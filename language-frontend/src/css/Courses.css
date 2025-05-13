@@ -1,0 +1,627 @@
+/* General Styles */
+body{
+    font-family: 'Arial', sans-serif;
+    background-color: #F1F1F1; /* Light gray background for the entire page */
+    color: #333; /* Default text color */
+    margin: 0;
+    padding: 0;
+}
+section {
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* Welcome Back Section */
+.welcome-back {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-back h2 {
+  color: #AB2526; /* Red for Welcome Back Section */
+}
+
+.welcome-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.welcome-header h2 {
+  font-size: 1.8rem;
+  color: #AB2526; /* Red for Welcome Back Section */
+}
+
+.welcome-header .view-history {
+  font-size: 1rem;
+  color: #F1A012;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.welcome-header .view-history:hover {
+  text-decoration: underline;
+}
+
+.welcome-back .lessons {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.lesson-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.lesson-card:hover {
+  transform: scale(1.05);
+}
+
+.lesson-card img {
+  width: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.lesson-details {
+  padding: 1rem;
+  text-align: center;
+}
+
+.lesson-details h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.lesson-details p {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Top Categories Section */
+.top-categories {
+  padding: 2rem;
+  text-align: center;
+}
+
+.top-categories h2 {
+  font-size: 2rem;
+  color: #188B81; /* Green for Top Categories Section */
+  margin-bottom: 1rem;
+}
+
+.categories-subtitle {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Default: 4 columns for desktop */
+  gap: 1.5rem;
+}
+
+.category-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 90%; /* Reduce card size */
+  max-width: 200px; /* Limit the maximum width */
+  margin: 0 auto; /* Center the cards */
+  gap: 1.5rem;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.category-icon {
+  width: 100%;
+  height: 120px; /* Reduce image height */
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+}
+
+.category-name {
+  font-size: 1rem; /* Reduce font size */
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.category-description {
+  font-size: 0.9rem; /* Reduce font size */
+  color: #666;
+}
+
+/* Online Learning CTA */
+.online-learning-cta {
+  background: #AB2526;
+  color: #fff;
+  text-align: center;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.online-learning-cta h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #FFFFFF; /* White for Online Learning CTA Section */
+}
+
+.online-learning-cta p {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.cta-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 2rem;
+  text-align: left;
+  display: inline-block;
+}
+
+.cta-benefits li {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  color: #F1D7A7; /* Light yellow for benefits */
+}
+
+.cta-button {
+  background: #F1A012;
+  color: #fff;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.cta-button:hover {
+  background: #d18b0e;
+  transform: scale(1.05);
+}
+
+/* Students Viewing */
+.students-viewing {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.students-viewing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.students-viewing-header h2 {
+  font-size: 1.8rem;
+  color: #F1A012; /* Orange for Students Viewing Section */
+}
+
+.students-viewing-header .view-all {
+  font-size: 1rem;
+  color: #F1A012;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.students-viewing-header .view-all:hover {
+  text-decoration: underline;
+}
+
+.students-viewing-courses {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.students-viewing-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.students-viewing-card:hover {
+  transform: scale(1.05);
+}
+
+.students-viewing-image {
+  width: 100%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.students-viewing-details {
+  padding: 1rem;
+  text-align: center;
+}
+
+.students-viewing-title {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.students-viewing-info {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Courses Section */
+.courses-section h2 {
+  color: #702424; /* Dark red for Courses Section */
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.courses {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.course-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: calc(33.33% - 1rem); /* Default: 3 cards per row */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.course-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.course-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.course-details {
+  padding: 1rem;
+  text-align: center;
+}
+
+.course-details h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.course-details p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0.3rem 0;
+}
+
+.course-details p:last-child {
+  font-weight: bold;
+  color: #F1A012; /* Highlight rating */
+}
+
+/* Language Courses Section */
+.language-courses-section {
+  margin: 2rem auto;
+  padding: 0 2rem;
+}
+
+.language-courses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.language-courses-title {
+  font-size: 2rem;
+  color: #333;
+}
+
+.show-more-link {
+  color: #AB2526;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.language-courses-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.language-course-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit text color */
+}
+
+.language-course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.language-course-card h3,
+.language-course-card p {
+  margin: 0;
+  padding: 0;
+  text-decoration: none; /* Ensure no underline */
+}
+
+.language-course-card a {
+  text-decoration: none; /* Remove underline for links */
+  color: inherit; /* Inherit text color */
+}
+
+.language-course-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.language-course-details {
+  padding: 1rem;
+  text-align: left;
+}
+
+.course-meta {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.language-course-name {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.language-course-description {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 1rem;
+  cursor: pointer; /* Indicate that the text is clickable */
+}
+
+.language-course-description:hover {
+  color: #AB2526; /* Highlight on hover */
+}
+
+.course-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.course-btn {
+  background-color: #AB2526;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.course-btn:hover {
+  background-color: #F1A012;
+}
+
+/* Mobile View */
+@media (max-width: 768px) {
+  section {
+    padding: 1rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-header {
+    flex-direction: row; /* Keep items in a row */
+    justify-content: space-between; /* Ensure "View History" is on the right */
+    align-items: center;
+  }
+
+  .welcome-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-header .view-history {
+    font-size: 0.9rem;
+  }
+
+  .lessons {
+    gap: 0.5rem;
+  }
+
+  .lesson-card {
+    width: 200px;
+  }
+
+  .lesson-details h3 {
+    font-size: 1rem;
+  }
+
+  .lesson-details p {
+    font-size: 0.9rem;
+  }
+
+  .top-categories .categories {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
+    gap: 1.5rem;
+  }
+
+  .category-card {
+    max-width: 150px; /* Further reduce card size for mobile */
+  }
+
+  .category-icon {
+    height: 100px; /* Reduce image height for mobile */
+  }
+
+  .category-name {
+    font-size: 0.9rem;
+  }
+
+  .category-description {
+    font-size: 0.8rem;
+  }
+
+  .top-categories h2 {
+    font-size: 1.5rem;
+  }
+
+  .categories-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .category-name {
+    font-size: 1rem;
+  }
+
+  .category-description {
+    font-size: 0.9rem;
+  }
+
+  .online-learning-cta {
+    padding: 1.5rem;
+  }
+
+  .online-learning-cta h2 {
+    font-size: 1.5rem;
+  }
+
+  .online-learning-cta p {
+    font-size: 0.9rem;
+  }
+
+  .cta-benefits li {
+    font-size: 0.9rem;
+  }
+
+  .cta-button {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .students-viewing-header h2 {
+    font-size: 1.5rem;
+  }
+
+  .students-viewing-header .view-all {
+    font-size: 0.9rem;
+  }
+
+  .students-viewing-courses {
+    gap: 0.5rem;
+  }
+
+  .students-viewing-card {
+    width: 200px;
+  }
+
+  .students-viewing-title {
+    font-size: 1rem;
+  }
+
+  .students-viewing-info {
+    font-size: 0.9rem;
+  }
+
+  .students-viewing .courses {
+    gap: 0.5rem;
+  }
+
+  .course-card {
+    width: calc(50% - 1rem); /* 2 cards per row */
+  }
+
+  .course-details h3 {
+    font-size: 1rem;
+  }
+
+  .course-details p {
+    font-size: 0.9rem;
+  }
+
+  .language-courses-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
+    gap: 1rem;
+  }
+
+  .language-course-card {
+    width: 100%; /* Full width for mobile */
+    max-width: none;
+  }
+
+  .language-course-image {
+    height: 120px; /* Reduce image height for mobile */
+  }
+
+  .language-course-name {
+    font-size: 1rem;
+  }
+
+  .language-course-info {
+    font-size: 0.9rem;
+  }
+
+  .language-course-instructor {
+    font-size: 0.8rem;
+  }
+
+  .language-course-rating {
+    font-size: 0.9rem;
+  }
+}
