@@ -1,0 +1,613 @@
+/* Lecture Notes Section */
+.lecture-notes {
+  margin: 2rem auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.lecture-notes h2 {
+  font-size: 2.5rem;
+  color: #AB2526; /* Highlighted heading color */
+  margin-bottom: 1rem;
+  animation: fadeIn 1s ease;
+}
+
+.lecture-description {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2rem;
+  animation: fadeIn 1.5s ease;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+  gap: 1.5rem;
+}
+
+.note-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeIn 2s ease;
+}
+
+.note-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.note-card h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.note-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.note-description {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+/* Courses Grid Section */
+.courses-grid {
+  margin: 2rem auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.courses-grid h2 {
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.courses-description {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.course-card {
+  flex: 0 1 calc(25% - 1rem); /* Default: 4 columns for desktop */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.course-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.course-image {
+  width: 100%;
+  height: 150px;
+  position: relative;
+  overflow: hidden;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.course-card:hover .thumbnail {
+  transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+.video-number {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.course-details {
+  padding: 1rem;
+  text-align: left;
+}
+
+.course-details h3 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.course-details p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  font-size: 1rem;
+  color: #AB2526;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #888;
+  margin-right: 0.5rem;
+}
+
+/* Video Section */
+.video-section {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
+.video-container {
+  position: relative;
+  max-width: 100%;
+  width: 80%; /* Default width for larger screens */
+  height: 60%; /* Default height for larger screens */
+  border-radius: 10px;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.video-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.video-container:hover .video-thumbnail {
+  transform: scale(1.05); /* Slight zoom effect on hover */
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.video-container:hover .video-overlay {
+  opacity: 1;
+}
+
+.play-button {
+  background: #F1A012;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  font-size: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.play-button:hover {
+  transform: scale(1.1);
+  background: #AB2526;
+}
+
+.video-details {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: #333;
+}
+
+.video-details h2 {
+  font-size: 2.5rem;
+  color: #AB2526;
+  margin-bottom: 0.5rem;
+  animation: fadeIn 1s ease;
+}
+
+.video-details p {
+  font-size: 1.2rem;
+  color: #555;
+  animation: fadeIn 1.5s ease;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+
+  .video-section {
+    height: auto; /* Allow height to adjust based on content */
+  }
+
+  .video-container {
+    width: 100%; /* Full width for smaller screens */
+    height: auto; /* Adjust height to maintain aspect ratio */
+    overflow: hidden; /* Prevent any overflow */
+  }
+
+  .video-thumbnail {
+    width: 80%; /* Ensure the image fits the container */
+    height: auto; /* Maintain aspect ratio */
+  }
+
+  .play-button {
+    width: 50px; /* Smaller play button */
+    height: 50px;
+    font-size: 1.2rem;
+  }
+
+  .video-details {
+    bottom: 0; /* Position at the bottom */
+    margin-top: 1rem; /* Adjust spacing for mobile */
+    padding: 0 1rem; /* Add padding for better alignment */
+  }
+
+  .video-details h2 {
+    font-size: 1.8rem; /* Smaller title font size */
+  }
+
+  .video-details p {
+    font-size: 1rem; /* Smaller description font size */
+    line-height: 1.5; /* Improve readability */
+  }
+
+  /* Lecture Notes Section */
+  .lecture-notes {
+    padding: 1rem;
+  }
+
+  .lecture-notes h2 {
+    font-size: 2rem; /* Smaller font size for mobile */
+  }
+
+  .lecture-description {
+    font-size: 1rem; /* Smaller description font size */
+  }
+
+  .notes-grid {
+    grid-template-columns: repeat(2, 1fr); /* Display in 2 columns on mobile */
+    gap: 1rem; /* Reduce gap for mobile */
+  }
+
+  .note-card {
+    padding: 1rem; /* Reduce padding for mobile */
+  }
+
+  .note-card h3 {
+    font-size: 1.2rem; /* Adjust font size for mobile */
+  }
+
+  .note-card p {
+    font-size: 0.9rem; /* Adjust font size for mobile */
+  }
+
+  .note-description {
+    font-size: 0.8rem; /* Adjust description font size for mobile */
+  }
+
+  /* Courses Grid Section */
+  .courses-grid {
+    padding: 1rem;
+  }
+
+  .courses-grid h2 {
+    font-size: 2rem; /* Smaller font size for mobile */
+  }
+
+  .courses-description {
+    font-size: 1rem; /* Smaller description font size */
+  }
+
+  .grid {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .course-card {
+    flex: 0 1 calc(50% - 1rem); /* Each card takes 50% width minus the gap */
+  }
+
+  .course-image {
+    height: 120px; /* Reduce image height for mobile */
+  }
+
+  .thumbnail {
+    height: 100%; /* Ensure the thumbnail fits the container */
+  }
+
+  .video-number {
+    font-size: 0.9rem; /* Adjust font size for mobile */
+  }
+
+  .course-details h3 {
+    font-size: 1rem; /* Adjust font size for mobile */
+  }
+
+  .course-details p {
+    font-size: 0.9rem; /* Adjust font size for mobile */
+  }
+
+  .price {
+    font-size: 0.9rem; /* Smaller price font size */
+  }
+
+  /* Course Intro Section */
+  .course-intro {
+    padding: 1rem;
+  }
+
+  .course-intro h1 {
+    font-size: 2rem; /* Smaller font size for mobile */
+  }
+
+  .course-intro p {
+    font-size: 1rem; /* Smaller font size for mobile */
+  }
+}
+
+/* Course Intro Section */
+.course-intro {
+  text-align: center;
+  margin: 2rem auto;
+  padding: 2rem;
+  max-width: 800px;
+  background: linear-gradient(to bottom, #f9f9f9, #ffffff);
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 1s ease;
+}
+
+.course-intro h1 {
+  font-size: 2.8rem;
+  color: #AB2526; /* Highlighted heading color */
+  margin-bottom: 1rem;
+  animation: slideIn 1s ease;
+}
+
+.course-intro p {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 1.5rem;
+  line-height: 1.8;
+  animation: fadeIn 1.5s ease;
+}
+
+.intro-description strong {
+  color: #F1A012; /* Highlighted text color */
+}
+
+.intro-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  animation: fadeIn 2s ease;
+}
+
+.intro-highlights li {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.intro-highlights li::before {
+  content: '✔';
+  position: absolute;
+  left: 0;
+  color: #AB2526; /* Checkmark color */
+  font-size: 1.2rem;
+}
+
+.start-learning-btn {
+  background: #AB2526;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.8rem 2rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+  animation: fadeIn 2.5s ease;
+}
+
+.start-learning-btn:hover {
+  background: #F1A012;
+  transform: scale(1.05);
+}
+
+/* Quizzes Section */
+.quizzes-section {
+  margin: 2rem auto;
+  padding: 0 2rem;
+  text-align: center;
+}
+
+.quizzes-section h2 {
+  font-size: 2.5rem;
+  color: #AB2526; /* Highlighted heading color */
+  margin-bottom: 1rem;
+  animation: fadeIn 1s ease;
+}
+
+.quizzes-description {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2rem;
+  animation: fadeIn 1.5s ease;
+}
+
+.quizzes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+  gap: 1.5rem;
+}
+
+.quiz-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeIn 2s ease;
+}
+
+.quiz-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.quiz-card h3 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.quiz-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 0.5rem;
+}
+
+.quiz-duration {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.start-quiz-btn {
+  background: #AB2526;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.start-quiz-btn:hover {
+  background: #F1A012;
+  transform: scale(1.05);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .quizzes-section {
+    padding: 1rem;
+  }
+
+  .quizzes-section h2 {
+    font-size: 2rem; /* Smaller font size for mobile */
+  }
+
+  .quizzes-description {
+    font-size: 1rem; /* Smaller description font size */
+  }
+
+  .quizzes-grid {
+    grid-template-columns: repeat(2, 1fr); /* Display in 2 columns on mobile */
+    gap: 1rem; /* Reduce gap for mobile */
+  }
+
+  .quiz-card {
+    padding: 1rem; /* Reduce padding for mobile */
+  }
+
+  .quiz-card h3 {
+    font-size: 1.2rem; /* Adjust font size for mobile */
+  }
+
+  .quiz-card p {
+    font-size: 0.9rem; /* Adjust font size for mobile */
+  }
+
+  .quiz-duration {
+    font-size: 0.8rem; /* Adjust duration font size for mobile */
+  }
+
+  .start-quiz-btn {
+    font-size: 0.9rem; /* Adjust button font size for mobile */
+    padding: 0.6rem 1rem; /* Adjust button padding for mobile */
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

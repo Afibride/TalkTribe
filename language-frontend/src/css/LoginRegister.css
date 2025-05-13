@@ -1,0 +1,381 @@
+/* ========= LOGIN PAGE ========= */
+
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fff;
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Left Panel */
+.left-panel {
+  width: 50%;
+  position: relative;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.welcome-text {
+  position: absolute;
+  bottom: 50px;
+  left: 100px;
+  color: #fff;
+  text-align: left;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.welcome-text h1 {
+  font-size: 4rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: #188B81;
+}
+
+.welcome-text h2 {
+  font-size: 2rem;
+  font-weight: normal;
+  font-style: italic;
+}
+
+/* Right Panel */
+.right-panel {
+  width: 50%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #fff;
+}
+
+.content {
+  max-width: 500px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+
+.register .right-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+}
+
+.register .content {
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}
+
+
+.logo {
+  margin-bottom: 2rem;
+}
+
+.logo-icon {
+  width: 100px;
+  height: 100px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.tab {
+  color: #F1A012;
+  border: none;
+  padding: 0.8rem 2rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 0.5rem;
+  transition: background-color 0.3s ease;
+  text-decoration: none; /* For NavLink styling */
+  text-align: center;
+}
+
+.tab.active {
+   color: #AB2526;
+   text-decoration: underline;
+}
+
+.tab:hover {
+  color: #AB2526;
+}
+
+/* Login Form */
+.login-form {
+  text-align: left;
+}
+
+.subtext {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+label {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #F1A012;
+}
+
+/* Password Field */
+.password-field {
+  position: relative;
+}
+
+.toggle-password-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #888;
+}
+
+.toggle-password-icon:hover {
+  color: #F1A012;
+}
+
+.register .toggle-password-icon {
+  right: 25px;
+  font-size: 1.1rem; 
+}
+
+/* Options (Remember Me + Forgot Password) */
+.options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.3rem;
+  gap: 1rem;
+}
+
+.form-group.remember-me {
+  display: flex;
+  align-items: left;
+  gap: 0.3rem;
+}
+
+.options a {
+  font-size: 0.8rem;
+  color: #AB2526;
+  text-decoration: none;
+}
+
+.options a:hover {
+  text-decoration: underline;
+}
+
+/* Login Button */
+.login-btn {
+  width: 50%;
+  background-color: #F1A012;
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin: 0 auto;         /* Centers the button */
+  display: block;         /* Required for margin auto to work on inline buttons */
+}
+
+
+.login-btn:hover {
+  background-color: #AB2526;
+  transform: scale(1.05);
+}
+
+.register .form-grid {
+  display: flex;
+  gap: 2rem;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.register .form-column {
+  flex: 1;
+}
+
+.register .form-column input {
+  width: 350px;
+  margin-bottom: 1rem;
+}
+
+.register .form-column .password-field input {
+  width: 350px;
+}
+
+
+/* ============ VERIFICATION CODE ============ */
+.register .verification-code-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.register .verification-code-container input {
+  flex: 1;
+  width: 30%;
+}
+
+.register .code-box {
+  padding: 0.8rem 1rem;
+  background-color: #f1f1f1;
+  border-radius: 30px;
+  font-weight: bold;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  filter: blur(1.4px); /* Slight blur, slightly visible */
+  user-select: none;
+  cursor: pointer;
+  color: #333;
+  width: 100px;
+  text-align: center;
+}
+
+
+
+/* Mobile View (max-width: 768px) */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .left-panel {
+    display: none;
+  }
+
+  .right-panel {
+    width: 100%;
+    padding: 1rem;
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  }
+
+  .content {
+    margin: 0;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .tabs {
+    flex-direction: row;
+    justify-content: center;
+    margin-right: 30px;
+  }
+
+  .logo {
+    margin-right: 30px;
+  }
+
+  .tab {
+    margin: 0.5rem;
+  }
+
+  .login-form {
+    text-align: left;
+    justify-content: center;
+  }
+
+  .subtext {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 30px;
+  }
+
+  input {
+    font-size: 1rem;
+    padding: 0.8rem;
+    width: 90%;   
+  }
+
+  .toggle-password-icon {
+    position: absolute;
+    top: 50%;
+    right: 40px;
+  }
+
+  .options a {
+    margin-right: 30px;
+  }
+
+  .register .form-grid {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .register .toggle-password-icon {
+    margin-right: 30px;
+    font-size: 1rem;
+  }
+
+
+  .register .verification-code-container {
+    gap: 0.5rem;
+  }
+
+  .register .verification-code-container input {
+    width: 40%;
+    padding: 0.8rem;
+    font-size: 1rem;
+  }
+
+  .register .code-box {
+    width: 30%;
+    padding: 0.8rem 0.6rem;
+    font-size: 0.9rem;
+    filter: blur(1.4px);
+    margin-right: 30px;
+  }
+
+  .login-btn {
+    font-size: 1rem;
+    padding: 0.8rem;
+    width: 90%;
+    margin-right: 40px;
+  }
+}

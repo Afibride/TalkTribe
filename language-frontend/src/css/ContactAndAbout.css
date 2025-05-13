@@ -1,0 +1,526 @@
+/* ===============================
+   Global Styles & Typography
+================================== */
+.contact-page {
+  padding: 3rem 1rem;
+  max-width: 1200px;
+  margin: auto;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+/* ===============================
+   Hero Section
+================================== */
+.contact-hero {
+  text-align: center;
+  margin-bottom: 3rem;
+  background-color: #fef6ec;
+  padding: 3rem 1rem;
+  border-radius: 12px;
+}
+
+.contact-hero h1 {
+  font-size: 2.8rem;
+  color: #AB2526;
+}
+
+.contact-hero p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 700px;
+  margin: auto;
+}
+
+/* ===============================
+   Info Section
+================================== */
+.contact-info-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.contact-box {
+  background: #fdf5e3;
+  padding: 1.8rem;
+  border-radius: 12px;
+  text-align: center;
+  flex: 1 1 250px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+.contact-box:hover {
+  transform: translateY(-5px);
+}
+
+.contact-icon {
+  font-size: 2.2rem;
+  color: #F1A012;
+  margin-bottom: 1rem;
+}
+
+/* ===============================
+   Contact Form Section
+================================== */
+.contact-form-section {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  background: #f9f9f9;
+  border-radius: 12px;
+  margin-bottom: 3rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+}
+
+.contact-form-section h2 {
+  font-size: 2rem;
+  color: #188B81;
+  margin-bottom: 1rem;
+}
+
+.contact-form-section .send-btn {
+  background: #188B81;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  padding: 0.8rem 2rem;
+  transition: background-color 0.3s ease;
+}
+
+.contact-form {
+  display: grid;
+  gap: 1rem;
+  max-width: 600px;
+  margin: auto;
+}
+
+.contact-form input,
+.contact-form textarea {
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 1rem;
+  width: 100%;
+}
+
+.contact-form button {
+  background-color: #F1A012;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.contact-form button:hover {
+  background-color: #AB2526;
+}
+
+/* ===============================
+   Call-to-Action Section
+================================== */
+.contact-cta {
+  text-align: center;
+  margin-top: 4rem;
+  background: #fff3ed;
+  padding: 2rem;
+  border-radius: 12px;
+}
+
+.contact-cta h2 {
+  font-size: 2rem;
+  color: #AB2526;
+  margin-bottom: 1rem;
+}
+
+.contact-cta p {
+  font-size: 1.1rem;
+  color: #555;
+  max-width: 800px;
+  margin: auto;
+  margin-bottom: 1.5rem;
+}
+
+.cta-button {
+  padding: 0.8rem 2rem;
+  background: #F1A012;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background: #AB2526;
+}
+
+/* ===============================
+   Animations
+================================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 1s ease forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 1s ease forwards;
+}
+
+/* ===============================
+   Responsive Styles
+================================== */
+@media (max-width: 768px) {
+  .contact-hero {
+    padding: 2.5rem 1rem;
+  }
+
+  .contact-hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .contact-hero p,
+  .contact-cta p {
+    font-size: 1rem;
+  }
+
+  .contact-box {
+    width: 100%;
+    max-width: 100%;
+    padding: 1.2rem;
+  }
+
+  .contact-form-section h2,
+  .contact-cta h2 {
+    font-size: 1.6rem;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 0.95rem;
+    padding: 0.9rem;
+  }
+
+  .contact-form button,
+  .cta-button {
+    font-size: 0.95rem;
+    padding: 0.9rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-hero h1 {
+    font-size: 2rem;
+  }
+
+  .contact-form-section {
+    padding: 2rem 1rem;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+
+  .contact-form button,
+  .cta-button {
+    font-size: 0.9rem;
+    padding: 0.8rem 1.4rem;
+  }
+
+  .contact-cta h2 {
+    font-size: 1.4rem;
+  }
+
+  .contact-cta p {
+    font-size: 0.95rem;
+  }
+}
+
+
+/* ===============================
+   About Page Styles
+================================== */
+.about-page {
+  padding: 3rem 1rem;
+  max-width: 1200px;
+  margin: auto;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+}
+
+/* ===============================
+   Hero Section
+================================== */
+.about-hero {
+  text-align: center;
+  background-color: #fef6ec;
+  padding: 3rem 1rem;
+  border-radius: 12px;
+  margin-bottom: 3rem;
+}
+
+.about-hero h1 {
+  font-size: 2.8rem;
+  color: #AB2526;
+  margin-bottom: 1rem;
+}
+
+.about-hero p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 700px;
+  margin: auto;
+}
+
+/* ===============================
+   About Content Sections
+================================== */
+.about-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.about-content section {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s ease;
+}
+
+.about-content section:hover {
+  transform: translateY(-5px);
+}
+
+.about-content h2 {
+  font-size: 2rem;
+  color: #188B81;
+  margin-bottom: 1rem;
+}
+
+.about-content p,
+.about-content li {
+  font-size: 1.05rem;
+  color: #444;
+  line-height: 1.6;
+}
+
+.about-content ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+}
+
+/* ===============================
+   Call-to-Action Section
+================================== */
+.about-cta {
+  text-align: center;
+  margin-top: 4rem;
+  background: #fff3ed;
+  padding: 2.5rem 1.5rem;
+  border-radius: 12px;
+}
+
+.about-cta h2 {
+  font-size: 2rem;
+  color: #AB2526;
+  margin-bottom: 1rem;
+}
+
+.about-cta p {
+  font-size: 1.1rem;
+  color: #555;
+  max-width: 800px;
+  margin: auto;
+  margin-bottom: 1.5rem;
+}
+
+.cta-btn {
+  padding: 0.8rem 2rem;
+  background: #F1A012;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cta-btn:hover {
+  background: #AB2526;
+}
+
+/* ===============================
+   AOS Animation Compatibility
+================================== */
+[data-aos] {
+  opacity: 0;
+  transition-property: transform, opacity;
+}
+
+[data-aos].aos-animate {
+  opacity: 1;
+}
+
+.about-img {
+  width: 100%;
+  max-width: 600px;
+  border-radius: 10px;
+  margin: 1rem 0;
+  display: block;
+  object-fit: cover;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+}
+
+/* Responsive image styling */
+@media (max-width: 768px) {
+  .about-img {
+    max-width: 100%;
+  }
+}
+
+/* ===============================
+   Responsive Styles for About Page
+================================== */
+@media (max-width: 768px) {
+  .about-hero {
+    padding: 2.5rem 1rem;
+  }
+
+  .about-hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .about-hero p,
+  .about-cta p {
+    font-size: 1rem;
+  }
+
+  .about-content h2,
+  .about-cta h2 {
+    font-size: 1.6rem;
+  }
+
+  .about-content p,
+  .about-content li {
+    font-size: 1rem;
+  }
+
+  .cta-btn {
+    font-size: 0.95rem;
+    padding: 0.9rem 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-hero h1 {
+    font-size: 2rem;
+  }
+
+  .about-content {
+    gap: 2rem;
+  }
+
+  .about-content section {
+    padding: 1.5rem;
+  }
+
+  .about-content h2 {
+    font-size: 1.4rem;
+  }
+
+  .about-content p,
+  .about-content li,
+  .about-cta p {
+    font-size: 0.95rem;
+  }
+
+  .about-cta h2 {
+    font-size: 1.4rem;
+  }
+
+  .cta-btn {
+    font-size: 0.9rem;
+    padding: 0.8rem 1.4rem;
+  }
+}
+.about-section {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+}
+
+.about-img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+  flex: 1 1 300px;
+}
+
+.about-text {
+  flex: 2 1 400px;
+}
+
+.about-text h2 {
+  color: #AB2526;
+  margin-bottom: 1rem;
+}
+
+.about-text p,
+.about-text ul {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* Responsive: Stack image above text on small screens */
+@media (max-width: 768px) {
+  .about-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .about-text {
+    flex: unset;
+  }
+
+  .about-text ul {
+    padding-left: 1.2rem;
+    text-align: left;
+  }
+}
