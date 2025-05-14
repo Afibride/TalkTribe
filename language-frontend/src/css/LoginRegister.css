@@ -178,6 +178,7 @@ input:focus {
   right: 30px;
   font-size: 1.1rem; 
   margin-top: 7px;
+
 }
 
 /* Options (Remember Me + Forgot Password) */
@@ -194,7 +195,6 @@ input:focus {
   align-items: left;
   gap: 0.3rem;
 }
-
 
 .options a {
   font-size: 0.8rem;
@@ -353,7 +353,6 @@ input:focus {
   .register .toggle-password-icon {
     margin-right: 30px;
     font-size: 1rem;
-
   }
 
 
