@@ -130,21 +130,21 @@ body, html {
 .subtext {
   font-size: 1.2rem;
   color: #555;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   text-align: center;
 }
 
 label {
   font-size: 0.9rem;
   color: #333;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   display: block;
 }
 
 input {
   width: 100%;
   padding: 0.8rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   border: 1px solid #ddd;
   border-radius: 25px;
   font-size: 1rem;
@@ -175,8 +175,10 @@ input:focus {
 }
 
 .register .toggle-password-icon {
-  right: 25px;
+  right: 30px;
   font-size: 1.1rem; 
+  margin-top: 7px;
+
 }
 
 /* Options (Remember Me + Forgot Password) */
@@ -323,7 +325,7 @@ input:focus {
 
   .subtext {
     font-size: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 4rem;
     margin-right: 30px;
   }
 
