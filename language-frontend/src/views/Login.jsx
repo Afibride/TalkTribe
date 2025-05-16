@@ -1,18 +1,71 @@
-import React, { useState } from "react";
-import { useNavigate, NavLink } from "react-router-dom"; // NavLink added
+import React, { useState, useEffect } from "react";
+import { useNavigate, NavLink, useLocation, Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import api from "../api/api";
 import "../css/LoginRegister.css";
 
 function Login() {
+  const [loginInput, setLoginInput] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
+  // 🔁 Auto login if token + user exist
+  useEffect(() => {
+    const token =
+      localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+    const user =
+      JSON.parse(localStorage.getItem("user")) ||
+      JSON.parse(sessionStorage.getItem("user"));
 
-  const handleLogin = (e) => {
+    if (token && user) {
+      navigate("/home-after-login", {
+        state: { user, isNewUser: false },
+      });
+    }
+  }, []);
+
+  // ✅ Handle toast messages (e.g., after password reset)
+  useEffect(() => {
+    if (location.state?.toastMessage) {
+      toast.success(location.state.toastMessage);
+      window.history.replaceState({}, document.title); // prevent repeated toasts on refresh
+    }
+  }, [location.state]);
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
+  const handleLogin = async (e) => {
     e.preventDefault();
-    navigate("/home-after-login");
+
+    try {
+      const response = await api.post("/api/login", {
+        login: loginInput,
+        password: password,
+      });
+
+      const { token, user, is_new_user } = response.data;
+
+      const storage = rememberMe ? localStorage : sessionStorage;
+      storage.setItem("authToken", token);
+      storage.setItem("user", JSON.stringify(user));
+
+      console.log("Login success:", { token, user, is_new_user });
+
+      navigate("/home-after-login", {
+        state: {
+          user,
+          isNewUser: is_new_user,
+        },
+      });
+    } catch (error) {
+      console.error("Login error:", error);
+      const msg = error.response?.data?.message || "Login failed. Try again.";
+      toast.error(msg);
+    }
   };
 
   return (
@@ -57,17 +110,23 @@ function Login() {
               Reconnect with your roots. Learn your language. Celebrate your
               tribe.
             </p>
-            <label htmlFor="email">email or Username or Phone</label>
+
+            <label>Email, Username or Phone</label>
             <input
               type="text"
-              placeholder="Enter email or phone or User name"
+              value={loginInput}
+              onChange={(e) => setLoginInput(e.target.value)}
+              placeholder="Enter email, username or phone"
               required
             />
+
             <div className="password-field">
-              <label htmlFor="password">Password</label>
+              <label>Password</label>
               <input
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password"
                 required
               />
               <i
@@ -80,10 +139,15 @@ function Login() {
 
             <div className="options">
               <div className="form-group remember-me">
-                <input type="checkbox" id="remember" />
+                <input
+                  type="checkbox"
+                  id="remember"
+                  checked={rememberMe}
+                  onChange={() => setRememberMe(!rememberMe)}
+                />
                 <label htmlFor="remember">Remember me</label>
               </div>
-              <a href="#">Forgot Password?</a>
+              <Link to="/forgot-password">Forgot Password?</Link>
             </div>
 
             <button type="submit" className="login-btn">

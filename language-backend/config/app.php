@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Talktribe'),
 
     /*
     |--------------------------------------------------------------------------
@@ -27,6 +27,8 @@ return [
     | services the application utilizes. Set this in your ".env" file.
     |
     */
+
+    'frontend_url' => env('FRONTEND_URL', 'http://192.168.59.250:5173'),
 
     'env' => env('APP_ENV', 'production'),
 

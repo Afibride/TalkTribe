@@ -8,6 +8,11 @@ const Header = () => {
   return (
     <header>
       <Navbar /> 
+      <div className="scrolling-motto">
+        <p>
+          🌍 TalkTribe — Reviving Local Languages | Celebrating Culture | Empowering Identity 💬
+        </p>
+      </div>
       <HeroSection /> 
     </header>
   );

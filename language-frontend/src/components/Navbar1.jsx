@@ -1,22 +1,47 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import '../css/HomeLogin.css';
 
 const NewNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const token = localStorage.getItem("authToken");
+
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+  const userName = user?.username || "User";
+  const profilePic = user?.profilePic || "/user.jpg"; // fallback
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen(prev => !prev);
+    setIsSearchOpen(false); // auto-close search on menu open
   };
 
-  const toggleSearch = () => {
-    setIsSearchOpen(!isSearchOpen);
+  const toggleSearch = () => setIsSearchOpen(prev => !prev);
+  const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
+  const closeDropdown = () => setIsDropdownOpen(false);
+
+  const handleLogoutClick = () => setShowLogoutConfirm(true);
+
+  const confirmLogout = () => {
+    localStorage.clear(); // removes token, user, everything
+    setShowLogoutConfirm(false);
+    closeDropdown();
+    navigate("/", {
+      state: { toastMessage: "👋 You’ve been logged out successfully." },
+    });
+    
   };
+
+  const cancelLogout = () => setShowLogoutConfirm(false);
 
   return (
     <nav className="navbar">
-      {/* Logo */}
       <img src="/logo.png" alt="TalkTribe Logo" className="logo" />
 
       {/* Search Bar */}
@@ -24,43 +49,25 @@ const NewNavbar = () => {
         <input type="text" className="search-bar" placeholder="Search ..." />
       </div>
 
-      {/* Links for Desktop */}
+      {/* Desktop Menu */}
       <div className="nav-menu desktop-menu">
         <div className="nav-links">
-          <NavLink
-            to="/home-after-login"
-            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/local-languages"
-            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-          >
-            Local Languages
-          </NavLink>
-          <NavLink
-            to="/blog"
-            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-          >
-            Blog
-          </NavLink>
-          <NavLink
-            to="/about"
-            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-          >
-            About Us
-          </NavLink>
+          <NavLink to="/home-after-login" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Home</NavLink>
+          <NavLink to="/local-languages" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Local Languages</NavLink>
+          <NavLink to="/blog" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Blog</NavLink>
+          <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>About Us</NavLink>
         </div>
-        {/* User Profile */}
-        <div className="user-profile">
-          <img src="/user.jpg" alt="User Profile" className="profile-pic" />
-          <span className="user-name">Tah</span>
-          <i className="fas fa-chevron-down dropdown-icon"></i>
-        </div>
+
+        {token && (
+          <div className="user-profile" onClick={toggleDropdown}>
+            <img src={profilePic} alt="User Profile" className="profile-pic" />
+            <span className="user-name">{userName}</span>
+            <i className="fas fa-chevron-down dropdown-icon"></i>
+          </div>
+        )}
       </div>
 
-      {/* Hamburger Menu and Search Icon for Mobile */}
+      {/* Mobile Buttons */}
       <div className="navbar-right">
         <button className="search-icon" onClick={toggleSearch}>
           <i className="fas fa-search"></i>
@@ -70,41 +77,45 @@ const NewNavbar = () => {
         </button>
       </div>
 
-      {/* Hamburger Menu Links for Mobile */}
+      {/* Mobile Menu */}
       <div className={`nav-menu mobile-menu ${isMenuOpen ? 'open' : ''}`}>
         <div className="nav-links">
-          <NavLink
-            to="/home-after-login"
-            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-          >
-            Home
-          </NavLink>
-          <NavLink
-            to="/local-languages"
-            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-          >
-            Local Languages
-          </NavLink>
-          <NavLink
-            to="/blog"
-            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-          >
-            Blog
-          </NavLink>
-          <NavLink
-            to="/about"
-            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
-          >
-            About Us
-          </NavLink>
+          <NavLink to="/home-after-login" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Home</NavLink>
+          <NavLink to="/local-languages" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Local Languages</NavLink>
+          <NavLink to="/blog" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Blog</NavLink>
+          <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>About Us</NavLink>
         </div>
-        {/* User Profile */}
-        <div className="user-profile">
-          <img src="/user.jpg" alt="User Profile" className="profile-pic" />
-          <span className="user-name">Tah</span>
-          <i className="fas fa-chevron-down dropdown-icon"></i>
-        </div>
+
+        {token && (
+          <div className="user-profile" onClick={toggleDropdown}>
+            <img src={profilePic} alt="User Profile" className="profile-pic" />
+            <span className="user-name">{userName}</span>
+            <i className="fas fa-chevron-down dropdown-icon"></i>
+          </div>
+        )}
       </div>
+
+      {/* Dropdown Menu */}
+      {isDropdownOpen && (
+        <div className="dropdown-menu">
+          <button className="close-dropdown" onClick={closeDropdown}>✖</button>
+          <NavLink to="/edit-profile" className="dropdown-item">Edit Profile</NavLink>
+          <button className="dropdown-item logout" onClick={handleLogoutClick}>Logout</button>
+        </div>
+      )}
+
+      {/* Logout Confirmation Modal */}
+      {showLogoutConfirm && (
+        <div className="logout-modal-overlay">
+          <div className="logout-modal">
+            <p>Are you sure you want to log out?</p>
+            <div className="modal-actions">
+              <button onClick={confirmLogout} className="confirm-btn">Yes</button>
+              <button onClick={cancelLogout} className="cancel-btn">No</button>
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };
