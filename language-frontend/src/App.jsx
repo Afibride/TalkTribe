@@ -1,39 +1,97 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import 'aos/dist/aos.css'; // Import AOS styles
-import AOS from 'aos'; // Import AOS
-import HomeLogin from './views/HomeLogin'; // Import HomeLogin page
-import Login from './views/Login'; // Import Login page
-import HomeAfterLogin from './views/HomeAfterLogin'; // Import HomeAfterLogin page
-import CoursesPage from './views/CoursesPage'; // Import CoursesPage
-import CoursePage from './views/CoursePage'; // Import CoursePage
-import BlogPage from './views/BlogPage'; // Import BlogPage
+import 'aos/dist/aos.css';
+import AOS from 'aos';
+
+import HomeLogin from './views/HomeLogin';
+import Login from './views/Login';
+import HomeAfterLogin from './views/HomeAfterLogin';
+import CoursesPage from './views/CoursesPage';
+import CoursePage from './views/CoursePage';
+import BlogPage from './views/BlogPage';
 import Register from './views/Register';
-import About from './views/AboutUs'; // Import AboutUs page
-import Contact from './views/ContactUs'; // Import ContactUs page
+import About from './views/AboutUs';
+import Contact from './views/ContactUs';
+import ForgotPassword from './views/ForgotPassword';
+import ResetPassword from './views/ResetPassword';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import PrivateRoute from './components/PrivateRoute';
+import PublicRoute from './components/PublicRoute'; // ✅ Import it
 
 function App() {
   useEffect(() => {
-    AOS.init({
-      duration: 1000, // Animation duration in milliseconds
-    });
+    AOS.init({ duration: 1000 });
   }, []);
 
   return (
+    <>
     <Router>
       <Routes>
-        <Route path="/" element={<HomeLogin />} /> {/* Home page */}
-        <Route path="/login" element={<Login />} /> {/* Login page */}
-        <Route path="/home-after-login" element={<HomeAfterLogin />} /> {/* Home after login */}
-        <Route path="/local-languages" element={<CoursesPage />} /> {/* Map CoursesPage */}
-        <Route path="/coursepage" element={<CoursePage />} /> {/* Added CoursePage route */}
-        <Route path="/blog" element={<BlogPage/>} /> {/* Placeholder for Blog page */}
-        <Route path="/register" element={<Register />} /> {/* Register page */}
-        <Route path="/about" element={<About/>} /> {/* Placeholder for About page */}
-        <Route path="/contact" element={<Contact/>} /> {/* Placeholder for Contact page */}
+        <Route path="/" element={<HomeLogin />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+
+        {/* ✅ Public routes (redirect if logged in) */}
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+
+        {/* 🔐 Private routes */}
+        <Route
+          path="/home-after-login"
+          element={
+            <PrivateRoute>
+              <HomeAfterLogin />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/local-languages"
+          element={
+            <PrivateRoute>
+              <CoursesPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/coursepage"
+          element={
+            <PrivateRoute>
+              <CoursePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/blog"
+          element={
+            <PrivateRoute>
+              <BlogPage />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </Router>
+    
+    <ToastContainer position="top-right" autoClose={3000} />
+    </>
   );
 }
 
