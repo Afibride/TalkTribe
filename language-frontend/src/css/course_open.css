@@ -1,3 +1,11 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+align-items: center;
+overflow-x: hidden;
+}
+
 /* Lecture Notes Section */
 .lecture-notes {
   margin: 2rem auto;
@@ -10,6 +18,15 @@
   color: #AB2526; /* Highlighted heading color */
   margin-bottom: 1rem;
   animation: fadeIn 1s ease;
+}
+
+.lecture-notes .loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh; /* or 100vh for full viewport */
+  font-size: 1.5rem;
+  color: #AB2526;
 }
 
 .lecture-description {
@@ -165,6 +182,8 @@
   padding: 0;
   width: 100vw;
   height: 100vh;
+  position: relative;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -176,7 +195,7 @@
   position: relative;
   max-width: 100%;
   width: 80%; /* Default width for larger screens */
-  height: 60%; /* Default height for larger screens */
+  height: 80%; /* Default height for larger screens */
   border-radius: 10px;
   justify-content: center;
   overflow: hidden;
@@ -252,6 +271,98 @@
   animation: fadeIn 1.5s ease;
 }
 
+/* Overlay to dim the background */
+.lesson-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* 40% opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it appears on top of other elements */
+}
+
+/* Popup container */
+.lesson-popup {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  padding: 20px;
+  position: relative;
+  z-index: 1001; /* Ensure it appears above the overlay */
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #fff; /* Red background */
+  color: #333; /* White text */
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.close-btn:hover {
+ color: #AB2526; /* Darker red on hover */
+}
+
+/* loading */
+.loading{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh; /* or 100vh for full viewport */
+  font-size: 1.5rem;
+  color: #AB2526;
+}
+
+/* Play button */
+.play-btn {
+  background-color: #F1A012;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.play-btn:hover {
+  background-color: #AB2526;
+}
+
+/* Notes link */
+a {
+  display: inline-block;
+  margin-top: 10px;
+  color: #AB2526;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Alternative text style */
+.alt{
+  text-align: center; /* Center horizontally */
+  margin-top: 50px; 
+  font-size: 16px; 
+  color: #555; 
+}
+
 /* Animations */
 @keyframes fadeIn {
   from {
@@ -261,6 +372,17 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
@@ -611,3 +733,4 @@
     transform: translateX(0);
   }
 }
+

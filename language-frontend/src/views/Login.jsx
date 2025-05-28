@@ -21,12 +21,12 @@ function Login() {
       JSON.parse(localStorage.getItem("user")) ||
       JSON.parse(sessionStorage.getItem("user"));
 
-    if (token && user) {
+    if (token && user && location.pathname === "/login") {
       navigate("/home-after-login", {
         state: { user, isNewUser: false },
       });
     }
-  }, []);
+  }, [location.pathname, navigate]);
 
   // ✅ Handle toast messages (e.g., after password reset)
   useEffect(() => {

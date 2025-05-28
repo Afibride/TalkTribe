@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import api from '../../api/api';
 import '../../css/Courses.css';
 
 const TopCategories = () => {
-  const categories = [
-    { name: 'Lamnso', icon: '/blog.jpg', description: 'Learn the Lamnso language and culture.' },
-    { name: 'Oku', icon: '/blog.jpg', description: 'Explore the basics of the Oku language.' },
-    { name: 'Bamileke', icon: '/blog.jpg', description: 'Master the Bamileke dialect and traditions.' },
-    { name: 'Fulani', icon: '/blog.jpg', description: 'Discover the Fulani language and heritage.' },
-    { name: 'Hausa', icon: '/blog.jpg', description: 'Learn the Hausa language and its rich culture.' },
-    { name: 'Yoruba', icon: '/blog.jpg', description: 'Dive into the Yoruba language and customs.' },
-  ];
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await api.get('/api/categories'); 
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <section className="top-categories">
@@ -20,7 +27,7 @@ const TopCategories = () => {
       <div className="categories-grid">
         {categories.map((category, index) => (
           <div key={index} className="category-card" data-aos="zoom-in">
-            <img src={category.icon} alt={category.name} className="category-icon" />
+            <img src={category.icon || '/default-category.jpg'} alt={category.name} className="category-icon" />
             <h3 className="category-name">{category.name}</h3>
             <p className="category-description">{category.description}</p>
           </div>

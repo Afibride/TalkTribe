@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import api from '../../api/api';
 import '../../css/Courses.css';
 
 const WelcomeBackSection = () => {
-    const lessons = [
-        { title: 'Lamnso Language and Culture', progress: 'Lesson 5 of 7', image: '/blog.jpg' },
-        { title: 'Lamnso Language and Culture', progress: 'Lesson 3 of 10', image: '/blog.jpg' },
-        { title: 'Lamnso Language and Culture', progress: 'Lesson 8 of 12', image: '/blog.jpg' },
-        { title: 'Lamnso Language and Culture', progress: 'Lesson 8 of 12', image: '/blog.jpg' },
-      ];
+  const [progressData, setProgressData] = useState([]);
+  const [refreshKey, setRefreshKey] = useState(0); // <-- add refreshKey state
+
+  useEffect(() => {
+    const fetchProgress = async () => {
+      try {
+        const response = await api.get('/api/user-course-progress');
+        setProgressData(response.data);
+      } catch (error) {
+        console.error('Error fetching user progress:', error);
+      }
+    };
+
+    fetchProgress();
+  }, [refreshKey]); // <-- add refreshKey as dependency
 
   return (
     <section className="welcome-back">
@@ -16,15 +26,26 @@ const WelcomeBackSection = () => {
         <a href="/history" className="view-history">View History</a>
       </div>
       <div className="lessons">
-        {lessons.map((lesson, index) => (
-          <div key={index} className="lesson-card" data-aos="fade-up">
-            <img src={lesson.image} alt={lesson.title} />
-            <div className="lesson-details">
-              <h3>{lesson.title}</h3>
-              <p>{lesson.progress}</p>
+        {progressData.length === 0 ? (
+          <p>No progress yet. Start learning a course!</p>
+        ) : (
+          progressData.map((progress) => (
+            <div key={progress.course_id} className="lesson-card" data-aos="fade-up">
+              <img src={progress.course_image || '/blog.jpg'} alt={progress.course_title} />
+              <div className="lesson-details">
+                <h3>{progress.course_title}</h3>
+                <p>Last Lesson: {progress.last_lesson_title}</p>
+                <p>Progress: {progress.progress_percent}%</p>
+                <a
+                  href={`/courses/${progress.course_id}/lessons?lesson=${progress.lesson_id}`}
+                  className="continue-btn"
+                >
+                  Continue Learning
+                </a>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </section>
   );
