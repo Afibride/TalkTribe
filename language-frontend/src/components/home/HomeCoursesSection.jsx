@@ -73,7 +73,7 @@ const CoursesSection = () => {
                   : `${course.description.slice(0, 50)}...`}
               </p>
               <div className="course-actions">
-                <Link to="/coursepage" className="course-btn">
+                <Link to="/courses/:id/lessons" className="course-btn">
                   Start Now!
                 </Link>
               </div>

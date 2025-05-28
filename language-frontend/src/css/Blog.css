@@ -1,4 +1,12 @@
 /* Hero Section */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+align-items: center;
+overflow-x: hidden;
+}
+
 .hero-section {
   position: relative;
   width: 100%;

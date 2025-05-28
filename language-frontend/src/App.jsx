@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react'; // <-- add useState
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'aos/dist/aos.css';
@@ -8,7 +8,7 @@ import HomeLogin from './views/HomeLogin';
 import Login from './views/Login';
 import HomeAfterLogin from './views/HomeAfterLogin';
 import CoursesPage from './views/CoursesPage';
-import CoursePage from './views/CoursePage';
+import LessonsPage from './views/Lessons';
 import BlogPage from './views/BlogPage';
 import Register from './views/Register';
 import About from './views/AboutUs';
@@ -19,12 +19,17 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import PrivateRoute from './components/PrivateRoute';
-import PublicRoute from './components/PublicRoute'; // ✅ Import it
+import PublicRoute from './components/PublicRoute'; 
 
 function App() {
   useEffect(() => {
     AOS.init({ duration: 1000 });
   }, []);
+
+  // ADD THESE:
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  const handleProgressUpdate = () => setRefreshKey(prev => prev + 1);
 
   return (
     <>
@@ -67,15 +72,15 @@ function App() {
           path="/local-languages"
           element={
             <PrivateRoute>
-              <CoursesPage />
+              <CoursesPage refreshKey={refreshKey} />
             </PrivateRoute>
           }
         />
         <Route
-          path="/coursepage"
+          path="/courses/:id/lessons"
           element={
             <PrivateRoute>
-              <CoursePage />
+              <LessonsPage onProgressUpdate={handleProgressUpdate} />
             </PrivateRoute>
           }
         />
