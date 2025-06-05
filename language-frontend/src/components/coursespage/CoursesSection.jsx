@@ -20,7 +20,7 @@ const CoursesSection = ({ title, courses }) => {
           courses.map((course, index) => (
             <Link to={`/courses/${course.id}/lessons`} key={index} className="language-course-card" data-aos="fade-up">
               <img
-                src={course.image ? `http://192.168.57.12:8000/storage/${course.image}` : '/blog.jpg'}
+                src={course.image_url || '/blog.jpg'}
                 alt={course.title}
                 className="language-course-image"
               />

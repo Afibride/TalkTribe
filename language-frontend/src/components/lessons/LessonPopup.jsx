@@ -9,13 +9,13 @@ const LessonPopup = ({ lesson, onClose, onPlay }) => {
           <button className="close-btn" onClick={onClose}>X</button>
           <h2>{lesson.title}</h2>
           <p>{lesson.description}</p>
-          {lesson.video_url && (
+          {lesson.video_url_full && (
             <div>
-              <button className="play-btn" onClick={() => onPlay(lesson.video_url)}>Play Video</button>
+              <button className="play-btn" onClick={() => onPlay(lesson.video_url_full)}>Play Video</button>
             </div>
           )}
-          {lesson.notes_file && (
-            <a href={`http://192.168.57.12:8000/storage/${lesson.notes_file}`} target="_blank" rel="noopener noreferrer">
+          {lesson.notes_file_url_full && (
+            <a href={lesson.notes_file_url_full} target="_blank" rel="noopener noreferrer">
               Download Notes
             </a>
           )}

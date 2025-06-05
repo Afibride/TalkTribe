@@ -15,13 +15,9 @@ const LectureNotes = ({ lessons, courseTitle }) => {
               <div key={index} className="note-card" data-aos="fade-up" data-aos-delay={`${index * 100}`}>
                 <h3>{lesson.title}</h3>
                 <p>{lesson.description}</p>
-                <a
-                  href={`http://192.168.57.12:8000/storage/${lesson.notes_file}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Download Notes
-                </a>
+               <a href={lesson.notes_file_url_full} target="_blank" rel="noopener noreferrer">
+              Download Notes
+            </a>
               </div>
             ) : null
           )

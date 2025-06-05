@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../css/HomeLogin.css';
 
 const slides = [
@@ -25,6 +26,8 @@ const slides = [
 
 const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigate = useNavigate();
+  const isLoggedIn = !!localStorage.getItem('authToken');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -64,7 +67,11 @@ const HeroSection = () => {
         <p>
           Don’t let the exciting world of local languages pass you by. Learn yours online in an innovative way.
         </p>
-        <button className="join-btn">Join TalkTribe</button>
+        {!isLoggedIn && (
+          <button className="join-btn" onClick={() => navigate('/register')}>
+            Join TalkTribe
+          </button>
+        )}
       </div>
     </section>
   );

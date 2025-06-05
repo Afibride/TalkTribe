@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import '../../css/course_open.css';
 
-const VideoSection = ({ videos, courseTitle, initialLesson }) => {
+const VideoSection = ({ videos, courseTitle, initialLesson, currentVideoUrl }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [lastSentPercent, setLastSentPercent] = useState(0);
   const videoRef = useRef(null);
@@ -41,7 +41,22 @@ const VideoSection = ({ videos, courseTitle, initialLesson }) => {
 
   return (
     <section className="video-section">
-      <h2>Watch {courseTitle || 'this course'} Lessons</h2>
+      <h2>{courseTitle || 'this course'} Lessons</h2>
+      <p className="video-description">
+        Explore the lessons for this course. Click on a thumbnail to play the video.
+      </p>     <div className="video-thumbnails">
+        {videos.map((lesson, idx) => (
+          <img
+            key={lesson.id}
+            src={lesson.thumbnail_url || '/blog.jpg'}
+            alt={lesson.title}
+            className={`video-thumb ${currentIndex === idx ? 'active' : ''}`}
+            onClick={() => setCurrentIndex(idx)}
+            style={{ cursor: 'pointer', width: 80, marginRight: 8, border: currentIndex === idx ? '2px solid #702424' : 'none' }}
+          />
+        ))}
+      </div>
+ 
       {videos.length > 0 ? (
         <video
           width="100%"
@@ -63,7 +78,7 @@ const VideoSection = ({ videos, courseTitle, initialLesson }) => {
               setLastSentPercent(percent);
             }
           }}
-          src={`http://192.168.57.12:8000/storage/${videos[currentIndex]?.video_url}`}
+          src={videos[currentIndex]?.video_url_full}
         >
           Your browser does not support the video tag.
         </video>

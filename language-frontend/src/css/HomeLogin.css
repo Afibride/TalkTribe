@@ -1059,6 +1059,7 @@ button:active, .btn:active {
   border-radius: 20px;
   font-size: 1rem;
   width: 300px;
+  margin-top: 20px;
 }
 
 .search-icon {
@@ -1192,7 +1193,6 @@ button:active, .btn:active {
     color: #702424;
     margin: 0; /* Remove margin for mobile */
     text-align: left;
-    gap: 0rem; /* Remove gap for mobile */
   }
 
   /* Hero Section */
@@ -1707,4 +1707,14 @@ button:active, .btn:active {
   100% {
     transform: translateX(-100%);
   }
+}
+
+/* Add to HomeLogin.css */
+.loading-centered {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh; /* or 100vh for full viewport */
+  font-size: 1.5rem;
+  color: #AB2526;
 }

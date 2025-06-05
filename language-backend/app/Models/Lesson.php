@@ -15,8 +15,12 @@ class Lesson extends Model
         'video_url' ,
         'notes_file',
         'course_id' ,
+        'created_by',
+        'thumbnail',
     ];
-    
+
+    protected $appends = ['video_url_full', 'notes_file_url_full', 'thumbnail_url'];
+
     public function course()
     {
         return $this->belongsTo(Course::class);
@@ -30,5 +34,26 @@ class Lesson extends Model
     public function lessonProgress()
     {
         return $this->hasMany(LessonProgress::class);
+    }
+
+    public function getVideoUrlFullAttribute()
+    {
+        if ($this->video_url) {
+            return url('storage/' . $this->video_url);
+        }
+        return null;
+    }
+
+    public function getNotesFileUrlFullAttribute()
+    {
+        if ($this->notes_file) {
+            return url('storage/' . $this->notes_file);
+        }
+        return null;
+    }
+
+    public function getThumbnailUrlAttribute()
+    {
+        return $this->thumbnail ? url('storage/' . $this->thumbnail) : null;
     }
 }

@@ -9,7 +9,8 @@ use App\Http\Controllers\CourseController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\LessonProgressController;
 use App\Http\Controllers\QuizSubmissionController;
-
+use App\Http\Controllers\StatsController;
+use App\Http\Controllers\TestimonialController;
 
 
 /*
@@ -44,6 +45,7 @@ Route::middleware('auth:sanctum')->group(function () {              // All cours
     Route::get('/courses-by-category', [CourseController::class, 'getCourses']);          // Individual course
     Route::get('/most-clicked-courses', [CourseController::class, 'mostClickedCourses']);
     Route::get('/random-courses', [CourseController::class, 'randomCourses']);
+    Route::get('/courses?limit=12', [CourseController::class, 'index']);
 
     
     Route::middleware('is_instructor')->group(function () {
@@ -55,7 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {              // All cours
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/lessons', [LessonController::class, 'index']);
+    Route::get('/lessonss', [LessonController::class, 'index']);
     Route::get('/lessons/{id}', [LessonController::class, 'show']);
     Route::get('/courses/{courseId}/lessons', [LessonController::class, 'getLessonsByCourse']);
 
@@ -75,6 +77,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/lesson-progress', [LessonProgressController::class, 'update']);
 });
 
+Route::get('/stats', [StatsController::class, 'index']);
+
+Route::get('/testimonials', [TestimonialController::class, 'index']);
+Route::post('/testimonials', [TestimonialController::class, 'store']);
 
 
 

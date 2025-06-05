@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../css/HomeLogin.css';
 
 const AboutSection = () => {
+  const navigate = useNavigate();
   return (
     <section className="about" data-aos="fade-up">
       <div className="about-container">
@@ -23,7 +25,13 @@ const AboutSection = () => {
             <p>
               Through <strong>interactive courses</strong>, a vibrant <strong>blog</strong>, and live sessions with <strong>community leaders</strong>, you’ll gain more than just language proficiency—you’ll gain a sense of <strong>identity</strong> and belonging.
             </p>
-            <button className="learn-more-btn" data-aos="fade-up">Learn More</button>
+            <button
+              className="learn-more-btn"
+              data-aos="fade-up"
+              onClick={() => navigate('/about')}
+            >
+              Learn More
+            </button>
           </div>
         </div>
       </div>

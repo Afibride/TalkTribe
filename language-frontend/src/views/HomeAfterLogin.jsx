@@ -59,7 +59,7 @@ const HomeAfterLogin = () => {
   }, [location.state, navigate]);
 
   if (isLoading || !user || Object.keys(user).length === 0) {
-    return <div className="homepage">Loading...</div>;
+    return <div className="loading-centered">Loading...</div>;
   }
 
   return (

@@ -20,6 +20,8 @@ const LessonsPage = ({ onProgressUpdate }) => {
   const [course, setCourse] = useState(null);
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [learningStarted, setLearningStarted] = useState(false);
+  const [currentVideoUrl, setCurrentVideoUrl] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
     const fetchCourseDetails = async () => {
@@ -61,13 +63,16 @@ const LessonsPage = ({ onProgressUpdate }) => {
     checkProgress();
   }, [course]);
 
-  const handleLessonClick = (lesson) => setSelectedLesson(lesson);
+  const handleLessonClick = (lesson) => {
+    setSelectedLesson(lesson);
+    setShowPopup(true);
+  };
   const closePopup = () => setSelectedLesson(null);
 
   const handlePlayVideo = (videoUrl) => {
     const videoElement = document.getElementById('main-video');
     if (videoElement) {
-      videoElement.src = `http://192.168.57.12:8000/storage/${videoUrl}`;
+      videoElement.src = videoUrl;
       videoElement.play();
     }
     closePopup();
@@ -104,6 +109,7 @@ const LessonsPage = ({ onProgressUpdate }) => {
             videos={course.lessons || []}
             courseTitle={course.title}
             initialLesson={selectedLesson}
+            currentVideoUrl={currentVideoUrl}
           />
           <LessonsGrid
             chapters={course.chapters || []}
@@ -114,11 +120,14 @@ const LessonsPage = ({ onProgressUpdate }) => {
           <LectureNotes lessons={course.lessons || []} courseTitle={course.title} />
           <Quizzes quizzes={course.quizzes || []} />
           <Footer />
-          {selectedLesson && (
+          {showPopup && selectedLesson && (
             <LessonPopup
               lesson={selectedLesson}
-              onClose={closePopup}
-              onPlay={handlePlayVideo}
+              onClose={() => setShowPopup(false)}
+              onPlay={(videoUrl) => {
+                setCurrentVideoUrl(videoUrl);
+                setShowPopup(false);
+              }}
             />
           )}
         </>
