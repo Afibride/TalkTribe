@@ -1,18 +1,19 @@
 import React from 'react';
 import '../../css/Blog.css';
 
-const HeroSection = () => {
+const BlogHeroSection = () => {
   return (
     <section className="hero-section">
       <div className="hero-content">
         <h1>Discover the Power of Local Languages</h1>
         <p>
-          Explore the beauty of your native tongue and its cultural significance. Join us in preserving the heritage of local languages through engaging blogs and resources.
+          Explore the beauty of your native tongue and its cultural significance. 
+          Join us in preserving the heritage of local languages through engaging blogs and resources.
         </p>
         <button className="explore-btn">Explore Blogs</button>
       </div>
       <img
-        src="/blog.jpg" // Replace with the actual path to the hero image
+        src="/blog.jpg"
         alt="Team collaborating with sticky notes"
         className="hero-image"
       />
@@ -20,4 +21,4 @@ const HeroSection = () => {
   );
 };
 
-export default HeroSection;
+export default BlogHeroSection;

@@ -5,23 +5,29 @@ import "react-toastify/dist/ReactToastify.css";
 import zxcvbn from "zxcvbn";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "../api/api";
+import { validateField } from "../utils/validation";
 import "../css/LoginRegister.css";
 
+const steps = ["Personal Info", "Account Details", "Verification"];
+
 function Register() {
+  const [step, setStep] = useState(0);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    username: "",
+    role: "learner",
+    password: "",
+    confirmPassword: "",
+    verificationCode: "",
+    userInputCode: ""
+  });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [verificationCode, setVerificationCode] = useState("");
-  const [userInputCode, setUserInputCode] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [username, setUsername] = useState("");
-  const [name, setName] = useState("");
-  const [role, setRole] = useState("learner");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,79 +41,118 @@ function Register() {
 
   const generateCode = () => {
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-    setVerificationCode(code);
+    setFormData(prev => ({ ...prev, verificationCode: code }));
   };
 
-  const isStrongPassword = (password) => {
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-    return regex.test(password);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: null
+      }));
+    }
   };
 
-  const isValidPhone = (phone) => {
-    const regex = /^\+?[0-9]{7,15}$/;
-    return regex.test(phone);
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value, formData);
+    if (error) {
+      setErrors(prev => ({ ...prev, [name]: error }));
+    }
   };
 
-  const handleRegister = async (e) => {
+  const validateStep = (step) => {
+    let isValid = true;
+    const newErrors = {};
+
+    switch (step) {
+      case 0:
+        ["name", "email", "phone"].forEach(field => {
+          const error = validateField(field, formData[field], formData);
+          if (error) {
+            newErrors[field] = error;
+            isValid = false;
+          }
+        });
+        break;
+      case 1:
+        ["username", "password", "confirmPassword"].forEach(field => {
+          const error = validateField(field, formData[field], formData);
+          if (error) {
+            newErrors[field] = error;
+            isValid = false;
+          }
+        });
+        break;
+      case 2:
+        if (!formData.userInputCode.trim()) {
+          newErrors.userInputCode = "Verification code is required";
+          isValid = false;
+        } else if (formData.userInputCode.trim().toUpperCase() !== formData.verificationCode.trim().toUpperCase()) {
+          newErrors.userInputCode = "Verification code does not match";
+          isValid = false;
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const nextStep = () => {
+    if (!validateStep(step)) {
+      const firstErrorField = Object.keys(errors).find(key => errors[key]);
+      if (firstErrorField) {
+        document.getElementById(firstErrorField)?.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+      return;
+    }
+    setStep(step + 1);
+  };
+
+  const prevStep = () => setStep(step - 1);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!validateStep(step)) return;
+    
     setLoading(true);
 
-    if (!email || !phone || !username || !name || !password || !confirmPassword || !userInputCode) {
-      toast.error("Please fill out all required fields.");
-      setLoading(false);
-      return;
-    }
-
-    if (!isValidPhone(phone)) {
-      toast.error("Please enter a valid phone number.");
-      setLoading(false);
-      return;
-    }
-
-    if (!isStrongPassword(password)) {
-      toast.error("Password must include uppercase, lowercase, number, and symbol.");
-      setLoading(false);
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match.");
-      setLoading(false);
-      return;
-    }
-
-    if (userInputCode.trim().toUpperCase() !== verificationCode.trim().toUpperCase()) {
-      toast.error("Verification code does not match.");
-      setLoading(false);
-      return;
-    }
-
     const payload = {
-      email,
-      phone,
-      username,
-      name,
-      role,
-      password,
-      password_confirmation: confirmPassword,
+      email: formData.email,
+      phone: formData.phone,
+      username: formData.username,
+      name: formData.name,
+      role: formData.role,
+      password: formData.password,
+      password_confirmation: formData.confirmPassword,
     };
 
     try {
-      const response = await api.post("/api/register", payload);
-
-  toast.success("Registered successfully!");
-
-  navigate("/login", {
-    state: {
-      toastMessage: "Account created successfully! Please log in.",
-    },
-  });
-
+      await api.post("/api/register", payload);
+      toast.success("Account created successfully! Please log in!");
+      navigate("/login", {
+        state: {
+          toastMessage: "Account created successfully! Please log in.",
+        },
+      });
     } catch (error) {
       if (error.response) {
         const { status, data } = error.response;
         if (status === 422 && data.errors) {
-          Object.values(data.errors).flat().forEach((msg) => toast.error(msg));
+          Object.values(data.errors).flat().forEach(msg => toast.error(msg));
         } else if (status === 409) {
           toast.error("Email or username already exists.");
         } else if (status === 404) {
@@ -128,8 +173,9 @@ function Register() {
       setLoading(false);
     }
   };
+
   return (
-    <div className="login-container register">
+    <div className="login-container">
       <ToastContainer position="top-right" autoClose={4000} hideProgressBar={false} />
 
       <div className="left-panel">
@@ -147,98 +193,202 @@ function Register() {
           </div>
 
           <div className="tabs">
-            <NavLink to="/login" className={({ isActive }) => `tab ${isActive ? "active" : ""}`}>Login</NavLink>
-            <NavLink to="/register" className={({ isActive }) => `tab ${isActive ? "active" : ""}`}>Register</NavLink>
+            <NavLink
+              to="/login"
+              className={({ isActive }) => `tab${isActive ? " active" : ""}`}
+              end
+            >
+              Login
+            </NavLink>
+            <NavLink
+              to="/register"
+              className={({ isActive }) => `tab${isActive ? " active" : ""}`}
+              end
+            >
+              Register
+            </NavLink>
           </div>
 
-          <form className="login-form" onSubmit={handleRegister}>
-            <p className="subtext">
-              Create your TalkTribe account and become a voice for your culture.
-            </p>
+          <form className="login-form" onSubmit={handleSubmit}>
 
-            <div className="form-grid">
-              <div className="form-column">
-                <label>Full Name</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter full name" required />
-
-                <label>Email Address</label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter email address" required />
-
-                <label>Phone</label>
-                <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Enter phone number" required />
-
-                <label>Username</label>
-                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="Enter username" required />
-              </div>
-
-              <div className="form-column">
-                <div className="password-field">
-                  <label>Password</label>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter password"
-                    required
-                  />
-                  {showPassword ? (
-                    <FaEyeSlash className="toggle-password-icon" onClick={() => setShowPassword(false)} />
-                  ) : (
-                    <FaEye className="toggle-password-icon" onClick={() => setShowPassword(true)} />
-                  )}
-                  {password && (
-                    <div className={`password-strength strength-${zxcvbn(password).score}`}>
-                      Strength: {["Very Weak", "Weak", "Fair", "Good", "Strong"][zxcvbn(password).score]}
-                    </div>
-                  )}
-                </div>
-
-                <div className="password-field">
-                  <label>Confirm Password</label>
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Confirm password"
-                    required
-                  />
-                  {showConfirmPassword ? (
-                    <FaEyeSlash className="toggle-password-icon" onClick={() => setShowConfirmPassword(false)} />
-                  ) : (
-                    <FaEye className="toggle-password-icon" onClick={() => setShowConfirmPassword(true)} />
-                  )}
-                </div>
-
-                <label>Role</label>
-                <select value={role} onChange={(e) => setRole(e.target.value)} required>
-                  <option value="learner">Learner</option>
-                  <option value="instructor">Instructor</option>
-                </select>
-
-                <label>Verification Code</label>
-                <div className="verification-code-container">
-                  <input
-                    type="text"
-                    placeholder="Enter the code shown"
-                    value={userInputCode}
-                    onChange={(e) => setUserInputCode(e.target.value.toUpperCase())}
-                    required
-                  />
-                  <div className="code-box" onClick={generateCode} title="Click to refresh code">
-                    {verificationCode}
-                  </div>
-                </div>
-              </div>
+            <div className="step-indicator">
+              {steps.map((s, i) => (
+                <span key={s} className={i === step ? "active-step" : ""}>
+                  {s}
+                </span>
+              ))}
             </div>
 
-            <p className="subtext">
+            {step === 0 && (
+              <div className="form-step">
+                <div className="form-column">
+                  
+                  <input 
+                    type="text" 
+                    id="name"
+                    name="name" 
+                    value={formData.name} 
+                    onChange={handleChange} 
+                    onBlur={handleBlur}
+                    placeholder="Enter full name" 
+                    className={`auth-input ${errors.name ? "auth-error" : ""}`}
+                  />
+                  {errors.name && <span className="auth-error-text">{errors.name}</span>}
+
+                  <input 
+                    type="email" 
+                    id="email"
+                    name="email" 
+                    value={formData.email} 
+                    onChange={handleChange} 
+                    onBlur={handleBlur}
+                    placeholder="Enter email address" 
+                    className={`auth-input ${errors.email ? "auth-error" : ""}`}
+                  />
+                  {errors.email && <span className="auth-error-text">{errors.email}</span>}
+
+                  <input 
+                    type="tel" 
+                    id="phone"
+                    name="phone" 
+                    value={formData.phone} 
+                    onChange={handleChange} 
+                    onBlur={handleBlur}
+                    placeholder="Enter phone number" 
+                    className={`auth-input ${errors.phone ? "auth-error" : ""}`}
+                  />
+                  {errors.phone && <span className="auth-error-text">{errors.phone}</span>}
+                </div>
+              </div>
+            )}
+
+            {step === 1 && (
+              <div className="form-step">
+                <div className="form-column">
+                  
+                  <input 
+                    type="text" 
+                    id="username"
+                    name="username" 
+                    value={formData.username} 
+                    onChange={handleChange} 
+                    onBlur={handleBlur}
+                    placeholder="Enter username" 
+                    className={`auth-input ${errors.username ? "auth-error" : ""}`}
+                  />
+                  {errors.username && <span className="auth-error-text">{errors.username}</span>}
+
+                  <div className="password-field">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder="Enter password"
+                      className={`auth-input ${errors.password ? "auth-error" : ""}`}
+                    />
+                    {showPassword ? (
+                      <FaEyeSlash className="toggle-password-icon" onClick={() => setShowPassword(false)} />
+                    ) : (
+                      <FaEye className="toggle-password-icon" onClick={() => setShowPassword(true)} />
+                    )}
+                    {formData.password && (
+                      <div className={`password-strength strength-${zxcvbn(formData.password).score}`}>
+                        Strength: {["Very Weak", "Weak", "Fair", "Good", "Strong"][zxcvbn(formData.password).score]}
+                      </div>
+                    )}
+                    {errors.password && <span className="auth-error-text">{errors.password}</span>}
+                  </div>
+
+                  <div className="password-field">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder="Confirm password"
+                      className={`auth-input ${errors.confirmPassword ? "auth-error" : ""}`}
+                    />
+                    {showConfirmPassword ? (
+                      <FaEyeSlash className="toggle-password-icon" onClick={() => setShowConfirmPassword(false)} />
+                    ) : (
+                      <FaEye className="toggle-password-icon" onClick={() => setShowConfirmPassword(true)} />
+                    )}
+                    {errors.confirmPassword && <span className="auth-error-text">{errors.confirmPassword}</span>}
+                  </div>
+
+                  <select 
+                    name="role" 
+                    value={formData.role} 
+                    onChange={handleChange}
+                    className="auth-input"
+                  >
+                    <option value="learner">Learner</option>
+                    <option value="instructor">Instructor</option>
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="form-step">
+                <div className="form-column">
+                  <div className="verification-code-container">
+                    <input
+                      type="text"
+                      id="userInputCode"
+                      name="userInputCode"
+                      placeholder="Enter the code shown"
+                      value={formData.userInputCode}
+                      onChange={(e) => setFormData({...formData, userInputCode: e.target.value.toUpperCase()})}
+                      onBlur={() => {
+                        if (!formData.userInputCode.trim()) {
+                          setErrors(prev => ({...prev, userInputCode: "Verification code is required"}));
+                        }
+                      }}
+                      className={`auth-input ${errors.userInputCode ? "auth-error" : ""}`}
+                    />
+                    <div className="code-box" onClick={generateCode} title="Click to refresh code">
+                      {formData.verificationCode}
+                    </div>
+                  </div>
+                  {errors.userInputCode && <span className="auth-error-text">{errors.userInputCode}</span>}
+                </div>
+                <p className="subtext">
               By clicking Register, you agree to our <a href="/terms" target="_blank">Terms</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.
             </p>
+              </div>
+            )}
 
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <button type="submit" className="login-btn" disabled={loading}>
-                {loading ? "Registering..." : "Register"}
-              </button>
+            
+
+            <div className="step-actions">
+              {step > 0 && (
+                <button type="button" onClick={prevStep} className="secondary-btn">
+                  Back
+                </button>
+              )}
+              {step < steps.length - 1 ? (
+                <button 
+                  type="button" 
+                  onClick={nextStep} 
+                  className="auth-button"
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  type="submit" 
+                  disabled={loading}
+                  className="auth-button"
+                >
+                  {loading ? "Registering..." : "Register"}
+                </button>
+              )}
             </div>
           </form>
         </div>

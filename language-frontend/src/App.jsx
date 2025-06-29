@@ -20,6 +20,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute'; 
+import FeaturesPage from './views/FeaturesPage';
 
 function App() {
   useEffect(() => {
@@ -37,6 +38,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomeLogin />} />
         <Route path="/about" element={<About />} />
+        <Route path="/features" element={<FeaturesPage />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />

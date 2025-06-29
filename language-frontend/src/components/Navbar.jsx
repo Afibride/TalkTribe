@@ -22,7 +22,7 @@ const Navbar = () => {
           <i className="fas fa-search"></i> {/* Font Awesome search icon */}
         </button>
         <button className={`hamburger-menu ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-          {isMenuOpen ? '✖' : '☰'} {/* Toggle between hamburger and X */}
+          {isMenuOpen ? 'X' : '☰'} {/* Toggle between hamburger and X */}
         </button>
       </div>
       <div className={`search-bar-container ${isSearchOpen ? 'open' : ''}`}>
@@ -35,6 +35,12 @@ const Navbar = () => {
             className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
             About Us
+          </NavLink>
+          <NavLink
+            to="/features"
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+          >
+            Features
           </NavLink>
           <NavLink
             to="/contact"

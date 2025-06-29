@@ -15,7 +15,7 @@ const NewNavbar = () => {
 
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const userName = user?.username || "User";
-  const profilePic = user?.profilePic || "/user.jpg"; // fallback
+  const profilePic = user?.profilePic || "/profile.png"; 
 
   const toggleMenu = () => {
     setIsMenuOpen(prev => !prev);
@@ -73,7 +73,7 @@ const NewNavbar = () => {
           <i className="fas fa-search"></i>
         </button>
         <button className={`hamburger-menu ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-          {isMenuOpen ? '✖' : '☰'}
+          {isMenuOpen ? 'X' : '☰'}
         </button>
       </div>
 

@@ -1,17 +1,22 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import '../../css/ContactAndAbout.css';
 
 function ContactCTA() {
     return (
-      <section className="contact-cta" data-aos="zoom-in">
+      <section className="about-cta">
         <h2>Join Our Language Movement</h2>
-        <p>
-          Want to help preserve indigenous languages? Join the TalkTribe community
-          of learners, educators, and culture lovers across Africa and beyond.
-        </p>
-        <button className="cta-button">Explore Courses</button>
+        <p>Whether you're a learner or a language advocate, we'd love to connect with you</p>
+        <div className="cta-buttons">
+          <Link to="/local-languages" className="btn btn-primary">
+            Explore Languages
+          </Link>
+          <Link to="/help" className="btn btn-outline">
+            Get Help
+          </Link>
+        </div>
       </section>
     );
-  }
-  
-  export default ContactCTA;
+}
+
+export default ContactCTA;
