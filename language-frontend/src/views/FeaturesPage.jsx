@@ -248,9 +248,7 @@ const FeaturesPage = () => {
               to="/register"
               className="btn btn-primary"
               onClick={() => {
-                if (!isLoggedIn) {
                   toast.info("Please register with us to get started!");
-                }
               }}
             >
               Join Now

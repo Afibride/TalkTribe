@@ -42,8 +42,9 @@ const NewNavbar = () => {
 
   return (
     <nav className="navbar">
-      <img src="/logo.png" alt="TalkTribe Logo" className="logo" />
-
+      <Link to={token ? "/home-after-login" : "/"} tabIndex={0}>
+        <img src="/logo.png" alt="TalkTribe Logo" className="logo" />
+      </Link>
       {/* Search Bar */}
       <div className={`search-bar-container ${isSearchOpen ? 'open' : ''}`}>
         <input type="text" className="search-bar" placeholder="Search ..." />
