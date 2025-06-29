@@ -1,48 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../../api/api'; // Make sure this points to your axios instance
 import '../../css/HomeLogin.css';
 
 const CoursesSection = () => {
-  const courses = [
-    {
-      title: "Lamnso Language and Culture",
-      duration: "6 Weeks",
-      level: "Intermediate",
-      instructor: "Fondzenyuy Nicolas",
-      image: "/blog.jpg",
-      description:
-        "Explore the rich culture and language of the Lamnso people. This course covers basic vocabulary, grammar, and cultural practices, providing a comprehensive introduction to the Lamnso language.",
-    },
-    {
-      title: "Oku Language Basics",
-      duration: "4 Weeks",
-      level: "Beginner",
-      instructor: "John Doe",
-      image: "/blog.jpg",
-      description:
-        "Learn the basics of the Oku language, including common phrases, grammar, and cultural insights.",
-    },
-    {
-      title: "Bamileke Dialect Mastery",
-      duration: "8 Weeks",
-      level: "Advanced",
-      instructor: "Marie Claire",
-      image: "/blog.jpg",
-      description:
-        "Master the Bamileke dialect with advanced lessons on vocabulary, grammar, and cultural nuances.",
-    },
-    {
-      title: "Fulani Language Essentials",
-      duration: "5 Weeks",
-      level: "Beginner",
-      instructor: "Ali Baba",
-      image: "/blog.jpg",
-      description:
-        "Get started with the Fulani language by learning essential phrases, grammar, and cultural practices.",
-    },
-  ];
-
+  const [courses, setCourses] = useState([]);
   const [expandedIndex, setExpandedIndex] = useState(null);
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await api.get('/api/courses?limit=12');
+        setCourses(response.data.data || response.data); // Adjust if your API wraps in 'data'
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+      }
+    };
+    fetchCourses();
+  }, []);
 
   const toggleDescription = (index) => {
     setExpandedIndex(expandedIndex === index ? null : index);

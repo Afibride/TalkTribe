@@ -189,6 +189,7 @@ overflow-x: hidden;
   justify-content: center;
   align-items: center;
   background-color: #f9f9f9;
+  margin-top: 100px;
 }
 
 .video-container {
@@ -732,5 +733,33 @@ a:hover {
     opacity: 1;
     transform: translateX(0);
   }
+}
+
+.video-thumbnails {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 12px;
+  padding: 10px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #702424 #f4f4f4;
+}
+
+.video-thumbnails::-webkit-scrollbar {
+  height: 8px;
+}
+
+.video-thumbnails::-webkit-scrollbar-thumb {
+  background: #702424;
+  border-radius: 4px;
+}
+
+.video-thumb {
+  flex: 0 0 auto;
+  border-radius: 6px;
+  transition: border 0.2s;
+}
+.video-thumb.active {
+  border: 2px solid #f15912ec;
 }
 

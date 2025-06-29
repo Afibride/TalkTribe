@@ -19,6 +19,7 @@ protected $fillable = [
     'clicks',
 ];
 
+protected $appends = ['image_url'];
 
     public function instructor()
     {
@@ -50,4 +51,11 @@ public function quizzes()
         return $this->belongsToMany(User::class, 'course_user')->withTimestamps();
     }
 
+    public function getImageUrlAttribute()
+{
+    if ($this->image) {
+        return url('storage/' . $this->image);
+    }
+    return null;
+}
 }

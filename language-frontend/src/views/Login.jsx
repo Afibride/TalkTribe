@@ -1,19 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, NavLink, useLocation, Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "../api/api";
-import "../css/LoginRegister.css";
+import { validateField } from "../utils/validation";
+import AuthLayout from "../components/AuthLayout";
+
 
 function Login() {
   const [loginInput, setLoginInput] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 🔁 Auto login if token + user exist
   useEffect(() => {
     const token =
       localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
@@ -28,18 +32,37 @@ function Login() {
     }
   }, [location.pathname, navigate]);
 
-  // ✅ Handle toast messages (e.g., after password reset)
   useEffect(() => {
     if (location.state?.toastMessage) {
       toast.success(location.state.toastMessage);
-      window.history.replaceState({}, document.title); // prevent repeated toasts on refresh
+      window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
-  const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const handleBlur = (fieldName, value) => {
+    const error = validateField(fieldName, value);
+    if (error) {
+      setErrors(prev => ({ ...prev, [fieldName]: error }));
+    } else if (errors[fieldName]) {
+      setErrors(prev => ({ ...prev, [fieldName]: null }));
+    }
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
+    const loginError = validateField("loginInput", loginInput);
+    const passwordError = validateField("password", password);
+
+    if (loginError || passwordError) {
+      setErrors({
+        loginInput: loginError,
+        password: passwordError
+      });
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await api.post("/api/login", {
@@ -53,7 +76,7 @@ function Login() {
       storage.setItem("authToken", token);
       storage.setItem("user", JSON.stringify(user));
 
-      console.log("Login success:", { token, user, is_new_user });
+      toast.success("Login successful! Welcome back.");
 
       navigate("/home-after-login", {
         state: {
@@ -62,25 +85,20 @@ function Login() {
         },
       });
     } catch (error) {
-      console.error("Login error:", error);
       const msg = error.response?.data?.message || "Login failed. Try again.";
       toast.error(msg);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
+       <div className="login-container">
       <div className="left-panel">
-        <img
-          src="/login.png"
-          alt="Talk Tribe teacher"
-          className="login-image"
-        />
+        <img src="/login.png" alt="Talk Tribe teacher" className="login-image" />
         <div className="welcome-text">
           <h1>Welcome!!!</h1>
-          <h2>
-            Your Language. Your Heritage. <br /> Your Voice.
-          </h2>
+          <h2>Your Language. Your Heritage. <br /> Your Voice.</h2>
         </div>
       </div>
 
@@ -104,59 +122,60 @@ function Login() {
               Register
             </NavLink>
           </div>
+      <form className="auth-form" onSubmit={handleLogin}>
+        <input
+          type="text"
+          value={loginInput}
+          onChange={(e) => setLoginInput(e.target.value)}
+          onBlur={() => handleBlur("loginInput", loginInput)}
+          placeholder="Email, Username or Phone"
+          className={`auth-input ${errors.loginInput ? "auth-error" : ""}`}
+          autoComplete="username"
+        />
+        {errors.loginInput && <span className="auth-error-text">{errors.loginInput}</span>}
 
-          <form className="login-form" onSubmit={handleLogin}>
-            <p className="subtext">
-              Reconnect with your roots. Learn your language. Celebrate your
-              tribe.
-            </p>
+        <div className="password-field">
+          <input
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            onBlur={() => handleBlur("password", password)}
+            placeholder="Password"
+            className={`auth-input ${errors.password ? "auth-error" : ""}`}
+            autoComplete="current-password"
+          />
+          {showPassword ? (
+            <FaEyeSlash className="toggle-password-icon" onClick={() => setShowPassword(false)} />
+          ) : (
+            <FaEye className="toggle-password-icon" onClick={() => setShowPassword(true)} />
+          )}
+        </div>
+        {errors.password && <span className="auth-error-text">{errors.password}</span>}
 
-            <label>Email, Username or Phone</label>
+        <div className="auth-options">
+          <div className="remember-me">
             <input
-              type="text"
-              value={loginInput}
-              onChange={(e) => setLoginInput(e.target.value)}
-              placeholder="Enter email, username or phone"
-              required
+              type="checkbox"
+              id="remember"
+              checked={rememberMe}
+              onChange={() => setRememberMe(!rememberMe)}
             />
+            <label htmlFor="remember">Remember me</label>
+          </div>
+          <Link to="/forgot-password" className="auth-link">Forgot Password?</Link>
+        </div>
 
-            <div className="password-field">
-              <label>Password</label>
-              <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter password"
-                required
-              />
-              <i
-                className={`fas ${
-                  showPassword ? "fa-eye-slash" : "fa-eye"
-                } toggle-password-icon`}
-                onClick={togglePasswordVisibility}
-              ></i>
-            </div>
-
-            <div className="options">
-              <div className="form-group remember-me">
-                <input
-                  type="checkbox"
-                  id="remember"
-                  checked={rememberMe}
-                  onChange={() => setRememberMe(!rememberMe)}
-                />
-                <label htmlFor="remember">Remember me</label>
-              </div>
-              <Link to="/forgot-password">Forgot Password?</Link>
-            </div>
-
-            <button type="submit" className="login-btn">
-              Login
-            </button>
-          </form>
+        <button 
+          type="submit" 
+          className="auth-button" 
+          disabled={isLoading}
+        >
+          {isLoading ? "Logging in..." : "Login"}
+        </button>
+      </form>
+    </div>
         </div>
       </div>
-    </div>
   );
 }
 

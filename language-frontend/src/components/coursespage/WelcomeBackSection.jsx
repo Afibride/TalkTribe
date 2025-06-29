@@ -31,7 +31,7 @@ const WelcomeBackSection = () => {
         ) : (
           progressData.map((progress) => (
             <div key={progress.course_id} className="lesson-card" data-aos="fade-up">
-              <img src={progress.course_image || '/blog.jpg'} alt={progress.course_title} />
+              <img src={progress.course_image_url || '/blog.jpg'} alt={progress.course_title} />
               <div className="lesson-details">
                 <h3>{progress.course_title}</h3>
                 <p>Last Lesson: {progress.last_lesson_title}</p>

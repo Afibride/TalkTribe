@@ -18,7 +18,7 @@ const LessonsGrid = ({ lessons, onLessonClick, courseTitle }) => {
             >
               <div className="course-image">
                 <img
-                  src={lesson.thumbnail ? `http://192.168.57.12:8000/storage/${lesson.thumbnail}` : '/blog.jpg'}
+                  src={lesson.thumbnail_url || '/blog.jpg'}
                   alt={lesson.title}
                   className="thumbnail"
                 />

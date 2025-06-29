@@ -1,0 +1,260 @@
+.features-page {
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.features-hero {
+  background: linear-gradient(135deg, #342058 0%, #4a2d8c 100%);
+  color: white;
+  text-align: center;
+  padding: 60px 20px;
+  border-radius: 0 0 20px 20px;
+  margin-bottom: 40px;
+}
+
+.features-hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.features-hero p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.features-overview {
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.overview-description {
+  max-width: 800px;
+  margin: 0 auto 30px;
+  color: #4a5568;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.features-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.feature-menu-item {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  transition: transform 0.3s;
+}
+
+.feature-menu-item:hover {
+  transform: translateY(-5px);
+}
+
+.menu-icon {
+  font-size: 24px;
+  margin-right: 15px;
+}
+
+.feature-menu-item h3 {
+  margin-bottom: 5px;
+  color: #2d3748;
+}
+
+.feature-menu-item p {
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.feature-detail {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  margin-bottom: 40px;
+}
+
+.feature-header {
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 40px;
+  margin-bottom: 15px;
+}
+
+.feature-header h2 {
+  margin-bottom: 10px;
+}
+
+.feature-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  padding: 30px;
+}
+
+.feature-image img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.feature-text {
+  color: #4a5568;
+  line-height: 1.6;
+}
+
+.feature-description {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+.feature-points {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.key-points, .benefits {
+  background: #f8f9fc;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.key-points h3, .benefits h3 {
+  color: #2d3748;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+}
+
+.key-points ul, .benefits ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.key-points li, .benefits li {
+  margin-bottom: 10px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.key-points li:before {
+  content: "•";
+  color: #4e73df;
+  position: absolute;
+  left: 0;
+}
+
+.benefits li:before {
+  content: "✓";
+  color: #1cc88a;
+  position: absolute;
+  left: 0;
+}
+
+.features-cta {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #f8f9fc;
+  margin: 40px 0;
+}
+
+.features-cta h2 {
+  margin-bottom: 15px;
+  color: #2d3748;
+}
+
+.features-cta p {
+  color: #4a5568;
+  max-width: 600px;
+  margin: 0 auto 30px;
+  font-size: 1.1rem;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background: #6f42c1;
+  color: white;
+  border: 2px solid #6f42c1;
+}
+
+.btn-primary:hover {
+  background: #4a2d8c;
+  border-color: #4a2d8c;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #6f42c1;
+  border: 2px solid #6f42c1;
+}
+
+.btn-outline:hover {
+  background: #6f42c1;
+  color: white;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .feature-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .feature-points {
+    grid-template-columns: 1fr;
+  }
+
+  .features-menu {
+    grid-template-columns: 1fr;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .features-hero h1 {
+    font-size: 2rem;
+  }
+
+  .features-hero p {
+    font-size: 1rem;
+  }
+
+  .feature-header {
+    padding: 20px;
+  }
+
+  .feature-content {
+    padding: 20px;
+  }
+}

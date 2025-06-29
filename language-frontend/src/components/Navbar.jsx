@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom'; // Add Link import
 import '../css/HomeLogin.css';
 
 const Navbar = () => {
@@ -16,13 +16,15 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <img src="/logo.png" alt="TalkTribe Logo" className="logo" />
+      <Link to="/" tabIndex={0}>
+        <img src="/logo.png" alt="TalkTribe Logo" className="logo" />
+      </Link>
       <div className="navbar-right">
         <button className="search-icon" onClick={toggleSearch}>
-          <i className="fas fa-search"></i> {/* Font Awesome search icon */}
+          <i className="fas fa-search"></i>
         </button>
         <button className={`hamburger-menu ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-          {isMenuOpen ? '✖' : '☰'} {/* Toggle between hamburger and X */}
+          {isMenuOpen ? 'X' : '☰'}
         </button>
       </div>
       <div className={`search-bar-container ${isSearchOpen ? 'open' : ''}`}>
@@ -35,6 +37,12 @@ const Navbar = () => {
             className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
           >
             About Us
+          </NavLink>
+          <NavLink
+            to="/features"
+            className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}
+          >
+            Features
           </NavLink>
           <NavLink
             to="/contact"

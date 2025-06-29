@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Storage;
 class CourseController extends Controller
 {
     // Get all courses (learners + instructors can access)
-    public function index()
+    public function index(Request $request)
     {
+        $limit = $request->query('limit', 12);
+        $courses = Course::latest()->take($limit)->get();
+        return response()->json($courses);
     }
 
     // Show a single course

@@ -3,8 +3,11 @@ import Slider from 'react-slick'; // Import React Slick
 import '../../css/HomeLogin.css';
 import 'slick-carousel/slick/slick.css'; // Slick CSS
 import 'slick-carousel/slick/slick-theme.css'; // Slick Theme CSS
+import { useNavigate } from 'react-router-dom';
 
 const BlogCTASection = () => {
+  const navigate = useNavigate();
+
   const images = [
     { src: '/blog1.jpg', alt: 'Cultural Dance' },
     { src: '/blog1.jpg', alt: 'Traditional Ceremony' },
@@ -57,7 +60,13 @@ const BlogCTASection = () => {
           Discover the beauty of your heritage through stories, traditions, and activities that connect you to your roots. 
           Learn how language and culture shape identity and community.
         </p>
-        <button className="blog-btn" data-aos="fade-up">Visit the Blog</button>
+        <button
+          className="blog-btn"
+          data-aos="fade-up"
+          onClick={() => navigate('/blog')}
+        >
+          Visit the Blog
+        </button>
       </div>
     </section>
   );
