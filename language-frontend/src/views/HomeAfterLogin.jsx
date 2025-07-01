@@ -16,59 +16,74 @@ const HomeAfterLogin = () => {
   const navigate = useNavigate();
   const [showBanner, setShowBanner] = useState(true);
   const [welcomeMessage, setWelcomeMessage] = useState("");
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const getStoredUser = () => {
-    try {
-      const savedUser = localStorage.getItem("user");
-      return savedUser ? JSON.parse(savedUser) : null;
-    } catch (err) {
-      console.error("❌ Failed to parse user from localStorage", err);
-      return null;
-    }
-  };
-
   useEffect(() => {
-    const passedUser = location.state?.user;
-    const localUser = getStoredUser();
+    const checkAuthAndInitialize = async () => {
+      try {
+        // Check for user in both location state and localStorage
+        const savedUser = localStorage.getItem("user");
+        const localUser = savedUser ? JSON.parse(savedUser) : null;
+        const passedUser = location.state?.user;
 
-    if (passedUser) {
-      setUser(passedUser);
-      localStorage.setItem("user", JSON.stringify(passedUser)); // Save for future
-    } else if (localUser) {
-      setUser(localUser);
-    } else {
-      navigate("/login"); // Redirect to login if no user is found
-    }
+        if (!localUser && !passedUser) {
+          // If no user found, redirect to login
+          toast.warn("Please login to continue");
+          navigate("/login", { replace: true });
+          return;
+        }
 
-    const isNewUser = location.state?.isNewUser;
+        // Use passed user if available, otherwise fall back to local user
+        const currentUser = passedUser || localUser;
+        setUser(currentUser);
 
-    if (isNewUser === true) {
-      setWelcomeMessage("🎉 Welcome to TalkTribe!");
-    } else if (isNewUser === false) {
-      setWelcomeMessage(`👋 Welcome back, ${localUser?.name || passedUser?.name || "User"}!`);
-    }
+        // Set welcome message based on whether user is new
+        const isNewUser = location.state?.isNewUser;
+        if (isNewUser === true) {
+          setWelcomeMessage(`🎉 Welcome to TalkTribe, ${currentUser?.name || "User"}!`);
+        } else if (isNewUser === false) {
+          setWelcomeMessage(`👋 Welcome back, ${currentUser?.name || "User"}!`);
+        } else {
+          // Default welcome if isNewUser isn't specified
+          setWelcomeMessage(`👋 Welcome, ${currentUser?.name || "User"}!`);
+        }
 
-    const timer = setTimeout(() => {
-      setShowBanner(false);
-    }, 5000);
+        // Auto-hide welcome banner after 5 seconds
+        const timer = setTimeout(() => {
+          setShowBanner(false);
+        }, 5000);
 
-    setIsLoading(false);
-    return () => clearTimeout(timer);
+        setIsLoading(false);
+        
+        return () => clearTimeout(timer);
+      } catch (err) {
+        console.error("Initialization error:", err);
+        toast.error("Failed to load user data");
+        navigate("/login", { replace: true });
+      }
+    };
+
+    checkAuthAndInitialize();
   }, [location.state, navigate]);
 
-  if (isLoading || !user || Object.keys(user).length === 0) {
-    return <div className="loading-centered">Loading...</div>;
+  // Show loading screen while checking auth and initializing
+  if (isLoading || !user) {
+    return (
+      <div className="loading-centered">
+        <div className="loading-spinner"></div>
+        <p>Loading your dashboard...</p>
+      </div>
+    );
   }
 
   return (
     <div className="homepage">
-      <Header welcomeMessage={welcomeMessage} showBanner={showBanner} />
+      <Header welcomeMessage={welcomeMessage} showBanner={showBanner} user={user} />
       <SuccessStats />
       <AboutSection />
       <BlogCTA />
-      <CoursesSection />
+      <CoursesSection user={user} />
       <Testimonials />
       <NewsSection />
       <Footer />

@@ -72,9 +72,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/quiz/submit', [QuizSubmissionController::class, 'submit']);
-    Route::get('/user-course-progress', [LessonProgressController::class, 'userCourseProgress']);
     Route::get('/lesson-progress/{lesson}', [LessonProgressController::class, 'show']);
     Route::post('/lesson-progress', [LessonProgressController::class, 'update']);
+        
+    
+    Route::prefix('progress')->group(function () {
+        Route::get('/user-courses', [LessonProgressController::class, 'userCourseProgress']);
+        Route::post('/start-course/{courseId}', [LessonProgressController::class, 'startCourse']);
+        Route::post('/update-lesson', [LessonProgressController::class, 'update']);
+        Route::get('/course/{courseId}', [LessonProgressController::class, 'getCourseProgress']);
+    });
 });
 
 Route::get('/stats', [StatsController::class, 'index']);

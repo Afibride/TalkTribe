@@ -9,55 +9,129 @@ use Illuminate\Http\Request;
 
 class LessonProgressController extends Controller
 {
-    public function update(Request $request)
-    {
-        $request->validate([
-            'lesson_id' => 'required|exists:lessons,id',
-            'progress_percent' => 'required|integer|min:0|max:100',
-        ]);
+public function update(Request $request)
+{
+    $request->validate([
+        'lesson_id' => 'required|exists:lessons,id',
+        'is_completed' => 'required|boolean',
+    ]);
+
+    try {
+        $userId = auth()->id();
+        $lesson = Lesson::with('course')->findOrFail($request->lesson_id);
+
+        \Log::info("Updating progress for user {$userId} on lesson {$lesson->id}");
 
         $progress = LessonProgress::updateOrCreate(
-            ['user_id' => auth()->id(), 'lesson_id' => $request->lesson_id],
-            [
-                'progress_percent' => $request->progress_percent,
-                'completed' => $request->progress_percent == 100,
-            ]
+            ['user_id' => $userId, 'lesson_id' => $request->lesson_id],
+            ['completed' => $request->is_completed]
         );
 
-        return response()->json(['message' => 'Lesson progress updated', 'data' => $progress]);
+        $courseProgress = $this->calculateCourseProgress($userId, $lesson->course_id);
+
+        \Log::info("Course progress updated", [
+            'user_id' => $userId,
+            'course_id' => $lesson->course_id,
+            'progress' => $courseProgress
+        ]);
+
+        return response()->json([
+            'message' => 'Lesson progress updated',
+            'course_progress' => $courseProgress
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error("Progress update failed: " . $e->getMessage());
+        return response()->json(['message' => 'Update failed'], 500);
+    }
+}
+
+public function userCourseProgress()
+{
+    $userId = auth()->id();
+    
+    $courses = Course::whereHas('lessons.progress', function($query) use ($userId) {
+        $query->where('user_id', $userId);
+    })
+    ->with(['lessons' => function($query) use ($userId) {
+        $query->with(['progress' => function($query) use ($userId) {
+            $query->where('user_id', $userId);
+        }]);
+    }])
+    ->get();
+
+    $progressData = $courses->map(function($course) use ($userId) {
+        $totalLessons = $course->lessons->count();
+        $completedLessons = $course->lessons->filter(function($lesson) {
+            return $lesson->progress && $lesson->progress->completed;
+        })->count();
+        
+        $progressPercent = $totalLessons > 0 
+            ? round(($completedLessons / $totalLessons) * 100) 
+            : 0;
+
+        $lastLesson = $course->lessons->sortByDesc(function($lesson) {
+            return $lesson->progress ? $lesson->progress->updated_at : null;
+        })->first();
+
+        return [
+            'course_id' => $course->id,
+            'course_title' => $course->title,
+            'course_image' => $course->image_url,
+            'total_lessons' => $totalLessons,
+            'completed_lessons' => $completedLessons,
+            'progress_percent' => $progressPercent,
+            'last_lesson_id' => $lastLesson->id,
+            'last_lesson_title' => $lastLesson->title,
+            'is_last_lesson_completed' => $lastLesson->progress ? $lastLesson->progress->completed : false,
+        ];
+    });
+
+    return response()->json($progressData);
+}
+
+public function startCourse($courseId)
+{
+    $course = Course::with('lessons')->findOrFail($courseId);
+    
+    if ($course->lessons->isEmpty()) {
+        return response()->json(['message' => 'Course has no lessons'], 400);
     }
 
-    public function userCourseProgress()
+    $firstLesson = $course->lessons->first();
+    
+    $progress = LessonProgress::updateOrCreate(
+        ['user_id' => auth()->id(), 'lesson_id' => $firstLesson->id],
+        ['completed' => true]
+    );
+
+    $courseProgress = $this->calculateCourseProgress(auth()->id(), $courseId);
+
+    return response()->json([
+        'message' => 'Course started successfully',
+        'course_progress' => $courseProgress
+    ]);
+}
+
+    protected function calculateCourseProgress($userId, $courseId)
     {
-        $userId = auth()->id();
+        $totalLessons = Lesson::where('course_id', $courseId)->count();
+        $completedLessons = LessonProgress::where('user_id', $userId)
+            ->whereHas('lesson', function($query) use ($courseId) {
+                $query->where('course_id', $courseId);
+            })
+            ->where('completed', true)
+            ->count();
 
-        // Get all lesson progresses for the user, with lesson and course info
-        $progresses = LessonProgress::with(['lesson.course'])
-            ->where('user_id', $userId)
-            ->orderByDesc('updated_at')
-            ->get();
-
-        // Group by course
-        $courses = [];
-        foreach ($progresses as $progress) {
-            $courseId = $progress->lesson->course->id;
-            if (!isset($courses[$courseId])) {
-                $courses[$courseId] = [
-                    'course_id' => $courseId,
-                    'course_title' => $progress->lesson->course->title,
-                    'course_image' => $progress->lesson->course->image,
-                    'last_lesson_title' => $progress->lesson->title,
-                    'progress_percent' => $progress->progress_percent,
-                    'lesson_id' => $progress->lesson->id,
-                ];
-            }
-        }
-
-        // Return as a list
-        return response()->json(array_values($courses));
+        return [
+            'course_id' => $courseId,
+            'total_lessons' => $totalLessons,
+            'completed_lessons' => $completedLessons,
+            'progress_percent' => $totalLessons > 0 ? round(($completedLessons / $totalLessons) * 100) : 0,
+        ];
     }
 
-    public function show($lessonId)
+        public function show($lessonId)
     {
         $progress = LessonProgress::where('user_id', auth()->id())
             ->where('lesson_id', $lessonId)
@@ -69,5 +143,12 @@ class LessonProgressController extends Controller
 
         return response()->json($progress);
     }
-}
 
+
+public function getCourseProgress($courseId)
+{
+    return response()->json(
+        $this->calculateCourseProgress(auth()->id(), $courseId)
+    );
+}
+}

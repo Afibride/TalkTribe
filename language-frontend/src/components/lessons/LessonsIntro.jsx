@@ -1,19 +1,30 @@
 import React from 'react';
+import { toast } from 'react-toastify';
 import api from '../../api/api';
 import '../../css/course_open.css';
 
 const LessonsIntro = ({ course, onStartLearning }) => {
   const handleStartLearning = async () => {
     try {
-      const currentLessonId = course.lessons[0]?.id; // Get the current lesson ID
-      await api.post('/api/lesson-progress', {
-        lesson_id: currentLessonId,
-        progress_percent: 100,
-      });
-      alert('Progress started!');
+      if (!course?.lessons?.length) {
+        toast.warning('This course has no lessons yet!');
+        return;
+      }
+
+      const response = await api.post(`/api/progress/start-course/${course.id}`);
+      
+      toast.success(
+        `Course started! ${response.data.course_progress.progress_percent}% completed`,
+        { autoClose: 3000 }
+      );
+
       if (onStartLearning) onStartLearning();
     } catch (error) {
-      console.error('Error starting course progress:', error);
+      toast.error(
+        error.response?.data?.message || 'Failed to start course',
+        { autoClose: 5000 }
+      );
+      console.error('Error starting course:', error);
     }
   };
 
@@ -24,13 +35,17 @@ const LessonsIntro = ({ course, onStartLearning }) => {
         <strong>{course?.description || 'Course Description Not Available'}</strong>
       </p>
       <ul className="intro-highlights">
-        <li>✔ Comprehensive Language Lessons</li>
+        <li>✔ {course?.total_lessons || 0} Comprehensive Lessons</li>
         <li>✔ Cultural Insights and Traditions</li>
         <li>✔ Interactive Quizzes and Activities</li>
         <li>✔ Certificate of Completion</li>
       </ul>
-      <button className="start-learning-btn" onClick={handleStartLearning}>
-        Start Learning Now
+      <button 
+        className="start-learning-btn" 
+        onClick={handleStartLearning}
+        disabled={!course?.lessons?.length}
+      >
+        {course?.lessons?.length ? 'Start Learning Now' : 'Coming Soon'}
       </button>
     </section>
   );

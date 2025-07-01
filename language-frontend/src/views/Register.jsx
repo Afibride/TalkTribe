@@ -3,7 +3,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import zxcvbn from "zxcvbn";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "../api/api";
 import { validateField } from "../utils/validation";
 import "../css/LoginRegister.css";
@@ -21,7 +21,7 @@ function Register() {
     password: "",
     confirmPassword: "",
     verificationCode: "",
-    userInputCode: ""
+    userInputCode: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -41,20 +41,20 @@ function Register() {
 
   const generateCode = () => {
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-    setFormData(prev => ({ ...prev, verificationCode: code }));
+    setFormData((prev) => ({ ...prev, verificationCode: code }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
 
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: null
+        [name]: null,
       }));
     }
   };
@@ -63,7 +63,7 @@ function Register() {
     const { name, value } = e.target;
     const error = validateField(name, value, formData);
     if (error) {
-      setErrors(prev => ({ ...prev, [name]: error }));
+      setErrors((prev) => ({ ...prev, [name]: error }));
     }
   };
 
@@ -73,7 +73,7 @@ function Register() {
 
     switch (step) {
       case 0:
-        ["name", "email", "phone"].forEach(field => {
+        ["name", "email", "phone"].forEach((field) => {
           const error = validateField(field, formData[field], formData);
           if (error) {
             newErrors[field] = error;
@@ -82,7 +82,7 @@ function Register() {
         });
         break;
       case 1:
-        ["username", "password", "confirmPassword"].forEach(field => {
+        ["username", "password", "confirmPassword"].forEach((field) => {
           const error = validateField(field, formData[field], formData);
           if (error) {
             newErrors[field] = error;
@@ -94,7 +94,10 @@ function Register() {
         if (!formData.userInputCode.trim()) {
           newErrors.userInputCode = "Verification code is required";
           isValid = false;
-        } else if (formData.userInputCode.trim().toUpperCase() !== formData.verificationCode.trim().toUpperCase()) {
+        } else if (
+          formData.userInputCode.trim().toUpperCase() !==
+          formData.verificationCode.trim().toUpperCase()
+        ) {
           newErrors.userInputCode = "Verification code does not match";
           isValid = false;
         }
@@ -109,11 +112,11 @@ function Register() {
 
   const nextStep = () => {
     if (!validateStep(step)) {
-      const firstErrorField = Object.keys(errors).find(key => errors[key]);
+      const firstErrorField = Object.keys(errors).find((key) => errors[key]);
       if (firstErrorField) {
         document.getElementById(firstErrorField)?.scrollIntoView({
           behavior: "smooth",
-          block: "center"
+          block: "center",
         });
       }
       return;
@@ -125,9 +128,9 @@ function Register() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateStep(step)) return;
-    
+
     setLoading(true);
 
     const payload = {
@@ -152,7 +155,9 @@ function Register() {
       if (error.response) {
         const { status, data } = error.response;
         if (status === 422 && data.errors) {
-          Object.values(data.errors).flat().forEach(msg => toast.error(msg));
+          Object.values(data.errors)
+            .flat()
+            .forEach((msg) => toast.error(msg));
         } else if (status === 409) {
           toast.error("Email or username already exists.");
         } else if (status === 404) {
@@ -176,41 +181,38 @@ function Register() {
 
   return (
     <div className="login-container">
-      <ToastContainer position="top-right" autoClose={4000} hideProgressBar={false} />
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+      />
 
       <div className="left-panel">
         <img src="/login.png" alt="Talk Tribe" className="login-image" />
         <div className="welcome-text">
           <h1>Welcome!!!</h1>
-          <h2>Your Language. Your Heritage. <br /> Your Voice.</h2>
+          <h2>
+            Your Language. Your Heritage. <br /> Your Voice.
+          </h2>
         </div>
       </div>
 
       <div className="right-panel">
+        {/* Back to Login Arrow */}
+        <button
+          className="back-arrow-btn"
+          onClick={() => navigate("/login")}
+          aria-label="Back to Login"
+          type="button"
+        >
+          <FaArrowLeft />
+        </button>
         <div className="content">
           <div className="logo">
             <img src="/logo.png" alt="Talk Tribe logo" className="logo-icon" />
           </div>
 
-          <div className="tabs">
-            <NavLink
-              to="/login"
-              className={({ isActive }) => `tab${isActive ? " active" : ""}`}
-              end
-            >
-              Login
-            </NavLink>
-            <NavLink
-              to="/register"
-              className={({ isActive }) => `tab${isActive ? " active" : ""}`}
-              end
-            >
-              Register
-            </NavLink>
-          </div>
-
           <form className="login-form" onSubmit={handleSubmit}>
-
             <div className="step-indicator">
               {steps.map((s, i) => (
                 <span key={s} className={i === step ? "active-step" : ""}>
@@ -222,42 +224,47 @@ function Register() {
             {step === 0 && (
               <div className="form-step">
                 <div className="form-column">
-                  
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     id="name"
-                    name="name" 
-                    value={formData.name} 
-                    onChange={handleChange} 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     onBlur={handleBlur}
-                    placeholder="Enter full name" 
+                    placeholder="Enter full name"
                     className={`auth-input ${errors.name ? "auth-error" : ""}`}
                   />
-                  {errors.name && <span className="auth-error-text">{errors.name}</span>}
+                  {errors.name && (
+                    <span className="auth-error-text">{errors.name}</span>
+                  )}
 
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     id="email"
-                    name="email" 
-                    value={formData.email} 
-                    onChange={handleChange} 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
                     onBlur={handleBlur}
-                    placeholder="Enter email address" 
+                    placeholder="Enter email address"
                     className={`auth-input ${errors.email ? "auth-error" : ""}`}
                   />
-                  {errors.email && <span className="auth-error-text">{errors.email}</span>}
+                  {errors.email && (
+                    <span className="auth-error-text">{errors.email}</span>
+                  )}
 
-                  <input 
-                    type="tel" 
+                  <input
+                    type="tel"
                     id="phone"
-                    name="phone" 
-                    value={formData.phone} 
-                    onChange={handleChange} 
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
                     onBlur={handleBlur}
-                    placeholder="Enter phone number" 
+                    placeholder="Enter phone number"
                     className={`auth-input ${errors.phone ? "auth-error" : ""}`}
                   />
-                  {errors.phone && <span className="auth-error-text">{errors.phone}</span>}
+                  {errors.phone && (
+                    <span className="auth-error-text">{errors.phone}</span>
+                  )}
                 </div>
               </div>
             )}
@@ -265,18 +272,21 @@ function Register() {
             {step === 1 && (
               <div className="form-step">
                 <div className="form-column">
-                  
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     id="username"
-                    name="username" 
-                    value={formData.username} 
-                    onChange={handleChange} 
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
                     onBlur={handleBlur}
-                    placeholder="Enter username" 
-                    className={`auth-input ${errors.username ? "auth-error" : ""}`}
+                    placeholder="Enter username"
+                    className={`auth-input ${
+                      errors.username ? "auth-error" : ""
+                    }`}
                   />
-                  {errors.username && <span className="auth-error-text">{errors.username}</span>}
+                  {errors.username && (
+                    <span className="auth-error-text">{errors.username}</span>
+                  )}
 
                   <div className="password-field">
                     <input
@@ -287,19 +297,38 @@ function Register() {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       placeholder="Enter password"
-                      className={`auth-input ${errors.password ? "auth-error" : ""}`}
+                      className={`auth-input ${
+                        errors.password ? "auth-error" : ""
+                      }`}
                     />
                     {showPassword ? (
-                      <FaEyeSlash className="toggle-password-icon" onClick={() => setShowPassword(false)} />
+                      <FaEyeSlash
+                        className="toggle-password-icon"
+                        onClick={() => setShowPassword(false)}
+                      />
                     ) : (
-                      <FaEye className="toggle-password-icon" onClick={() => setShowPassword(true)} />
+                      <FaEye
+                        className="toggle-password-icon"
+                        onClick={() => setShowPassword(true)}
+                      />
                     )}
                     {formData.password && (
-                      <div className={`password-strength strength-${zxcvbn(formData.password).score}`}>
-                        Strength: {["Very Weak", "Weak", "Fair", "Good", "Strong"][zxcvbn(formData.password).score]}
+                      <div
+                        className={`password-strength strength-${
+                          zxcvbn(formData.password).score
+                        }`}
+                      >
+                        Strength:{" "}
+                        {
+                          ["Very Weak", "Weak", "Fair", "Good", "Strong"][
+                            zxcvbn(formData.password).score
+                          ]
+                        }
                       </div>
                     )}
-                    {errors.password && <span className="auth-error-text">{errors.password}</span>}
+                    {errors.password && (
+                      <span className="auth-error-text">{errors.password}</span>
+                    )}
                   </div>
 
                   <div className="password-field">
@@ -311,19 +340,31 @@ function Register() {
                       onChange={handleChange}
                       onBlur={handleBlur}
                       placeholder="Confirm password"
-                      className={`auth-input ${errors.confirmPassword ? "auth-error" : ""}`}
+                      className={`auth-input ${
+                        errors.confirmPassword ? "auth-error" : ""
+                      }`}
                     />
                     {showConfirmPassword ? (
-                      <FaEyeSlash className="toggle-password-icon" onClick={() => setShowConfirmPassword(false)} />
+                      <FaEyeSlash
+                        className="toggle-password-icon"
+                        onClick={() => setShowConfirmPassword(false)}
+                      />
                     ) : (
-                      <FaEye className="toggle-password-icon" onClick={() => setShowConfirmPassword(true)} />
+                      <FaEye
+                        className="toggle-password-icon"
+                        onClick={() => setShowConfirmPassword(true)}
+                      />
                     )}
-                    {errors.confirmPassword && <span className="auth-error-text">{errors.confirmPassword}</span>}
+                    {errors.confirmPassword && (
+                      <span className="auth-error-text">
+                        {errors.confirmPassword}
+                      </span>
+                    )}
                   </div>
 
-                  <select 
-                    name="role" 
-                    value={formData.role} 
+                  <select
+                    name="role"
+                    value={formData.role}
                     onChange={handleChange}
                     className="auth-input"
                   >
@@ -344,45 +385,73 @@ function Register() {
                       name="userInputCode"
                       placeholder="Enter the code shown"
                       value={formData.userInputCode}
-                      onChange={(e) => setFormData({...formData, userInputCode: e.target.value.toUpperCase()})}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          userInputCode: e.target.value.toUpperCase(),
+                        })
+                      }
                       onBlur={() => {
                         if (!formData.userInputCode.trim()) {
-                          setErrors(prev => ({...prev, userInputCode: "Verification code is required"}));
+                          setErrors((prev) => ({
+                            ...prev,
+                            userInputCode: "Verification code is required",
+                          }));
                         }
                       }}
-                      className={`auth-input ${errors.userInputCode ? "auth-error" : ""}`}
+                      className={`auth-input ${
+                        errors.userInputCode ? "auth-error" : ""
+                      }`}
                     />
-                    <div className="code-box" onClick={generateCode} title="Click to refresh code">
+                    <div
+                      className="code-box"
+                      onClick={generateCode}
+                      title="Click to refresh code"
+                    >
                       {formData.verificationCode}
                     </div>
                   </div>
-                  {errors.userInputCode && <span className="auth-error-text">{errors.userInputCode}</span>}
+                  {errors.userInputCode && (
+                    <span className="auth-error-text">
+                      {errors.userInputCode}
+                    </span>
+                  )}
                 </div>
                 <p className="subtext">
-              By clicking Register, you agree to our <a href="/terms" target="_blank">Terms</a> and <a href="/privacy" target="_blank">Privacy Policy</a>.
-            </p>
+                  By clicking Register, you agree to our{" "}
+                  <a href="/terms" target="_blank">
+                    Terms
+                  </a>{" "}
+                  and{" "}
+                  <a href="/privacy" target="_blank">
+                    Privacy Policy
+                  </a>
+                  .
+                </p>
               </div>
             )}
 
-            
-
             <div className="step-actions">
               {step > 0 && (
-                <button type="button" onClick={prevStep} className="secondary-btn">
+                <button
+                  type="button"
+                  onClick={prevStep}
+                  className="secondary-btn"
+                >
                   Back
                 </button>
               )}
               {step < steps.length - 1 ? (
-                <button 
-                  type="button" 
-                  onClick={nextStep} 
+                <button
+                  type="button"
+                  onClick={nextStep}
                   className="auth-button"
                 >
                   Next
                 </button>
               ) : (
                 <button
-                  type="submit" 
+                  type="submit"
                   disabled={loading}
                   className="auth-button"
                 >
