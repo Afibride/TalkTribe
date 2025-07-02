@@ -506,6 +506,25 @@ h2 {
   margin: 5px 0;
 }
 
+.browse-btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  background-color: #AB2526;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.browse-btn:hover {
+  text-decoration: none ;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+}
+
 /* Mobile View */
 @media (max-width: 768px) {
   section {

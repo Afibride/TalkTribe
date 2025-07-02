@@ -51,16 +51,16 @@ const Navbar = () => {
             Contact Us
           </NavLink>
         </div>
-        <div className="nav-buttons">
+        <div className="auth-buttons">
           <NavLink
             to="/login"
-            className={({ isActive }) => (isActive ? 'login-btn active' : 'login-btn')}
+            className="btn btn-outline"
           >
             Login
           </NavLink>
           <NavLink
             to="/register"
-            className={({ isActive }) => (isActive ? 'signup-btn active' : 'signup-btn')}
+            className="btn btn-primary"
           >
             Sign Up
           </NavLink>

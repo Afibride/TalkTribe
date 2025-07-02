@@ -1,23 +1,46 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import api from '../../api/api';
 import '../../css/Courses.css';
 
 const WelcomeBackSection = () => {
   const [progressData, setProgressData] = useState([]);
-  const [refreshKey, setRefreshKey] = useState(0); // <-- add refreshKey state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await api.get('/api/user-course-progress');
+        setLoading(true);
+        const response = await api.get('/api/progress/user-courses');
         setProgressData(response.data);
       } catch (error) {
+        toast.error('Failed to load progress data');
         console.error('Error fetching user progress:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchProgress();
-  }, [refreshKey]); // <-- add refreshKey as dependency
+  }, []);
+
+  const handleContinueLearning = async (courseId, lessonId) => {
+    try {
+      // You can track this action if needed
+      toast.info('Redirecting to your lesson...');
+    } catch (error) {
+      toast.error('Failed to navigate to lesson');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="loading-spinner">
+        <div className="spinner"></div>
+        <p>Loading your progress...</p>
+      </div>
+    );
+  }
 
   return (
     <section className="welcome-back">
@@ -25,23 +48,52 @@ const WelcomeBackSection = () => {
         <h2>Welcome back, ready for your next lesson?</h2>
         <a href="/history" className="view-history">View History</a>
       </div>
-      <div className="lessons">
+      
+      <div className="lessons-grid">
         {progressData.length === 0 ? (
-          <p>No progress yet. Start learning a course!</p>
+          <div className="empty-state">
+            <p>You haven't started any courses yet.</p>
+            <a href="/courses" className="browse-btn">Browse Courses</a>
+          </div>
         ) : (
-          progressData.map((progress) => (
-            <div key={progress.course_id} className="lesson-card" data-aos="fade-up">
-              <img src={progress.course_image_url || '/blog.jpg'} alt={progress.course_title} />
-              <div className="lesson-details">
-                <h3>{progress.course_title}</h3>
-                <p>Last Lesson: {progress.last_lesson_title}</p>
-                <p>Progress: {progress.progress_percent}%</p>
-                <a
-                  href={`/courses/${progress.course_id}/lessons?lesson=${progress.lesson_id}`}
-                  className="continue-btn"
+          progressData.map((course) => (
+            <div key={course.course_id} className="course-card">
+              <img 
+                src={course.course_image || '/default-course.jpg'} 
+                alt={course.course_title}
+                className="course-thumbnail"
+                onError={(e) => {
+                  e.target.onerror = null; 
+                  e.target.src = '/default-course.jpg';
+                }}
+              />
+              <div className="course-details">
+                <h3>{course.course_title}</h3>
+                
+                <div className="progress-container">
+                  <div className="progress-info">
+                    <span>Progress: {course.progress_percent}%</span>
+                    <span>{course.completed_lessons}/{course.total_lessons} lessons</span>
+                  </div>
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill" 
+                      style={{ width: `${course.progress_percent}%` }}
+                    ></div>
+                  </div>
+                </div>
+
+                <p className="last-activity">
+                  {course.is_last_lesson_completed ? 'Completed: ' : 'Last Viewed: '}
+                  {course.last_lesson_title}
+                </p>
+
+                <button
+                  onClick={() => handleContinueLearning(course.course_id, course.last_lesson_id)}
+                  className={`action-btn ${course.progress_percent === 100 ? 'completed' : ''}`}
                 >
-                  Continue Learning
-                </a>
+                  {course.progress_percent === 100 ? 'Review Course' : 'Continue Learning'}
+                </button>
               </div>
             </div>
           ))

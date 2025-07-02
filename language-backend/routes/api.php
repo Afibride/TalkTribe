@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\API\PasswordResetController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -30,7 +31,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
-
+Route::get('/home-courses', [CourseController::class, 'index']);
+    
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -45,8 +47,7 @@ Route::middleware('auth:sanctum')->group(function () {              // All cours
     Route::get('/courses-by-category', [CourseController::class, 'getCourses']);          // Individual course
     Route::get('/most-clicked-courses', [CourseController::class, 'mostClickedCourses']);
     Route::get('/random-courses', [CourseController::class, 'randomCourses']);
-    Route::get('/courses?limit=12', [CourseController::class, 'index']);
-
+  Route::get('/categories', [CategoryController::class, 'index']);
     
     Route::middleware('is_instructor')->group(function () {
         Route::post('/courses', [CourseController::class, 'store']);         // Add new course
@@ -71,10 +72,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/quiz/submit', [QuizSubmissionController::class, 'submit']);
-    Route::get('/user-course-progress', [LessonProgressController::class, 'userCourseProgress']);
-    Route::get('/lesson-progress/{lesson}', [LessonProgressController::class, 'show']);
-    Route::post('/lesson-progress', [LessonProgressController::class, 'update']);
+    Route::prefix('progress')->group(function () {
+        // Lesson progress
+        Route::get('/lesson/{lessonId}', [LessonProgressController::class, 'getLessonProgress']);
+        Route::post('/lesson', [LessonProgressController::class, 'updateLessonProgress']);
+        
+        // Course progress
+        Route::get('/user-courses', [LessonProgressController::class, 'getUserCourseProgress']);
+        Route::post('/start-course/{courseId}', [LessonProgressController::class, 'startCourse']);
+        Route::get('/course/{courseId}', [LessonProgressController::class, 'getCourseProgress']);
+         Route::get('/next-lesson/{courseId}', [LessonProgressController::class, 'getNextLesson'])->name('progress.next-lesson');
+    });
 });
 
 Route::get('/stats', [StatsController::class, 'index']);

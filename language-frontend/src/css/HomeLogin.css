@@ -113,37 +113,43 @@ overflow-x: hidden;
   text-decoration: underline;
 }
 
-.nav-buttons {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem; /* Add spacing between buttons */
+.auth-buttons {
+  margin-left: 2rem !important;
+  display: flex !important;
+  gap: 1rem !important;
 }
 
-.nav-buttons .login-btn,
-.nav-buttons .signup-btn {
-  background: none; /* Remove background */
-  border: 1px solid #702424; /* Add border */
-  color: #702424;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
-  text-decoration: none;
-  margin-right: 20px;
-  padding: 0.5rem 1rem; /* Add padding for better spacing */
-  border-radius: 20px; /* Add rounded corners */
-  transition: background-color 0.3s ease, color 0.3s ease;
-  text-align: center; /* Center align text */
+.btn {
+  padding: 0.5rem 1rem !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+  
 }
 
-.nav-buttons .signup-btn {
-  margin-right: 50px;
-  text-wrap: nowrap; /* Prevent text wrapping */
+.btn-outline {
+  border: 1px solid #702424 !important;
+  color: #702424 !important;
 }
 
-.nav-buttons .login-btn:hover,
-.nav-buttons .signup-btn:hover {
-  background-color: #702424; /* Add background on hover */
-  color: #fff; /* Change text color on hover */
+.btn-outline:hover {
+  background-color: #702424 !important;
+  text-decoration: none !important;
+  color: white !important;
+}
+
+.btn-primary {
+  background-color: #702424 !important;
+  color: white !important;
+  border: 1px solid #702424 !important;
+}
+
+.btn-primary:hover {
+  background-color: #fff !important;
+  border-color: #702424 !important;
+  color: #702424 !important;
+  text-decoration: none !important;
 }
 
 
@@ -1175,20 +1181,13 @@ button:active, .btn:active {
     gap: 1rem;
   }
 
-  .nav-buttons {
-    flex-direction: column;
-    gap: 0; 
-    margin-left: 0;
+  .auth-buttons {
+    margin: 1rem 0 0 !important;
+    width: 100% !important;
+    flex-direction: column !important;
+    gap: 1rem !important;
   }
 
-  .nav-buttons .login-btn,
-  .nav-buttons .signup-btn{
-    font-size: 1rem;
-    border: none;
-    color: #702424;
-    margin: 0; 
-    text-align: left;
-  }
 
   /* Hero Section */
   .hero {

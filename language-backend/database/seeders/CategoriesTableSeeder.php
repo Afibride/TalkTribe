@@ -9,9 +9,49 @@ class CategoriesTableSeeder extends Seeder
 {
     public function run()
     {
-        DB::table('categories')->insert([
-            ['name' => 'Local Language', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'Culture', 'created_at' => now(), 'updated_at' => now()],
-        ]);
+     DB::table('categories')->truncate();
+
+DB::table('categories')->insert([
+    [
+        'name' => 'Dialects Studies',
+        'icon' => 'https://img.icons8.com/color/96/translation.png',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ],
+    [
+        'name' => 'Culture & Arts Studies',
+        'icon' => '	https://img.icons8.com/color/96/festival.png',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ],
+
+   
+    [
+        'name' => 'Festivals & Celebrations',
+        'icon' => 'https://img.icons8.com/color/96/festival.png',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ],
+    [
+        'name' => 'Storytelling & Folklore',
+        'icon' => 'https://img.icons8.com/color/96/storytelling.png',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ],
+    [
+        'name' => 'Traditions & Customs',
+        'icon' => 'https://img.icons8.com/color/96/kimono.png',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ],
+    [
+        'name' => 'History & Heritage',
+        'icon' => 'https://img.icons8.com/color/96/historical.png',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ],
+
+]);
+
     }
 }
