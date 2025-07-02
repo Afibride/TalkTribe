@@ -71,4 +71,10 @@ class Kernel extends HttpKernel
         'role' => \App\Http\Middleware\RoleMiddleware::class,
 
     ];
+
+
+protected $commands = [
+    \App\Console\Commands\BackfillCourseProgress::class,
+    // other commands...
+];
 }

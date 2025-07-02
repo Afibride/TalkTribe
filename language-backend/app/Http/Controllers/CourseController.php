@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -10,12 +11,18 @@ use Illuminate\Support\Facades\Storage;
 class CourseController extends Controller
 {
     // Get all courses (learners + instructors can access)
-    public function index(Request $request)
-    {
-        $limit = $request->query('limit', 12);
-        $courses = Course::latest()->take($limit)->get();
-        return response()->json($courses);
-    }
+public function index(Request $request)
+{
+    $limit = $request->query('limit', 12);
+
+    $courses = Course::with(['instructor:id,name'])
+        ->where('is_public', true) // ✅ Only public courses
+        ->inRandomOrder()
+        ->take($limit)
+        ->get();
+
+    return response()->json($courses);
+}
 
     // Show a single course
     public function show($id)
@@ -119,21 +126,14 @@ class CourseController extends Controller
     
 
     // Get courses by category
-    public function getCourses()
-    {
-        $localLanguageCourses = Course::where('category_id', 1)
-            ->with(['instructor:id,name'])
-            ->get();
+public function getCourses()
+{
+    $categories = Category::with(['courses' => function($query) {
+        $query->with(['instructor:id,name']);
+    }])->get();
 
-        $cultureCourses = Course::where('category_id', 2)
-            ->with(['instructor:id,name'])
-            ->get();
-
-        return response()->json([
-            'localLanguageCourses' => $localLanguageCourses,
-            'cultureCourses' => $cultureCourses,
-        ]);
-    }
+    return response()->json($categories);
+}
 
    public function mostClickedCourses()
 {
