@@ -7,16 +7,15 @@ import BlogPostsSection from '../components/blog/BlogPostsSection';
 
 const BlogPage = () => {
   return (
+    <>
     <div className="blog-page">
       <NewNavbar />
       <BlogHeroSection />
-      <div className="blog-container">
         <CreatePostSection />
         <BlogPostsSection />
-      
-      <Footer />
-      </div>
     </div>
+    <Footer />
+    </>
   );
 };
 

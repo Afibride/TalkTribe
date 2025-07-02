@@ -1,11 +1,11 @@
-import React, { useEffect, useRef } from 'react'; // useRef added
+import React, { useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Header from '../components/Header';
 import SuccessStats from '../components/home/SuccessStats';
 import AboutSection from '../components/home/AboutSection';
 import BlogCTA from '../components/home/BlogCTA';
-import CoursesSection from '../components/home/HomeCoursesSection';
+import CoursesSection from '../components/home/HomeCoursesSection'; // <-- same
 import Testimonials from '../components/home/Testimonials';
 import NewsSection from '../components/home/NewsSection';
 import Footer from '../components/Footer';
@@ -14,7 +14,7 @@ import '../css/HomeLogin.css';
 const HomeLogin = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const hasShownToast = useRef(false); // 👈 guard against double rendering
+  const hasShownToast = useRef(false);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -37,7 +37,11 @@ const HomeLogin = () => {
       <SuccessStats />
       <AboutSection />
       <BlogCTA />
-      <CoursesSection />
+      <CoursesSection 
+        userId={null}  // <- force guest mode
+        userName={null}
+        userEmail={null}
+      />
       <Testimonials />
       <NewsSection />
       <Footer />

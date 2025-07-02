@@ -101,6 +101,9 @@ const NewNavbar = () => {
         <div className="dropdown-menu">
           <button className="close-dropdown" onClick={closeDropdown}>✖</button>
           <NavLink to="/edit-profile" className="dropdown-item">Edit Profile</NavLink>
+          <NavLink to="/my-courses" className="dropdown-item">My Courses</NavLink>
+          <NavLink to="/my-progress" className="dropdown-item">My Progress</NavLink>
+          <NavLink to="/settings" className="dropdown-item">Settings</NavLink>
           <button className="dropdown-item logout" onClick={handleLogoutClick}>Logout</button>
         </div>
       )}
