@@ -4,6 +4,11 @@ import HeroSection from './home/HeroSection';
 import '../css/HomeLogin.css';
 
 const Header = ({ welcomeMessage, showBanner }) => {
+  // Ensure welcomeMessage is a string before rendering
+  const displayMessage = typeof welcomeMessage === 'string' 
+    ? welcomeMessage 
+    : 'Welcome!';
+
   return (
     <header>
       <NewNavbar />
@@ -14,9 +19,9 @@ const Header = ({ welcomeMessage, showBanner }) => {
         </p>
       </div>
 
-      {showBanner && welcomeMessage && (
+      {showBanner && (
         <div className="welcome-banner show">
-          {welcomeMessage}
+          {displayMessage}
         </div>
       )}
 

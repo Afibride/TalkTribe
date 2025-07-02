@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../api/api';
+import { Link } from 'react-router-dom';
 import '../../css/Courses.css';
+import api from '../../api/api';
 
 const TopCategories = () => {
   const [categories, setCategories] = useState([]);
@@ -18,16 +19,29 @@ const TopCategories = () => {
     fetchCategories();
   }, []);
 
+  const scrollToCategory = (categoryId) => {
+    const element = document.getElementById(`category-${categoryId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="top-categories">
-      <h2>Choose Your Favourite Local Language</h2>
+      <h2>Top Categories</h2>
       <p className="categories-subtitle">
-        Explore a variety of local languages and cultures to connect with your roots.
+        Explore a variety of our Top Categories to connect with your roots.
       </p>
       <div className="categories-grid">
         {categories.map((category, index) => (
-          <div key={index} className="category-card" data-aos="zoom-in">
-            <img src={category.icon || '/default-category.jpg'} alt={category.name} className="category-icon" />
+          <div 
+            key={index} 
+            className="category-card" 
+            data-aos="zoom-in"
+            onClick={() => scrollToCategory(category.id)}
+            style={{ cursor: 'pointer' }}
+          >
+            <img src={category.icon || '/blog.jpg'} alt={category.name} className="category-icon" />
             <h3 className="category-name">{category.name}</h3>
             <p className="category-description">{category.description}</p>
           </div>

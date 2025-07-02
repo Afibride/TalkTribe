@@ -28,26 +28,28 @@ const HomeAfterLogin = () => {
         const passedUser = location.state?.user;
 
         if (!localUser && !passedUser) {
-          // If no user found, redirect to login
           toast.warn("Please login to continue");
           navigate("/login", { replace: true });
           return;
         }
 
-        // Use passed user if available, otherwise fall back to local user
         const currentUser = passedUser || localUser;
         setUser(currentUser);
 
-        // Set welcome message based on whether user is new
+        // Extract safe display values
+        const name = currentUser?.name || "User";
         const isNewUser = location.state?.isNewUser;
+
+        // Construct welcome message
+        let message;
         if (isNewUser === true) {
-          setWelcomeMessage(`🎉 Welcome to TalkTribe, ${currentUser?.name || "User"}!`);
+          message = `🎉 Welcome to TalkTribe, ${name}!`;
         } else if (isNewUser === false) {
-          setWelcomeMessage(`👋 Welcome back, ${currentUser?.name || "User"}!`);
+          message = `👋 Welcome back, ${name}!`;
         } else {
-          // Default welcome if isNewUser isn't specified
-          setWelcomeMessage(`👋 Welcome, ${currentUser?.name || "User"}!`);
+          message = `👋 Welcome, ${name}!`;
         }
+        setWelcomeMessage(message);
 
         // Auto-hide welcome banner after 5 seconds
         const timer = setTimeout(() => {
@@ -67,7 +69,6 @@ const HomeAfterLogin = () => {
     checkAuthAndInitialize();
   }, [location.state, navigate]);
 
-  // Show loading screen while checking auth and initializing
   if (isLoading || !user) {
     return (
       <div className="loading-centered">
@@ -79,11 +80,18 @@ const HomeAfterLogin = () => {
 
   return (
     <div className="homepage">
-      <Header welcomeMessage={welcomeMessage} showBanner={showBanner} user={user} />
+      <Header 
+        welcomeMessage={welcomeMessage} 
+        showBanner={showBanner}
+      />
       <SuccessStats />
       <AboutSection />
       <BlogCTA />
-      <CoursesSection user={user} />
+      <CoursesSection 
+        userId={user.id}
+        userName={user.name}
+        userEmail={user.email}
+      />
       <Testimonials />
       <NewsSection />
       <Footer />

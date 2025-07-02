@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import api from '../../api/api';
 import '../../css/course_open.css';
 
 const VideoSection = ({ videos, courseTitle, initialLesson, currentVideoUrl }) => {
@@ -39,12 +40,32 @@ const VideoSection = ({ videos, courseTitle, initialLesson, currentVideoUrl }) =
     setIsPlaying(false);
   };
 
+  const handleTimeUpdate = async (e) => {
+    const video = e.target;
+    const percent = Math.floor((video.currentTime / video.duration) * 100);
+    
+    // Only send if percent has increased
+    if (percent > lastSentPercent) {
+      try {
+        await api.post('/api/progress/lesson', {
+          lesson_id: videos[currentIndex].id,
+          progress_percent: percent,
+          is_completed: percent === 100
+        });
+        setLastSentPercent(percent);
+      } catch (error) {
+        console.error('Error updating lesson progress:', error);
+      }
+    }
+  };
+
   return (
     <section className="video-section">
       <h2>{courseTitle || 'this course'} Lessons</h2>
       <p className="video-description">
         Explore the lessons for this course. Click on a thumbnail to play the video.
-      </p>     <div className="video-thumbnails">
+      </p>
+      <div className="video-thumbnails">
         {videos.map((lesson, idx) => (
           <img
             key={lesson.id}
@@ -66,19 +87,8 @@ const VideoSection = ({ videos, courseTitle, initialLesson, currentVideoUrl }) =
           ref={videoRef}
           onPlay={handlePlay}
           onPause={handlePause}
-          onTimeUpdate={e => {
-            const video = e.target;
-            const percent = Math.floor((video.currentTime / video.duration) * 100);
-            // Only send if percent has increased
-            if (percent > lastSentPercent) {
-              api.post('/api/lesson-progress', {
-                lesson_id: currentLessonId,
-                progress_percent: percent,
-              });
-              setLastSentPercent(percent);
-            }
-          }}
-          src={videos[currentIndex]?.video_url_full}
+          onTimeUpdate={handleTimeUpdate}
+          src={videos[currentIndex]?.video_url_full || currentVideoUrl}
         >
           Your browser does not support the video tag.
         </video>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -13,52 +13,115 @@ import api from '../api/api';
 import '../css/Courses.css';
 
 const CoursesPage = () => {
-  const [localLanguageCourses, setLocalLanguageCourses] = useState([]);
-  const [cultureCourses, setCultureCourses] = useState([]);
+  const [categoriesWithCourses, setCategoriesWithCourses] = useState([]);
   const [mostClickedCourses, setMostClickedCourses] = useState([]);
   const [refreshKey, setRefreshKey] = useState(0);
+  const coursesSectionRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
-    const fetchCourses = async () => {
+    
+    const fetchData = async () => {
       try {
-        const response = await api.get('/api/courses-by-category');
-        setLocalLanguageCourses(response.data.localLanguageCourses);
-        setCultureCourses(response.data.cultureCourses);
+        setLoading(true);
+        
+        const coursesResponse = await api.get('/api/courses-by-category');
+        setCategoriesWithCourses(coursesResponse.data);
+      
+        const clickedResponse = await api.get('/api/most-clicked-courses');
+        setMostClickedCourses(clickedResponse.data);
+        
+        setError(null);
       } catch (error) {
-        console.error('Error fetching courses:', error);
+        console.error('Error fetching data:', error);
+        setError('Failed to load courses. Please try again later.');
+      } finally {
+        setLoading(false);
       }
     };
-    fetchCourses();
-  }, []);
 
-  useEffect(() => {
-    AOS.init({ duration: 1000 });
-    const fetchMostClickedCourses = async () => {
-      try {
-        const response = await api.get('/api/most-clicked-courses');
-        setMostClickedCourses(response.data);
-      } catch (error) {
-        console.error('Error fetching most clicked courses:', error);
-      }
-    };
-    fetchMostClickedCourses();
+    fetchData();
   }, []);
 
   useEffect(() => {
     AOS.refresh();
-  }, [mostClickedCourses]);
+  }, [mostClickedCourses, categoriesWithCourses]);
 
+  if (loading) {
+    return (
+      <div className="courses-page-loading">
+        <NewNavbar />
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Loading courses...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="courses-page-error">
+        <NewNavbar />
+        <div className="error-message">
+          <p>{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="retry-button"
+          >
+            Retry
+          </button>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div className="courses-page">
       <NewNavbar />
-      <WelcomeBackSection refreshKey={refreshKey} />
+      
+      <WelcomeBackSection 
+        refreshKey={refreshKey} 
+        coursesSectionRef={coursesSectionRef} 
+      />
+      
       <TopCategories />
-      <CoursesSection title="Local Language Courses" courses={localLanguageCourses} />
+      
       <OnlineLearningCTA />
-      <CoursesSection title="Culture Courses" courses={cultureCourses} />
+      
+      {/* First category section with ref for scrolling */}
+      <div 
+        ref={coursesSectionRef} 
+        id="courses-section" 
+        className="category-section"
+      >
+        {categoriesWithCourses.length > 0 && (
+          <CoursesSection 
+            title={categoriesWithCourses[0].name} 
+            courses={categoriesWithCourses[0].courses} 
+          />
+        )}
+      </div>
+      
+      {/* Remaining category sections */}
+      {categoriesWithCourses.slice(1).map(category => (
+        <div 
+          key={category.id} 
+          id={`category-${category.id}`} 
+          className="category-section"
+        >
+          <CoursesSection 
+            title={category.name} 
+            courses={category.courses} 
+          />
+        </div>
+      ))}
+      
       <StudentsViewing courses={mostClickedCourses} />
+      
       <Footer />
     </div>
   );
