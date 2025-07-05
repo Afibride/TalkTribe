@@ -1,64 +1,193 @@
-import React, { useState, useEffect } from 'react';
-import { NavLink, useNavigate, useLocation, Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import '../css/HomeLogin.css';
+import React, { useState, useEffect } from "react";
+import { NavLink, useNavigate, Link } from "react-router-dom";
+import "../css/HomeLogin.css";
+import "../css/NavbarSearch.css";
+import api from "../api/api";
 
 const NewNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
   const token = localStorage.getItem("authToken");
-
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const userName = user?.username || "User";
-  const profilePic = user?.profilePic || "/profile.png"; 
+  const profilePic = user?.profilePic || "/profile.png";
 
   const toggleMenu = () => {
-    setIsMenuOpen(prev => !prev);
-    setIsSearchOpen(false); // auto-close search on menu open
+    setIsMenuOpen((prev) => !prev);
+    setIsSearchOpen(false);
   };
 
-  const toggleSearch = () => setIsSearchOpen(prev => !prev);
-  const toggleDropdown = () => setIsDropdownOpen(prev => !prev);
+  const toggleSearch = () => setIsSearchOpen((prev) => !prev);
+  const toggleDropdown = () => setIsDropdownOpen((prev) => !prev);
   const closeDropdown = () => setIsDropdownOpen(false);
 
   const handleLogoutClick = () => setShowLogoutConfirm(true);
-
   const confirmLogout = () => {
-    localStorage.clear(); // removes token, user, everything
+    localStorage.clear();
     setShowLogoutConfirm(false);
     closeDropdown();
     navigate("/", {
       state: { toastMessage: "👋 You’ve been logged out successfully." },
     });
-    
   };
-
   const cancelLogout = () => setShowLogoutConfirm(false);
+
+  const handleSearchInputChange = (e) => setSearchTerm(e.target.value);
+
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      if (searchTerm.trim() !== "") {
+        api
+          .get(`/api/search?q=${encodeURIComponent(searchTerm)}`)
+          .then((res) => {
+            setSearchResults(res.data);
+          })
+          .catch((err) => {
+            console.error(err);
+            setSearchResults(null);
+          });
+      } else {
+        setSearchResults(null);
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
+
+  const handleResultClick = (type, id) => {
+    setIsSearchOpen(false);
+    setSearchTerm("");
+    setSearchResults(null);
+
+    if (type === "lesson") navigate(`/lesson/${id}`);
+    else if (type === "course") navigate(`/courses/${id}/lessons`);
+    else if (type === "user") navigate(`/profile/${id}`);
+  };
 
   return (
     <nav className="navbar">
       <Link to={token ? "/home-after-login" : "/"} tabIndex={0}>
         <img src="/logo.png" alt="TalkTribe Logo" className="logo" />
       </Link>
+
       {/* Search Bar */}
-      <div className={`search-bar-container ${isSearchOpen ? 'open' : ''}`}>
-        <input type="text" className="search-bar" placeholder="Search ..." />
+      <div className={`search-bar-container ${isSearchOpen ? "open" : ""}`}>
+        <input
+          type="text"
+          className="search-bar"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={handleSearchInputChange}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              if (searchTerm.trim() !== "") {
+                navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+                setIsSearchOpen(false);
+              }
+            }
+          }}
+        />
+
+        {searchResults && (
+          <div className="search-results">
+            {searchResults.courses?.length > 0 && (
+              <div className="result-group">
+                <h4>Courses</h4>
+                {searchResults.courses.map((item) => (
+                  <div
+                    key={`course-${item.id}`}
+                    className="search-result-item"
+                    onClick={() => handleResultClick("course", item.id)}
+                  >
+                    <strong>{item.title}</strong>
+                    <p>{item.description?.slice(0, 50)}...</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {searchResults.lessons?.length > 0 && (
+              <div className="result-group">
+                <h4>Lessons</h4>
+                {searchResults.lessons.map((item) => (
+                  <div
+                    key={`lesson-${item.id}`}
+                    className="search-result-item"
+                    onClick={() => handleResultClick("lesson", item.id)}
+                  >
+                    <strong>{item.title}</strong>
+                    <p>{item.description?.slice(0, 50)}...</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {searchResults.users?.length > 0 && (
+              <div className="result-group">
+                <h4>Users</h4>
+                {searchResults.users.map((item) => (
+                  <div
+                    key={`user-${item.id}`}
+                    className="search-result-item"
+                    onClick={() => handleResultClick("user", item.id)}
+                  >
+                    <strong>{item.name}</strong>
+                    <p>{item.email}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {(!searchResults.courses?.length &&
+              !searchResults.lessons?.length &&
+              !searchResults.users?.length) && <p>No results found.</p>}
+          </div>
+        )}
       </div>
 
-      {/* Desktop Menu */}
+      {/* Desktop Nav */}
       <div className="nav-menu desktop-menu">
         <div className="nav-links">
-          <NavLink to="/home-after-login" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Home</NavLink>
-          <NavLink to="/local-languages" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Local Languages</NavLink>
-          <NavLink to="/blog" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Blog</NavLink>
-          <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>About Us</NavLink>
+          <NavLink
+            to="/home-after-login"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/local-languages"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Learn
+          </NavLink>
+          <NavLink
+            to="/blog"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Blog
+          </NavLink>
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            About Us
+          </NavLink>
         </div>
-
         {token && (
           <div className="user-profile" onClick={toggleDropdown}>
             <img src={profilePic} alt="User Profile" className="profile-pic" />
@@ -73,20 +202,50 @@ const NewNavbar = () => {
         <button className="search-icon" onClick={toggleSearch}>
           <i className="fas fa-search"></i>
         </button>
-        <button className={`hamburger-menu ${isMenuOpen ? 'open' : ''}`} onClick={toggleMenu}>
-          {isMenuOpen ? 'X' : '☰'}
+        <button
+          className={`hamburger-menu ${isMenuOpen ? "open" : ""}`}
+          onClick={toggleMenu}
+        >
+          {isMenuOpen ? "X" : "☰"}
         </button>
       </div>
 
       {/* Mobile Menu */}
-      <div className={`nav-menu mobile-menu ${isMenuOpen ? 'open' : ''}`}>
+      <div className={`nav-menu mobile-menu ${isMenuOpen ? "open" : ""}`}>
         <div className="nav-links">
-          <NavLink to="/home-after-login" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Home</NavLink>
-          <NavLink to="/local-languages" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Local Languages</NavLink>
-          <NavLink to="/blog" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Blog</NavLink>
-          <NavLink to="/about" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>About Us</NavLink>
+          <NavLink
+            to="/home-after-login"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Home
+          </NavLink>
+          <NavLink
+            to="/local-languages"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Learn
+          </NavLink>
+          <NavLink
+            to="/blog"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            Blog
+          </NavLink>
+          <NavLink
+            to="/about"
+            className={({ isActive }) =>
+              isActive ? "nav-link active" : "nav-link"
+            }
+          >
+            About Us
+          </NavLink>
         </div>
-
         {token && (
           <div className="user-profile" onClick={toggleDropdown}>
             <img src={profilePic} alt="User Profile" className="profile-pic" />
@@ -96,26 +255,42 @@ const NewNavbar = () => {
         )}
       </div>
 
-      {/* Dropdown Menu */}
+      {/* Dropdown */}
       {isDropdownOpen && (
         <div className="dropdown-menu">
-          <button className="close-dropdown" onClick={closeDropdown}>✖</button>
-          <NavLink to="/edit-profile" className="dropdown-item">Edit Profile</NavLink>
-          <NavLink to="/my-courses" className="dropdown-item">My Courses</NavLink>
-          <NavLink to="/my-progress" className="dropdown-item">My Progress</NavLink>
-          <NavLink to="/settings" className="dropdown-item">Settings</NavLink>
-          <button className="dropdown-item logout" onClick={handleLogoutClick}>Logout</button>
+          <button className="close-dropdown" onClick={closeDropdown}>
+            ✖
+          </button>
+          <NavLink to="/edit-profile" className="dropdown-item">
+            Edit Profile
+          </NavLink>
+          <NavLink to="/my-courses" className="dropdown-item">
+            My Courses
+          </NavLink>
+          <NavLink to="/my-progress" className="dropdown-item">
+            My Progress
+          </NavLink>
+          <NavLink to="/settings" className="dropdown-item">
+            Settings
+          </NavLink>
+          <button className="dropdown-item logout" onClick={handleLogoutClick}>
+            Logout
+          </button>
         </div>
       )}
 
-      {/* Logout Confirmation Modal */}
+      {/* Logout Confirm */}
       {showLogoutConfirm && (
         <div className="logout-modal-overlay">
           <div className="logout-modal">
             <p>Are you sure you want to log out?</p>
             <div className="modal-actions">
-              <button onClick={confirmLogout} className="confirm-btn">Yes</button>
-              <button onClick={cancelLogout} className="cancel-btn">No</button>
+              <button onClick={confirmLogout} className="confirm-btn">
+                Yes
+              </button>
+              <button onClick={cancelLogout} className="cancel-btn">
+                No
+              </button>
             </div>
           </div>
         </div>

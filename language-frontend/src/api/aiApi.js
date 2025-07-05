@@ -1,19 +1,15 @@
-// src/api/api.js
+// src/api/aiApi.js
 import axios from 'axios';
 
-// 👇 Set your Laravel API URL (use environment variables for production!)
-const api = axios.create({
-  baseURL: 'http://192.168.250.241:8000',
-  withCredentials: true,
+const aiApi = axios.create({
+  baseURL: 'http://192.168.42.236:8001/api/ai/', 
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
 });
 
-
-// 👇 Auto-attach Bearer token from localStorage
-api.interceptors.request.use(
+aiApi.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
     if (token) {
@@ -24,5 +20,4 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-
-export default api;
+export default aiApi;

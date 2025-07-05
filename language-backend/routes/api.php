@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\API\PasswordResetController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -32,7 +33,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 Route::get('/home-courses', [CourseController::class, 'index']);
-    
+Route::get('/search', [SearchController::class, 'search']); // Search for courses, lessons, and users   
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {

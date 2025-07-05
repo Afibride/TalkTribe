@@ -19,6 +19,7 @@ import Contact from './views/ContactUs';
 import ForgotPassword from './views/ForgotPassword';
 import ResetPassword from './views/ResetPassword';
 import FeaturesPage from './views/FeaturesPage';
+import SearchResults from './views/SearchResults';
 
 // Components
 import PrivateRoute from './components/PrivateRoute';
@@ -52,6 +53,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/search" element={<SearchResults />} />
 
           {/* Public routes (redirect if logged in) */}
           <Route

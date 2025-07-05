@@ -20,7 +20,6 @@ class Lesson extends Model
         'order'
     ];
 
-    
     protected $appends = ['video_url_full', 'notes_file_url_full', 'thumbnail_url'];
 
     public function course()

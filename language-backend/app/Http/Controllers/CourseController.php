@@ -19,7 +19,8 @@ public function index(Request $request)
         ->where('is_public', true) // ✅ Only public courses
         ->inRandomOrder()
         ->take($limit)
-        ->get();
+        ->get()
+        ->each->append('total_lessons');
 
     return response()->json($courses);
 }
@@ -28,7 +29,8 @@ public function index(Request $request)
     public function show($id)
     {
         $course = Course::with('instructor')->findOrFail($id);
-        return response()->json($course);
+$course->append('total_lessons');
+return response()->json($course);
     }
 
     // Instructor adds a new course
