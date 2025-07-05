@@ -3,28 +3,28 @@ import '../../css/course_open.css';
 
 const LessonsGrid = ({ lessons, onLessonClick, courseTitle }) => {
   return (
-    <section className="courses-grid">
+    <section className="lessons-grid">
       <h2>{courseTitle || "This Course's"} Lessons</h2>
-      <p className="courses-description">
+      <p className="lessons-description">
         Explore the lessons for this course. Click on a lesson to start learning.
       </p>
-      <div className="grid">
+      <div className="lessons-container">
         {lessons.length > 0 ? (
           lessons.map((lesson) => (
             <div
               key={lesson.id}
-              className="course-card"
+              className="lesson-card"
               onClick={() => onLessonClick(lesson)}
             >
-              <div className="course-image">
+              <div className="lesson-image">
                 <img
                   src={lesson.thumbnail_url || '/blog.jpg'}
                   alt={lesson.title}
                   className="thumbnail"
                 />
-                <span className="video-number">{lesson.title}</span>
+                <span className="lesson-title-overlay">{lesson.title}</span>
               </div>
-              <div className="course-details">
+              <div className="lesson-details">
                 <h3>{lesson.title}</h3>
                 <p>{lesson.description || 'No description available.'}</p>
               </div>

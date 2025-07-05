@@ -66,6 +66,7 @@ class LessonController extends Controller
         }
     }
 
+    
     // Generate video thumbnail (placeholder function, implement actual logic)
     protected function generateVideoThumbnail($videoPath, $thumbnailPath)
     {
@@ -183,16 +184,22 @@ class LessonController extends Controller
 
     public function getLessonsByCourse($courseId)
     {
-        \Log::info("Fetching all course data for course ID: $courseId");
-
         $course = Course::with(['lessons'])->findOrFail($courseId);
-
-        \Log::info("Clicks before increment: " . $course->clicks);
         $course->increment('clicks');
         $course->refresh();
-        \Log::info("Clicks after increment: " . $course->clicks);
-
-
         return response()->json($course);
     }
+
+    public function downloadNotes($lessonId)
+{
+    $lesson = Lesson::findOrFail($lessonId);
+    
+    return response()->download(
+        storage_path('app/public/' . $lesson->notes_file),
+        'lecture-notes.' . pathinfo($lesson->notes_file, PATHINFO_EXTENSION),
+        [
+            'Access-Control-Expose-Headers' => 'Content-Disposition'
+        ]
+    );
+}
 }

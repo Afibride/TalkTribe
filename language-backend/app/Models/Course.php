@@ -19,14 +19,14 @@ protected $fillable = [
     'clicks',
 ];
 
-protected $appends = ['image_url'];
+protected $appends = ['image_url', 'total_lessons'];
 
-    public function instructor()
-    {
-        return $this->belongsTo(User::class, 'instructor_id');
-    }
+public function instructor()
+{
+    return $this->belongsTo(User::class, 'instructor_id');
+}
 
-    public function category()
+public function category()
 {
     return $this->belongsTo(Category::class);
 }
@@ -57,5 +57,10 @@ public function quizzes()
         return url('storage/' . $this->image);
     }
     return null;
+}
+
+public function getTotalLessonsAttribute()
+{
+    return $this->lessons()->count();
 }
 }
