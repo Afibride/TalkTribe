@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\Lesson;
 use App\Models\LessonProgress;
 use Illuminate\Support\Facades\Storage;
+use Smalot\PdfParser\Parser as PdfParser;
+use PhpOffice\PhpWord\IOFactory as WordIOFactory;
 
 class LessonController extends Controller
 {
@@ -201,5 +203,57 @@ class LessonController extends Controller
             'Access-Control-Expose-Headers' => 'Content-Disposition'
         ]
     );
+}
+
+public function getLessonNotesContent($lessonId)
+{
+    $lesson = Lesson::findOrFail($lessonId);
+    $filePath = storage_path('app/public/' . $lesson->notes_file);
+
+    if (!file_exists($filePath)) {
+        return response()->json(['error' => 'File not found'], 404);
+    }
+
+    $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+    $content = '';
+
+    if ($ext === 'txt') {
+        $content = file_get_contents($filePath);
+    } elseif ($ext === 'pdf') {
+        $parser = new \Smalot\PdfParser\Parser();
+        $pdf = $parser->parseFile($filePath);
+        $content = $pdf->getText();
+    } elseif (in_array($ext, ['doc', 'docx'])) {
+        $phpWord = \PhpOffice\PhpWord\IOFactory::load($filePath);
+        $text = '';
+        foreach ($phpWord->getSections() as $section) {
+            foreach ($section->getElements() as $element) {
+                if (method_exists($element, 'getText')) {
+                    $text .= $element->getText() . "\n";
+                }
+            }
+        }
+        $content = $text;
+    } else {
+        return response()->json(['error' => 'Unsupported file type'], 400);
+    }
+
+    // Split content into pages using "Page X" or "Page X of Y" as delimiter
+    $pages = preg_split('/\n?Page\s+\d+(\s+of\s+\d+)?\n?/i', $content, -1, PREG_SPLIT_NO_EMPTY);
+
+    // Optionally, add back the page markers for clarity
+    preg_match_all('/Page\s+\d+(\s+of\s+\d+)?/i', $content, $matches);
+    $markers = $matches[0];
+
+    $pagesWithMarkers = [];
+    foreach ($pages as $i => $pageContent) {
+        $marker = isset($markers[$i]) ? $markers[$i] : 'Page ' . ($i + 1);
+        $pagesWithMarkers[] = [
+            'marker' => $marker,
+            'content' => trim($pageContent)
+        ];
+    }
+
+    return response()->json(['pages' => $pagesWithMarkers]);
 }
 }

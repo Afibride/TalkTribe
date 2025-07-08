@@ -1064,7 +1064,6 @@ button:active, .btn:active {
   padding: 2rem 0rem;
   overflow: hidden;
   text-align: center;
-  position: absolute;
   width: 100%;
   margin-top: auto; /* Ensure footer sticks to the bottom */
 }
