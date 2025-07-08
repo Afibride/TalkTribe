@@ -80,6 +80,7 @@ const CoursesPage = () => {
   }
 
   return (
+    <>
     <div className="courses-page">
       <NewNavbar />
       
@@ -121,9 +122,9 @@ const CoursesPage = () => {
       ))}
       
       <StudentsViewing courses={mostClickedCourses} />
-      
-      <Footer />
     </div>
+    <Footer />
+    </>
   );
 };
 

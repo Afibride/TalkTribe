@@ -62,6 +62,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/lessonss', [LessonController::class, 'index']);
     Route::get('/lessons/{id}', [LessonController::class, 'show']);
     Route::get('/courses/{courseId}/lessons', [LessonController::class, 'getLessonsByCourse']);
+    Route::get('/lessons/{lesson}/notes-content', [LessonController::class, 'getLessonNotesContent']);
 
     
     Route::middleware('role:instructor')->group(function () {
