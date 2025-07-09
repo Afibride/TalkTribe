@@ -1,6 +1,7 @@
 <?php
 
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\API\PasswordResetController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\QuizController;
@@ -97,6 +98,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/quizzes/{quiz}/submit', [QuizController::class, 'submitQuiz']);
 });
 
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Blog routes
+    Route::get('/blog/posts', [BlogController::class, 'index']);
+    Route::post('/blog/posts', [BlogController::class, 'store']);
+    Route::post('/blog/posts/{post}/like', [BlogController::class, 'toggleLike']);
+    Route::post('/blog/posts/{id}/comment', [BlogController::class, 'addComment']);
+    Route::get('/blog/posts/{post}/related', [BlogController::class, 'relatedPosts']);
+    Route::get('/blog/posts/popular', [BlogController::class, 'popularPosts']);
+    Route::get('/blog/posts/{id}', [BlogController::class, 'show']);
+Route::post('/blog/posts/{id}/view', [BlogController::class, 'trackView']);
+});
 Route::get('/stats', [StatsController::class, 'index']);
 
 Route::get('/testimonials', [TestimonialController::class, 'index']);

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
+use Storage;
 
 class Course extends Model
 {
@@ -51,12 +52,18 @@ public function quizzes()
         return $this->belongsToMany(User::class, 'course_user')->withTimestamps();
     }
 
-    public function getImageUrlAttribute()
+
+public function getImageUrlAttribute()
 {
-    if ($this->image) {
-        return url('storage/' . $this->image);
+    if (!$this->image) {
+        return null; 
     }
-    return null;
+    
+   if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+        return $this->image;
+    }
+    
+    return Storage::disk('public')->url($this->image);
 }
 
 public function getTotalLessonsAttribute()
