@@ -1066,6 +1066,8 @@ button:active, .btn:active {
   text-align: center;
   width: 100%;
   margin-top: auto; /* Ensure footer sticks to the bottom */
+  margin-bottom: 0 !important;
+  position: absolute;
 }
 
 .footer-top {

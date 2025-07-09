@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\API\PasswordResetController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -63,8 +64,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/lessons/{id}', [LessonController::class, 'show']);
     Route::get('/courses/{courseId}/lessons', [LessonController::class, 'getLessonsByCourse']);
     Route::get('/lessons/{lesson}/notes-content', [LessonController::class, 'getLessonNotesContent']);
+   
 
-    
     Route::middleware('role:instructor')->group(function () {
         Route::post('/lessons', [LessonController::class, 'store']);
         Route::post('/lessons/{id}', [LessonController::class, 'update']);
@@ -85,6 +86,15 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/course/{courseId}', [LessonProgressController::class, 'getCourseProgress']);
          Route::get('/next-lesson/{courseId}', [LessonProgressController::class, 'getNextLesson'])->name('progress.next-lesson');
     });
+});
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    // Quiz routes
+    Route::get('/quizzes', [QuizController::class, 'index']);
+    Route::get('/quizzes/{quizId}', [QuizController::class, 'show']);
+    Route::get('/quizzes/lesson/{lessonId}', [QuizController::class, 'lessonQuizzes']);
+    Route::post('/quizzes/generate', [QuizController::class, 'generateQuiz']);
+    Route::post('/quizzes/{quiz}/submit', [QuizController::class, 'submitQuiz']);
 });
 
 Route::get('/stats', [StatsController::class, 'index']);
