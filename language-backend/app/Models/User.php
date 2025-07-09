@@ -49,4 +49,16 @@ public function courseProgress()
 {
     return $this->hasMany(CourseProgress::class);
 }
+
+   public function quizAttempts()
+    {
+        return $this->hasMany(QuizAttempt::class);
+    }
+
+    public function completedQuizzes()
+    {
+        return $this->belongsToMany(Quiz::class, 'quiz_attempts')
+                   ->withPivot('score', 'completed_at')
+                   ->withTimestamps();
+    }
 }

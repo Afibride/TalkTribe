@@ -61,6 +61,14 @@ class LessonController extends Controller
                 'created_by' => auth()->id(),
             ]);
 
+            // Automatically generate quiz after lesson is created
+            try {
+                app()->call('App\Http\Controllers\QuizController@generateQuizFromNotes', ['lessonId' => $lesson->id]);
+            } catch (\Exception $e) {
+                // Optionally log or handle quiz generation errors
+                \Log::error('Quiz auto-generation failed: ' . $e->getMessage());
+            }
+
             return response()->json($lesson, 201);
         } catch (\Exception $e) {
             \Log::error('Lesson store error: ' . $e->getMessage());
@@ -205,9 +213,15 @@ class LessonController extends Controller
     );
 }
 
+
 public function getLessonNotesContent($lessonId)
 {
     $lesson = Lesson::findOrFail($lessonId);
+
+    if (!$lesson->notes_file) {
+        return response()->json(['error' => 'No notes file attached'], 404);
+    }
+
     $filePath = storage_path('app/public/' . $lesson->notes_file);
 
     if (!file_exists($filePath)) {
@@ -217,37 +231,49 @@ public function getLessonNotesContent($lessonId)
     $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
     $content = '';
 
-    if ($ext === 'txt') {
-        $content = file_get_contents($filePath);
-    } elseif ($ext === 'pdf') {
-        $parser = new \Smalot\PdfParser\Parser();
-        $pdf = $parser->parseFile($filePath);
-        $content = $pdf->getText();
-    } elseif (in_array($ext, ['doc', 'docx'])) {
-        $phpWord = \PhpOffice\PhpWord\IOFactory::load($filePath);
-        $text = '';
-        foreach ($phpWord->getSections() as $section) {
-            foreach ($section->getElements() as $element) {
-                if (method_exists($element, 'getText')) {
-                    $text .= $element->getText() . "\n";
+    try {
+        switch ($ext) {
+            case 'txt':
+                $content = file_get_contents($filePath);
+                break;
+
+            case 'pdf':
+                $parser = new \Smalot\PdfParser\Parser();
+                $pdf = $parser->parseFile($filePath);
+                $content = $pdf->getText();
+                break;
+
+            case 'doc':
+            case 'docx':
+                $phpWord = \PhpOffice\PhpWord\IOFactory::load($filePath);
+                foreach ($phpWord->getSections() as $section) {
+                    foreach ($section->getElements() as $element) {
+                        if (method_exists($element, 'getText')) {
+                            $content .= $element->getText() . "\n";
+                        }
+                    }
                 }
-            }
+                break;
+
+            default:
+                return response()->json(['error' => 'Preview not supported for .' . $ext], 400);
         }
-        $content = $text;
-    } else {
-        return response()->json(['error' => 'Unsupported file type'], 400);
+    } catch (\Throwable $e) {
+        \Log::error("Notes parsing failed: " . $e->getMessage());
+        return response()->json(['error' => 'Failed to parse notes file'], 500);
     }
 
-    // Split content into pages using "Page X" or "Page X of Y" as delimiter
-    $pages = preg_split('/\n?Page\s+\d+(\s+of\s+\d+)?\n?/i', $content, -1, PREG_SPLIT_NO_EMPTY);
+    if (!$content) {
+        return response()->json(['error' => 'No readable content found'], 204);
+    }
 
-    // Optionally, add back the page markers for clarity
+    $pages = preg_split('/\n?Page\s+\d+(\s+of\s+\d+)?\n?/i', $content, -1, PREG_SPLIT_NO_EMPTY);
     preg_match_all('/Page\s+\d+(\s+of\s+\d+)?/i', $content, $matches);
     $markers = $matches[0];
 
     $pagesWithMarkers = [];
     foreach ($pages as $i => $pageContent) {
-        $marker = isset($markers[$i]) ? $markers[$i] : 'Page ' . ($i + 1);
+        $marker = $markers[$i] ?? 'Page ' . ($i + 1);
         $pagesWithMarkers[] = [
             'marker' => $marker,
             'content' => trim($pageContent)
@@ -256,4 +282,5 @@ public function getLessonNotesContent($lessonId)
 
     return response()->json(['pages' => $pagesWithMarkers]);
 }
+
 }

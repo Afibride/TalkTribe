@@ -20,10 +20,12 @@ import ForgotPassword from './views/ForgotPassword';
 import ResetPassword from './views/ResetPassword';
 import FeaturesPage from './views/FeaturesPage';
 import SearchResults from './views/SearchResults';
+import QuizzesPage from './views/QuizzesPage';
 
 // Components
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
+
 
 function App() {
   // Initialize animation library
@@ -114,6 +116,14 @@ function App() {
             element={
               <PrivateRoute>
                 <BlogPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/courses/:id/quizzes"
+            element={
+              <PrivateRoute>
+                <QuizzesPage />
               </PrivateRoute>
             }
           />

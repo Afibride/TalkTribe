@@ -12,12 +12,13 @@ class Lesson extends Model
     protected $fillable = [
         'title',
         'description',
-        'video_url' ,
+        'video_url',
         'notes_file',
-        'course_id' ,
+        'course_id',
         'created_by',
         'thumbnail',
-        'order'
+        'order',
+        'quiz_id', 
     ];
 
     protected $appends = ['video_url_full', 'notes_file_url_full', 'thumbnail_url'];
@@ -39,22 +40,60 @@ class Lesson extends Model
 
     public function getVideoUrlFullAttribute()
     {
-        if ($this->video_url) {
-            return url('storage/' . $this->video_url);
-        }
-        return null;
+        return $this->video_url ? url('storage/' . $this->video_url) : null;
     }
 
     public function getNotesFileUrlFullAttribute()
     {
-        if ($this->notes_file) {
-            return url('storage/' . $this->notes_file);
-        }
-        return null;
+        return $this->notes_file ? url('storage/' . $this->notes_file) : null;
     }
 
     public function getThumbnailUrlAttribute()
     {
         return $this->thumbnail ? url('storage/' . $this->thumbnail) : null;
+    }
+
+    public function quizzes()
+    {
+        return $this->hasMany(Quiz::class);
+    }
+
+    public function generatedQuiz()
+    {
+        return $this->belongsTo(Quiz::class, 'quiz_id');
+    }
+
+    protected static function booted()
+    {
+        static::created(function ($lesson) {
+            dispatch(function () use ($lesson) {
+                try {
+                    $quiz = app(\App\Http\Controllers\QuizController::class)->generateQuizFromNotes($lesson->id);
+
+                    if ($quiz) {
+                        $lesson->update(['quiz_id' => $quiz->id]);
+                    }
+
+                } catch (\Exception $e) {
+                    \Log::error("Auto quiz generation failed: " . $e->getMessage());
+                }
+            })->delay(now()->addSeconds(10));
+        });
+
+        static::updated(function ($lesson) {
+            if ($lesson->isDirty('notes_file')) {
+                dispatch(function () use ($lesson) {
+                    try {
+                        $lesson->quizzes()->delete();
+                        $quiz = app(\App\Http\Controllers\QuizController::class)->generateQuizFromNotes($lesson->id);
+                        if ($quiz) {
+                            $lesson->update(['quiz_id' => $quiz->id]);
+                        }
+                    } catch (\Exception $e) {
+                        \Log::error("Auto quiz regeneration failed: " . $e->getMessage());
+                    }
+                })->delay(now()->addSeconds(10));
+            }
+        });
     }
 }

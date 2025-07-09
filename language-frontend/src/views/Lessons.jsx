@@ -24,12 +24,13 @@ const LessonsPage = ({ onProgressUpdate }) => {
   const [currentVideoUrl, setCurrentVideoUrl] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const [courseProgress, setCourseProgress] = useState(null);
+  const [activeTab, setActiveTab] = useState('lessons'); // 'lessons' or 'quizzes'
+  const [loading, setLoading] = useState(true);
 
-  // Fetch course details and progress
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch course details with lessons
+        setLoading(true);
         const [courseRes, progressRes] = await Promise.all([
           api.get(`/api/courses/${courseId}/lessons`),
           api.get(`/api/progress/course/${courseId}`)
@@ -38,12 +39,10 @@ const LessonsPage = ({ onProgressUpdate }) => {
         setCourse(courseRes.data);
         setCourseProgress(progressRes.data.data || progressRes.data);
 
-        // Check if we have progress data
         if (progressRes.data.data || progressRes.data) {
           setLearningStarted(true);
         }
 
-        // Handle continue lesson if specified
         if (continueLessonId && courseRes.data.lessons) {
           const lessonToContinue = courseRes.data.lessons.find(
             l => String(l.id) === String(continueLessonId)
@@ -53,7 +52,6 @@ const LessonsPage = ({ onProgressUpdate }) => {
             setCurrentVideoUrl(lessonToContinue.video_url);
           }
         } else if (progressRes.data?.last_lesson_id) {
-          // If no continueLessonId but we have last lesson progress
           const lastLesson = courseRes.data.lessons.find(
             l => String(l.id) === String(progressRes.data.last_lesson_id)
           );
@@ -63,7 +61,9 @@ const LessonsPage = ({ onProgressUpdate }) => {
           }
         }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching course data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -72,102 +72,132 @@ const LessonsPage = ({ onProgressUpdate }) => {
 
   const handleLessonClick = async (lesson) => {
     try {
-      // Mark lesson as started if not already completed
       await api.post('/api/progress/lesson', {
         lesson_id: lesson.id,
         is_completed: false
       });
-      
+
       setSelectedLesson(lesson);
       setShowPopup(true);
-      
-      // Refresh progress data
+
       if (onProgressUpdate) onProgressUpdate();
     } catch (error) {
       console.error('Error updating lesson progress:', error);
-      toast.error('Failed to start lesson');
     }
   };
 
   const handlePlayVideo = async (videoUrl) => {
     try {
       if (selectedLesson) {
-        // Mark lesson as completed when video starts playing
         await api.post('/api/progress/lesson', {
           lesson_id: selectedLesson.id,
           is_completed: true
         });
-        
+
         setCurrentVideoUrl(videoUrl);
         setShowPopup(false);
-        
-        // Refresh progress data
+
         const progressRes = await api.get(`/api/progress/course/${courseId}`);
         setCourseProgress(progressRes.data.data || progressRes.data);
         if (onProgressUpdate) onProgressUpdate();
       }
     } catch (error) {
-      console.error('Error updating lesson progress:', error);
-      toast.error('Failed to update progress');
+      console.error('Error updating progress:', error);
     }
   };
 
   const handleStartLearning = async () => {
     try {
-      // Call the start-course endpoint
-      const response = await api.post(`/api/progress/start-course/${courseId}`);
-      
+      await api.post(`/api/progress/start-course/${courseId}`);
+
       setLearningStarted(true);
       if (onProgressUpdate) onProgressUpdate();
-      
-      // Set the first lesson as selected
+
       if (course?.lessons?.length > 0) {
         setSelectedLesson(course.lessons[0]);
         setCurrentVideoUrl(course.lessons[0].video_url);
       }
     } catch (error) {
       console.error('Error starting course:', error);
-      toast.error('Failed to start course');
     }
   };
 
+  const navigateToQuizzes = () => {
+    navigate(`/courses/${courseId}/quizzes`);
+  };
+
   if (!course) {
-    return <div className='loading'>Loading...</div>;
+    return <div className="loading">Loading...</div>;
   }
 
-  // Show intro until learning has started
   if (!learningStarted) {
     return (
-      <div>
+      <>
         <NewNavbar />
         <LessonsIntro
           course={course}
           onStartLearning={handleStartLearning}
         />
         <Footer />
-      </div>
+      </>
     );
   }
 
   return (
-    <div>
+    <>
       <NewNavbar />
+
       <VideoSection
         videos={course.lessons || []}
         courseTitle={course.title}
         initialLesson={selectedLesson}
         currentVideoUrl={currentVideoUrl}
       />
-      <LessonsGrid
-        chapters={course.chapters || []}
-        lessons={course.lessons || []}
-        courseTitle={course.title}
-        onLessonClick={handleLessonClick}
-        courseProgress={courseProgress}
-      />
-      <LectureNotes lessons={course.lessons || []} courseTitle={course.title} />
-      <Quizzes quizzes={course.quizzes || []} />
-      
+
+      <div className="course-tabs">
+        <button
+          className={`tab-button ${activeTab === 'lessons' ? 'active' : ''}`}
+          onClick={() => setActiveTab('lessons')}
+        >
+          Lessons
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'quizzes' ? 'active' : ''}`}
+          onClick={() => setActiveTab('quizzes')}
+        >
+          Quizzes
+        </button>
+        <button 
+          className="standalone-quizzes-button"
+          onClick={navigateToQuizzes}
+        >
+          View All Quizzes
+        </button>
+      </div>
+
+      <div className="course-content-container">
+        {activeTab === 'lessons' ? (
+          <>
+            <LessonsGrid
+              chapters={course.chapters || []}
+              lessons={course.lessons || []}
+              courseTitle={course.title}
+              onLessonClick={handleLessonClick}
+              courseProgress={courseProgress}
+            />
+
+            <LectureNotes lessons={course.lessons || []} courseTitle={course.title} />
+
+            <div className="section-divider"></div>
+
+            <h2>Lesson Quizzes</h2>
+            <Quizzes lessons={course.lessons || []} standalone={false} />
+          </>
+        ) : (
+          <Quizzes lessons={course.lessons || []} standalone={true} />
+        )}
+      </div>
+
       {showPopup && selectedLesson && (
         <LessonPopup
           lesson={selectedLesson}
@@ -175,9 +205,9 @@ const LessonsPage = ({ onProgressUpdate }) => {
           onPlay={handlePlayVideo}
         />
       )}
-      
+
       <Footer />
-    </div>
+    </>
   );
 };
 
