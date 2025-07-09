@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // 👇 Set your Laravel API URL (use environment variables for production!)
 const api = axios.create({
-  baseURL: 'http://192.168.42.237:8000',
+  baseURL: 'http://192.168.250.241:8000',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',

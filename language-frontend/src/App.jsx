@@ -21,6 +21,7 @@ import ResetPassword from './views/ResetPassword';
 import FeaturesPage from './views/FeaturesPage';
 import SearchResults from './views/SearchResults';
 import QuizzesPage from './views/QuizzesPage';
+import BlogDetailPage from './views/BlogDetailPage';
 
 // Components
 import PrivateRoute from './components/PrivateRoute';
@@ -124,6 +125,15 @@ function App() {
             element={
               <PrivateRoute>
                 <QuizzesPage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/blog/:id"
+            element={
+              <PrivateRoute>
+                <BlogDetailPage />
               </PrivateRoute>
             }
           />

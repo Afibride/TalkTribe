@@ -68,6 +68,7 @@ const NewNavbar = () => {
     if (type === "lesson") navigate(`/lesson/${id}`);
     else if (type === "course") navigate(`/courses/${id}/lessons`);
     else if (type === "user") navigate(`/profile/${id}`);
+    else if (type === "blog_post") navigate(`/blog/${id}`);
   };
 
   return (
@@ -97,6 +98,7 @@ const NewNavbar = () => {
 
         {searchResults && (
           <div className="search-results">
+            {/* Courses */}
             {searchResults.courses?.length > 0 && (
               <div className="result-group">
                 <h4>Courses</h4>
@@ -113,6 +115,7 @@ const NewNavbar = () => {
               </div>
             )}
 
+            {/* Lessons */}
             {searchResults.lessons?.length > 0 && (
               <div className="result-group">
                 <h4>Lessons</h4>
@@ -129,6 +132,7 @@ const NewNavbar = () => {
               </div>
             )}
 
+            {/* Users */}
             {searchResults.users?.length > 0 && (
               <div className="result-group">
                 <h4>Users</h4>
@@ -145,9 +149,30 @@ const NewNavbar = () => {
               </div>
             )}
 
-            {(!searchResults.courses?.length &&
+            {/* Blog Posts */}
+            {searchResults.blog_posts?.length > 0 && (
+              <div className="result-group">
+                <h4>Blog Posts</h4>
+                {searchResults.blog_posts.map((item) => (
+                  <div
+                    key={`blog-${item.id}`}
+                    className="search-result-item"
+                    onClick={() => handleResultClick("blog_post", item.id)}
+                  >
+                    <strong>{item.title}</strong>
+                    <p>{item.excerpt?.slice(0, 50)}...</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Fallback */}
+            {!searchResults.courses?.length &&
               !searchResults.lessons?.length &&
-              !searchResults.users?.length) && <p>No results found.</p>}
+              !searchResults.users?.length &&
+              !searchResults.blog_posts?.length && (
+                <p>No results found.</p>
+              )}
           </div>
         )}
       </div>

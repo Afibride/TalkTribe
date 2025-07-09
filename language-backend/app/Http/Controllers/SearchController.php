@@ -6,45 +6,54 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Models\BlogPost;
 
 class SearchController extends Controller
 {
-    public function search(Request $request)
-    {
-        $query = $request->input('q');
+public function search(Request $request)
+{
+    $query = $request->input('q', '');
 
-        if (!$query) {
-            return response()->json(['message' => 'Empty search'], 400);
-        }
-
-        // Users: match name or username
-        $users = User::where('name', 'LIKE', "%{$query}%")
-                    ->orWhere('username', 'LIKE', "%{$query}%")
-                    ->take(10)
-                    ->get();
-
-        // Courses: match title or description, then append total_lessons
-        $courses = Course::where('title', 'LIKE', "%{$query}%")
-            ->orWhere('description', 'LIKE', "%{$query}%")
-            ->take(10)
-            ->get()
-            ->each->append('total_lessons');
-
-        // Lessons: match title or content, include course title
-        $lessons = Lesson::with('course:id,title')
-            ->where('title', 'LIKE', "%{$query}%")
-            ->orWhere('description', 'LIKE', "%{$query}%")
-            ->take(10)
-            ->get()
-            ->map(function ($lesson) {
-                $lesson->course_title = $lesson->course->title ?? null;
-                return $lesson;
-            });
-
-        return response()->json([
-            'users' => $users,
-            'courses' => $courses,
-            'lessons' => $lessons,
-        ]);
+    if (empty(trim($query))) {
+        return response()->json(['message' => 'Search query is required'], 400);
     }
+
+    $searchQuery = "%{$query}%";
+
+    $results = [
+        'users' => User::query()
+            ->where('name', 'LIKE', $searchQuery)
+            ->orWhere('username', 'LIKE', $searchQuery)
+            ->limit(10)
+            ->get(),
+            
+        'courses' => Course::query()
+            ->where('title', 'LIKE', $searchQuery)
+            ->orWhere('description', 'LIKE', $searchQuery)
+            ->limit(10)
+            ->get()
+            ->each->append('total_lessons'),
+            
+        'lessons' => Lesson::with('course:id,title')
+            ->where('title', 'LIKE', $searchQuery)
+            ->orWhere('description', 'LIKE', $searchQuery)
+            ->limit(10)
+            ->get()
+            ->map(fn ($lesson) => tap($lesson, function ($l) {
+                $l->course_title = $l->course->title ?? null;
+            })),
+            
+        'blog_posts' => BlogPost::with(['user:id,name,username', 'categories:id,name'])
+            ->where(function ($q) use ($searchQuery) {
+                $q->where('title', 'LIKE', $searchQuery)
+                  ->orWhere('content', 'LIKE', $searchQuery);
+            })
+            ->orderByRaw("CASE WHEN title LIKE ? THEN 1 ELSE 2 END", [$searchQuery])
+            ->limit(10)
+            ->get()
+            ->each->append(['image_url', 'excerpt'])
+    ];
+
+    return response()->json($results);
+}
 }
