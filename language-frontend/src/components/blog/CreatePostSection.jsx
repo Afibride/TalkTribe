@@ -46,8 +46,7 @@ const handleSubmit = async (e) => {
     <section className="create-post-section">
       <div className="create-post-container">
         <div className="post-header">
-          <img src="/profile.png" alt="User" className="author-avatar" />
-          <h3>Create a Post</h3>
+         <h3>Create a Post</h3>
         </div>
         
         <form onSubmit={handleSubmit}>

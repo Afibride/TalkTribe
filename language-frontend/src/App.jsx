@@ -26,6 +26,8 @@ import BlogDetailPage from './views/BlogDetailPage';
 // Components
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
+import Notifications from './views/Notifications';
+import ProfilePage from './views/ProfilePage';
 
 
 function App() {
@@ -134,6 +136,23 @@ function App() {
             element={
               <PrivateRoute>
                 <BlogDetailPage />
+              </PrivateRoute>
+            }
+          />
+          
+          <Route
+            path="/notifications"
+            element={
+              <PrivateRoute>
+                <Notifications />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile/:username"
+            element={
+              <PrivateRoute>
+                <ProfilePage />
               </PrivateRoute>
             }
           />

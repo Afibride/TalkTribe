@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { FaThumbsUp, FaComment, FaShare } from 'react-icons/fa';
 import api from '../../api/api';
 import '../../css/Blog.css';
 
@@ -56,11 +57,13 @@ const RelatedBlogSection = ({ currentPostId }) => {
               <div className="related-blog-details">
                 <h3>{post.title}</h3>
                 <p className="related-blog-excerpt">
-                  {post.content?.substring(0, 500).replace(/<\/?[^>]+(>|$)/g, "")}...
+                  {post.content?.substring(0, 100).replace(/<\/?[^>]+(>|$)/g, "")}
+                  {post.content?.length > 100 && '...'}
                 </p>
                 <div className="blog-stats">
-                  <span className="blog-likes">❤️ {post.likes_count || 0}</span>
-                  <span className="blog-views">👁 {post.views_count || 0}</span>
+                  <span><FaThumbsUp /> {post.likes_count || 0}</span>
+                  <span><FaComment /> {post.comments_count || 0}</span>
+                  <span><FaShare /> {post.shares_count || 0}</span>
                 </div>
               </div>
             </Link>
