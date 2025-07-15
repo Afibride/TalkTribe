@@ -3,6 +3,7 @@ import { NavLink, useNavigate, Link } from "react-router-dom";
 import "../css/HomeLogin.css";
 import "../css/NavbarSearch.css";
 import api from "../api/api";
+import SubNavbar from "./SubNavbar";
 
 const NewNavbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -11,12 +12,22 @@ const NewNavbar = () => {
   const [searchResults, setSearchResults] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(0);
 
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
   const user = JSON.parse(localStorage.getItem("user")) || {};
   const userName = user?.username || "User";
-  const profilePic = user?.profilePic || "/profile.png";
+  const profilePic = user?.profile_pic_url || "/profile.png";
+
+  useEffect(() => {
+    if (token) {
+      api
+        .get("/api/notifications/count")
+        .then((res) => setNotificationCount(res.data.count))
+        .catch((err) => console.error("Error fetching notifications:", err));
+    }
+  }, [token]);
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -33,7 +44,7 @@ const NewNavbar = () => {
     setShowLogoutConfirm(false);
     closeDropdown();
     navigate("/", {
-      state: { toastMessage: "👋 You’ve been logged out successfully." },
+      state: { toastMessage: "👋 You've been logged out successfully." },
     });
   };
   const cancelLogout = () => setShowLogoutConfirm(false);
@@ -65,7 +76,7 @@ const NewNavbar = () => {
     setSearchTerm("");
     setSearchResults(null);
 
-    if (type === "lesson") navigate(`/lesson/${id}`);
+    if (type === "lesson") navigate(`/courses/${id}/lesson/${id}`);
     else if (type === "course") navigate(`/courses/${id}/lessons`);
     else if (type === "user") navigate(`/profile/${id}`);
     else if (type === "blog_post") navigate(`/blog/${id}`);
@@ -77,7 +88,6 @@ const NewNavbar = () => {
         <img src="/logo.png" alt="TalkTribe Logo" className="logo" />
       </Link>
 
-      {/* Search Bar */}
       <div className={`search-bar-container ${isSearchOpen ? "open" : ""}`}>
         <input
           type="text"
@@ -98,7 +108,6 @@ const NewNavbar = () => {
 
         {searchResults && (
           <div className="search-results">
-            {/* Courses */}
             {searchResults.courses?.length > 0 && (
               <div className="result-group">
                 <h4>Courses</h4>
@@ -115,7 +124,6 @@ const NewNavbar = () => {
               </div>
             )}
 
-            {/* Lessons */}
             {searchResults.lessons?.length > 0 && (
               <div className="result-group">
                 <h4>Lessons</h4>
@@ -132,7 +140,6 @@ const NewNavbar = () => {
               </div>
             )}
 
-            {/* Users */}
             {searchResults.users?.length > 0 && (
               <div className="result-group">
                 <h4>Users</h4>
@@ -140,16 +147,24 @@ const NewNavbar = () => {
                   <div
                     key={`user-${item.id}`}
                     className="search-result-item"
-                    onClick={() => handleResultClick("user", item.id)}
+                    onClick={() => handleResultClick("user", item.username)}
                   >
+                    <img
+                      src={item.profile_pic_url || "/profil.png"}
+                      alt={item.name}
+                      className="user-avatar"
+                      onError={(e) => {
+                        e.target.src = "/profile.png";
+                        e.target.onerror = null;
+                      }}
+                    />
                     <strong>{item.name}</strong>
-                    <p>{item.email}</p>
+                    <p>@{item.username}</p>
                   </div>
                 ))}
               </div>
             )}
 
-            {/* Blog Posts */}
             {searchResults.blog_posts?.length > 0 && (
               <div className="result-group">
                 <h4>Blog Posts</h4>
@@ -166,18 +181,14 @@ const NewNavbar = () => {
               </div>
             )}
 
-            {/* Fallback */}
             {!searchResults.courses?.length &&
               !searchResults.lessons?.length &&
               !searchResults.users?.length &&
-              !searchResults.blog_posts?.length && (
-                <p>No results found.</p>
-              )}
+              !searchResults.blog_posts?.length && <p>No results found.</p>}
           </div>
         )}
       </div>
 
-      {/* Desktop Nav */}
       <div className="nav-menu desktop-menu">
         <div className="nav-links">
           <NavLink
@@ -186,7 +197,7 @@ const NewNavbar = () => {
               isActive ? "nav-link active" : "nav-link"
             }
           >
-            Home
+            <i className="fas fa-home"></i> Home
           </NavLink>
           <NavLink
             to="/local-languages"
@@ -194,7 +205,7 @@ const NewNavbar = () => {
               isActive ? "nav-link active" : "nav-link"
             }
           >
-            Learn
+            <i className="fas fa-book-open"></i> Learn
           </NavLink>
           <NavLink
             to="/blog"
@@ -202,7 +213,7 @@ const NewNavbar = () => {
               isActive ? "nav-link active" : "nav-link"
             }
           >
-            Blog
+            <i className="fas fa-newspaper"></i> Blog
           </NavLink>
           <NavLink
             to="/about"
@@ -210,101 +221,117 @@ const NewNavbar = () => {
               isActive ? "nav-link active" : "nav-link"
             }
           >
-            About Us
+            <i className="fas fa-info-circle"></i> About Us
           </NavLink>
+
+          {token && (
+            <NavLink
+              to="/notifications"
+              className={({ isActive }) =>
+                `notification-desktop ${isActive ? "active" : ""}`
+              }
+            >
+              <div className="notification-icon">
+                <i className="fas fa-bell"></i>
+                {notificationCount > 0 && (
+                  <span className="notification-badge">
+                    {notificationCount}
+                  </span>
+                )}
+              </div>
+            </NavLink>
+          )}
         </div>
+
         {token && (
           <div className="user-profile" onClick={toggleDropdown}>
-            <img src={profilePic} alt="User Profile" className="profile-pic" />
+            <img
+              src={profilePic}
+              alt="User Profile"
+              className="nav-profile-pic"
+            />
             <span className="user-name">{userName}</span>
             <i className="fas fa-chevron-down dropdown-icon"></i>
           </div>
         )}
       </div>
 
-      {/* Mobile Buttons */}
       <div className="navbar-right">
         <button className="search-icon" onClick={toggleSearch}>
           <i className="fas fa-search"></i>
         </button>
+
+        {token && (
+          <NavLink
+            to="/notifications"
+            className={({ isActive }) =>
+              `mobile-notification-link ${isActive ? "active" : ""}`
+            }
+          >
+            <div className="notification-icon">
+              <i className="fas fa-bell"></i>
+              {notificationCount > 0 && (
+                <span className="notification-badge">{notificationCount}</span>
+              )}
+            </div>
+          </NavLink>
+        )}
+
         <button
           className={`hamburger-menu ${isMenuOpen ? "open" : ""}`}
           onClick={toggleMenu}
         >
-          {isMenuOpen ? "X" : "☰"}
+          {isMenuOpen ? "✕" : "☰"}
         </button>
       </div>
 
-      {/* Mobile Menu */}
-      <div className={`nav-menu mobile-menu ${isMenuOpen ? "open" : ""}`}>
-        <div className="nav-links">
+      <div className={`mobile-menu ${isMenuOpen ? "open" : ""}`}>
+        <div className="mobile-nav-links">
           <NavLink
-            to="/home-after-login"
+            to="/settings"
             className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
+              isActive ? "mobile-nav-link active" : "mobile-nav-link"
             }
+            onClick={toggleMenu}
           >
-            Home
+            <i className="fas fa-cog"></i> Settings
           </NavLink>
-          <NavLink
-            to="/local-languages"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
+          <button
+            className="mobile-nav-link logout"
+            onClick={handleLogoutClick}
           >
-            Learn
-          </NavLink>
-          <NavLink
-            to="/blog"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
-          >
-            Blog
-          </NavLink>
-          <NavLink
-            to="/about"
-            className={({ isActive }) =>
-              isActive ? "nav-link active" : "nav-link"
-            }
-          >
-            About Us
-          </NavLink>
+            <i className="fas fa-sign-out-alt"></i> Logout
+          </button>
         </div>
-        {token && (
-          <div className="user-profile" onClick={toggleDropdown}>
-            <img src={profilePic} alt="User Profile" className="profile-pic" />
-            <span className="user-name">{userName}</span>
-            <i className="fas fa-chevron-down dropdown-icon"></i>
-          </div>
-        )}
       </div>
 
-      {/* Dropdown */}
       {isDropdownOpen && (
         <div className="dropdown-menu">
           <button className="close-dropdown" onClick={closeDropdown}>
             ✖
           </button>
-          <NavLink to="/edit-profile" className="dropdown-item">
-            Edit Profile
+          <NavLink
+            to={`/profile/${userName}`}
+            className="dropdown-item"
+            onClick={closeDropdown}
+          >
+            <i className="fas fa-user"></i> My Profile
           </NavLink>
           <NavLink to="/my-courses" className="dropdown-item">
-            My Courses
+            <i className="fas fa-book"></i> My Courses
           </NavLink>
           <NavLink to="/my-progress" className="dropdown-item">
-            My Progress
+            <i className="fas fa-chart-line"></i> My Progress
           </NavLink>
           <NavLink to="/settings" className="dropdown-item">
-            Settings
+            <i className="fas fa-cog"></i> Settings
           </NavLink>
           <button className="dropdown-item logout" onClick={handleLogoutClick}>
-            Logout
+            <i className="fas fa-sign-out-alt"></i> Logout
           </button>
         </div>
       )}
 
-      {/* Logout Confirm */}
       {showLogoutConfirm && (
         <div className="logout-modal-overlay">
           <div className="logout-modal">
@@ -320,6 +347,7 @@ const NewNavbar = () => {
           </div>
         </div>
       )}
+      <SubNavbar />
     </nav>
   );
 };

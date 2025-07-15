@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // 👇 Set your Laravel API URL (use environment variables for production!)
 const api = axios.create({
-  baseURL: 'http://192.168.250.241:8000',
+  baseURL: 'http://192.168.42.32:8000',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -23,6 +23,20 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+
+api.interceptors.response.use((response) => {
+  return response;
+}, (error) => {
+  if (error.response && error.response.status === 401) {
+    // Handle unauthorized access
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  }
+  return Promise.reject(error);
+});
+
 
 
 export default api;

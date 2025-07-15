@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import NewNavbar from '../components/Navbar1';
+import BlogNavbar from '../components/blog/BlogNavbar'; // Add this import
 import Footer from '../components/Footer';
 import BlogHeroSection from '../components/blog/BlogHeroSection';
 import BlogPostsSection from '../components/blog/BlogPostsSection';
@@ -10,6 +11,7 @@ const BlogPage = () => {
   const [refreshPosts, setRefreshPosts] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
   const [showCreatePost, setShowCreatePost] = useState(false);
+  const [activeTab, setActiveTab] = useState('blog-home'); // Add this state
 
   const handlePostCreated = () => {
     setRefreshPosts(prev => !prev);
@@ -24,31 +26,54 @@ const BlogPage = () => {
     <>
       <div className="blog-page">
         <NewNavbar />
-        <BlogHeroSection 
-          onCreatePostClick={() => setShowCreatePost(true)}
-        />
+        <BlogNavbar activeTab={activeTab} setActiveTab={setActiveTab} /> {/* Add this line */}
         
-        {showCreatePost && (
-          <CreatePostSection 
-            onSuccess={handlePostCreated}
-            onCancel={() => setShowCreatePost(false)}
-          />
+        {/* Conditionally render content based on activeTab */}
+        {activeTab === 'blog-home' && (
+          <>
+            <BlogHeroSection 
+              onCreatePostClick={() => setShowCreatePost(true)}
+            />
+            
+            {showCreatePost && (
+              <CreatePostSection 
+                onSuccess={handlePostCreated}
+                onCancel={() => setShowCreatePost(false)}
+              />
+            )}
+
+            <div className="blog-container">
+              <div className="blog-main-content">
+                <BlogPostsSection 
+                  refresh={refreshPosts}
+                  onPostSelect={handlePostSelect}
+                />
+              </div>
+              
+              <div className="blog-sidebar">
+                <RelatedBlogSection 
+                  currentPostId={selectedPost} 
+                />
+              </div>
+            </div>
+          </>
         )}
 
-        <div className="blog-container">
-          <div className="blog-main-content">
-            <BlogPostsSection 
-              refresh={refreshPosts}
-              onPostSelect={handlePostSelect}
-            />
+        {activeTab === 'news' && (
+          <div className="news-container">
+            {/* News content goes here */}
+            <h2>Latest News</h2>
+            {/* You can create a NewsSection component */}
           </div>
-          
-          <div className="blog-sidebar">
-            <RelatedBlogSection 
-              currentPostId={selectedPost} 
-            />
+        )}
+
+        {activeTab.startsWith('community-') && (
+          <div className="community-container">
+            {/* Community posts content goes here */}
+            <h2>Community Posts</h2>
+            {/* You can create a CommunityPostsSection component */}
           </div>
-        </div>
+        )}
       </div>
       <Footer />
     </>

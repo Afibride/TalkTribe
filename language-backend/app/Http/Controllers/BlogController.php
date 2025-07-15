@@ -14,14 +14,15 @@ use Schema;
 
 class BlogController extends Controller
 {
-    // Get all blog posts
+
 public function index()
 {
     $posts = BlogPost::with([
-        'user', 
+        'user:id,name,username,image', 
         'categories', 
         'comments' => function($query) {
-            $query->with('user:id,name,image')
+            $query->whereNull('parent_id')
+                  ->with(['user:id,name,username,image', 'replies.user:id,name,username,image']) // Add username here
                   ->latest(); 
         }
     ])
@@ -34,15 +35,16 @@ public function index()
     return response()->json($posts);
 }
 
-
+// Similarly update the show() method:
 public function show($id)
 {
     try {
         $post = BlogPost::with([
-            'user', 
+            'user:id,name,username,image', 
             'categories', 
             'comments' => function($query) {
-                $query->with('user:id,name,image')
+                $query->whereNull('parent_id')
+                      ->with(['user:id,name,username,image', 'replies.user:id,name,username,image']) // Add username here
                       ->latest();
             }
         ])
@@ -51,7 +53,6 @@ public function show($id)
         }])
         ->findOrFail($id);
 
-        // Only increment if column exists
         if (Schema::hasColumn('blog_posts', 'views_count')) {
             $post->increment('views_count');
         }
@@ -146,21 +147,31 @@ public function addComment(Request $request, $postId)
     try {
         $request->validate([
             'content' => 'required|string|max:1000',
+            'parent_id' => 'nullable|exists:blog_post_comments,id'
         ]);
 
         $post = BlogPost::findOrFail($postId);
 
-        $comment = $post->comments()->create([
+        $commentData = [
             'user_id' => Auth::id(),
             'content' => $request->content,
-        ]);
+        ];
 
-        $post->increment('comments_count');
+        if ($request->has('parent_id')) {
+            $commentData['parent_id'] = $request->parent_id;
+        }
 
-        // Load the user relationship with only necessary fields
+        $comment = $post->comments()->create($commentData);
+
+        // Only increment comments_count for top-level comments
+        if (!$request->has('parent_id')) {
+            $post->increment('comments_count');
+        }
+
+        // Load the user and replies relationships
         $comment->load(['user' => function($query) {
             $query->select('id', 'name', 'image');
-        }]);
+        }, 'replies']);
 
         return response()->json([
             'message' => 'Comment added successfully',

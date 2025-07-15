@@ -6,6 +6,7 @@ use App\Http\Controllers\API\PasswordResetController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -41,6 +42,10 @@ Route::get('/search', [SearchController::class, 'search']); // Search for course
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+
+Route::get('/users/{username}', [UserController::class, 'show']);
+Route::get('/users/{username}/posts', [UserController::class, 'getUserPosts']);
+Route::post('/users/{username}', [UserController::class, 'update']);
 });
 
 

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { FaThumbsUp, FaComment, FaShare } from 'react-icons/fa';
 import api from '../api/api';
 import '../css/BlogDetail.css';
+import '../css/Blog.css';
 
 import NewNavbar from '../components/Navbar1';
 import Footer from '../components/Footer';
@@ -26,7 +27,6 @@ const BlogDetailPage = () => {
         setLiked(response.data.liked || false);
         setLikesCount(response.data.likes_count || 0);
 
-        // Track view count
         await api.post(`/api/blog/posts/${id}/view`);
       } catch (err) {
         setError(err.message);
@@ -60,14 +60,18 @@ const BlogDetailPage = () => {
         <article className="blog-post-detail">
           <header className="post-header">
             <div className="author-info">
-              <img
-                src={post.user?.avatar || '/profile.png'}
-                alt={post.user?.name || 'Author'}
-                className="author-avatar"
-                onError={(e) => { e.target.src = '/profile.png'; }}
-              />
+              <Link to={`/profile/${post.user?.username || 'user'}`} className="author-link">
+                <img
+                  src={post.user?.profile_pic_url || '/profile.png'}
+                  alt={post.user?.name || 'Author'}
+                  className="author-avatar"
+                  onError={(e) => { e.target.src = '/profile.png'; }}
+                />
+              </Link>
               <div>
-                <h3>{post.user?.name || 'Unknown Author'}</h3>
+                <Link to={`/profile/${post.user?.username || 'user'}`} className="author-link">
+                  <h3>{post.user?.name || 'Unknown Author'}</h3>
+                </Link>
                 <p className="post-meta">
                   {new Date(post.created_at).toLocaleDateString()} • {post.reading_time || '5 min'} read
                 </p>
@@ -88,7 +92,7 @@ const BlogDetailPage = () => {
               <img
                 src={post.image_url}
                 alt={post.title}
-                onError={(e) => { e.target.src = '/blog-placeholder.jpg'; }}
+                onError={(e) => { e.target.src = '/blog.jpg'; }}
               />
             </div>
           )}
@@ -110,7 +114,10 @@ const BlogDetailPage = () => {
             </div>
           </div>
 
-          <CommentsSection postId={id} initialComments={post.comments || []} />
+          <CommentsSection 
+            postId={id} 
+            initialComments={post.comments || []} 
+          />
         </article>
 
         <aside className="blog-sidebar">

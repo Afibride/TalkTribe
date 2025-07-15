@@ -45,32 +45,43 @@ const BlogPostsSection = ({ refresh }) => {
     }
   };
 
-const handleAddComment = async (postId, commentText) => {
+  const handleAddComment = async (postId, commentText, parentId = null) => {
     try {
-        const response = await api.post(`/api/blog/posts/${postId}/comment`, {
-            content: commentText
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-            }
-        });
-        
-        setPosts(posts.map(post => 
-            post.id === postId ? {
-                ...post,
-                comments: [response.data.comment, ...(post.comments || [])],
-                comments_count: (post.comments_count || 0) + 1
-            } : post
-        ));
-        
-        return true; // Success
+      const response = await api.post(`/api/blog/posts/${postId}/comment`, {
+        content: commentText,
+        parent_id: parentId
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+      
+      setPosts(posts.map(post => 
+        post.id === postId ? {
+          ...post,
+          comments: parentId 
+            ? post.comments.map(comment => 
+                comment.id === parentId
+                  ? { 
+                      ...comment, 
+                      replies: [response.data.comment, ...(comment.replies || [])],
+                      replies_count: (comment.replies_count || 0) + 1
+                    }
+                  : comment
+              )
+            : [response.data.comment, ...(post.comments || [])],
+          comments_count: (post.comments_count || 0) + 1
+        } : post
+      ));
+      
+      return response.data.comment;
     } catch (err) {
-        console.error('Error adding comment:', err.response?.data || err.message);
-        alert(err.response?.data?.message || 'Failed to add comment');
-        return false; // Failure
+      console.error('Error adding comment:', err.response?.data || err.message);
+      alert(err.response?.data?.message || 'Failed to add comment');
+      return null;
     }
-};
+  };
 
   const loadMore = () => {
     if (!loading && hasMore) {
@@ -95,7 +106,8 @@ const handleAddComment = async (postId, commentText) => {
             },
             author: {
               name: post.user?.name || 'Anonymous',
-              avatar: post.user?.avatar || '/profile.png',
+              username: post.user?.username || 'user',
+              profile_pic_url: post.user?.profile_pic_url || '/profile.png',
               role: post.user?.role || 'Language Enthusiast'
             },
             stats: {
@@ -108,6 +120,7 @@ const handleAddComment = async (postId, commentText) => {
           }}
           onLike={handleLike}
           onAddComment={handleAddComment}
+          showEditOptions={post.user?.id === parseInt(localStorage.getItem('userId'))}
         />
       ))}
       
