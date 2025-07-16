@@ -23,10 +23,6 @@ const Navbar = () => {
           <i className="fas fa-search"></i>
         </button>
 
-        <button className="notification-icon">
-          <i className="fas fa-bell"></i>
-        </button>
-
         <button
           className={`hamburger-menu ${isMenuOpen ? 'open' : ''}`}
           onClick={toggleMenu}

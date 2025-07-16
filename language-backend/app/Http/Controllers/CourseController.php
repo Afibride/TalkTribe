@@ -153,4 +153,21 @@ public function getCourses()
         $courses = Course::inRandomOrder()->take(5)->get();
         return response()->json($courses);
     }
+
+    
+public function getInstructorCourses(Request $request)
+{
+    $user = $request->user();
+    
+    if ($user->role !== 'instructor') {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+    
+    $courses = Course::where('instructor_id', $user->id)
+        ->with(['category', 'lessons'])
+        ->latest()
+        ->get();
+        
+    return response()->json($courses);
+}
 }

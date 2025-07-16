@@ -7,6 +7,10 @@ import CommentsSection from '../components/blog/CommentsSection';
 import NewNavbar from '../components/Navbar1';
 import Footer from '../components/Footer';
 import CreatePostSection from '../components/blog/CreatePostSection';
+import InstructorCourses from '../components/instructor/InstructorCourses';
+import CreateCourseModal from '../components/instructor/CreateCourseModal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -30,6 +34,19 @@ const ProfilePage = () => {
   });
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [showCreateCourseModal, setShowCreateCourseModal] = useState(false);
+  const [courses, setCourses] = useState([]);
+  const [isInstructor, setIsInstructor] = useState(false);
+
+  const fetchInstructorCourses = async () => {
+    try {
+      const response = await api.get('/api/instructor/courses');
+      setCourses(response.data);
+    } catch (error) {
+      console.error('Error fetching instructor courses:', error);
+      setError('Failed to load courses');
+    }
+  };
 
   const fetchProfile = async () => {
     try {
@@ -46,6 +63,7 @@ const ProfilePage = () => {
       
       setProfile(response.data.user);
       setIsCurrentUser(currentUser?.username === username);
+      setIsInstructor(response.data.user?.role === 'instructor');
       
       setEditForm({
         name: response.data.user.name,
@@ -66,12 +84,17 @@ const ProfilePage = () => {
         comments: post.comments || []
       })));
       
+      if (response.data.user?.role === 'instructor') {
+        await fetchInstructorCourses();
+      }
+      
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to load profile');
       if (err.response?.status === 404) {
         setError('User not found');
       }
       setPosts([]);
+      setCourses([]);
     } finally {
       setIsLoading(false);
     }
@@ -277,6 +300,109 @@ const ProfilePage = () => {
     fetchProfile();
   };
 
+  const handleCourseCreated = (newCourse) => {
+  setCourses([newCourse, ...courses]);
+  toast.success('Course created successfully!');
+  setShowCreateCourseModal(false);
+};
+
+const handleCourseUpdated = (updatedCourse) => {
+  setCourses(courses.map(c => c.id === updatedCourse.id ? updatedCourse : c));
+  toast.success('Course updated successfully!');
+};
+
+const handleCourseDeleted = (deletedId) => {
+  setCourses(courses.filter(c => c.id !== deletedId));
+  toast.success('Course deleted successfully!');
+};
+
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case 'posts':
+        return (
+          <div className="posts-container">
+            {isCurrentUser && (
+              <button 
+                className="create-post-btn"
+                onClick={() => setShowCreatePost(true)}
+              >
+                Create New Post
+              </button>
+            )}
+            
+            {posts.length === 0 ? (
+              <div className="no-posts">
+                <p>No posts yet.</p>
+              </div>
+            ) : (
+              posts.map(post => (
+                <BlogPost 
+                  key={post.id}
+                  post={{
+                    ...post,
+                    content: {
+                      text: post.content,
+                      image: post.image_url
+                    },
+                    author: {
+                      name: profile.name,
+                      avatar: profile.profile_pic_url || '/profile.png',
+                      role: profile.role || 'User'
+                    },
+                    stats: {
+                      likes: post.likes_count || 0,
+                      comments: post.comments_count || 0,
+                      shares: 0
+                    },
+                    liked: post.liked || false,
+                    comments: post.comments || [],
+                    showComments: true
+                  }}
+                  onLike={() => handleLike(post.id)}
+                  onAddComment={(commentText, parentId) => handleAddComment(post.id, commentText, parentId)}
+                  onEdit={isCurrentUser ? handlePostEdit : null}
+                  onDelete={isCurrentUser ? () => confirmDeletePost(post.id) : null}
+                  showEditOptions={isCurrentUser}
+                />
+              ))
+            )}
+          </div>
+        );
+      case 'about':
+        return (
+          <div className="about-container">
+            <div className="about-section">
+              <h3>About</h3>
+              <p>{profile.bio || 'No bio provided.'}</p>
+            </div>
+            
+            <div className="about-section">
+              <h3>Details</h3>
+              <div className="detail-item">
+                <i className="fas fa-map-marker-alt"></i>
+                <span>{profile.location || 'Unknown location'}</span>
+              </div>
+              <div className="detail-item">
+                <i className="fas fa-calendar-alt"></i>
+                <span>Joined {new Date(profile.created_at).toLocaleDateString()}</span>
+              </div>
+            </div>
+          </div>
+        );
+      case 'courses':
+        return (
+          <InstructorCourses 
+            courses={courses} 
+            onCourseCreated={handleCourseCreated}
+            onCourseUpdated={handleCourseUpdated}
+            onCourseDeleted={handleCourseDeleted}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   if (isLoading) return (
     <div className="loading-container">
       <div className="loading-spinner"></div>
@@ -444,302 +570,264 @@ const ProfilePage = () => {
           >
             About
           </button>
+          {isInstructor && (
+            <button 
+              className={`tab ${activeTab === 'courses' ? 'active' : ''}`}
+              onClick={() => setActiveTab('courses')}
+            >
+              My Courses
+            </button>
+          )}
         </div>
 
         <div className="tab-content">
-          {activeTab === 'posts' && (
-            <div className="posts-container">
-              {isCurrentUser && (
-                <button 
-                  className="create-post-btn"
-                  onClick={() => setShowCreatePost(true)}
-                >
-                  Create New Post
-                </button>
-              )}
-              
-              {posts.length === 0 ? (
-                <div className="no-posts">
-                  <p>No posts yet.</p>
-                </div>
-              ) : (
-                posts.map(post => (
-                  <BlogPost 
-                    key={post.id}
-                    post={{
-                      ...post,
-                      content: {
-                        text: post.content,
-                        image: post.image_url
-                      },
-                      author: {
-                        name: profile.name,
-                        avatar: profile.profile_pic_url || '/profile.png',
-                        role: profile.role || 'User'
-                      },
-                      stats: {
-                        likes: post.likes_count || 0,
-                        comments: post.comments_count || 0,
-                        shares: 0
-                      },
-                      liked: post.liked || false,
-                      comments: post.comments || [],
-                      showComments: true
-                    }}
-                    onLike={() => handleLike(post.id)}
-                    onAddComment={(commentText, parentId) => handleAddComment(post.id, commentText, parentId)}
-                    onEdit={isCurrentUser ? handlePostEdit : null}
-                    onDelete={isCurrentUser ? () => confirmDeletePost(post.id) : null}
-                    showEditOptions={isCurrentUser}
-                  />
-                ))
-              )}
-            </div>
-          )}
-
-          {activeTab === 'about' && (
-            <div className="about-container">
-              <div className="about-section">
-                <h3>About</h3>
-                <p>{profile.bio || 'No bio provided.'}</p>
-              </div>
-              
-              <div className="about-section">
-                <h3>Details</h3>
-                <div className="detail-item">
-                  <i className="fas fa-map-marker-alt"></i>
-                  <span>{profile.location || 'Unknown location'}</span>
-                </div>
-                <div className="detail-item">
-                  <i className="fas fa-calendar-alt"></i>
-                  <span>Joined {new Date(profile.created_at).toLocaleDateString()}</span>
-                </div>
-              </div>
-            </div>
-          )}
+          {renderTabContent()}
         </div>
-      </div>
 
-      {/* Edit Profile Modal */}
-      {isEditing && (
-        <div className="modal-overlay">
-          <div className="edit-profile-modal">
-            <form onSubmit={handleEditSubmit} className="edit-profile-form">
-              <button 
-                type="button" 
-                className="close-edit-form"
-                onClick={() => {
-                  setIsEditing(false);
-                  setEditingField(null);
-                  setError(null);
-                }}
-              >
-                &times;
-              </button>
-              
-              <h2>Edit Profile</h2>
-              
-              {(editingField === 'name' || editingField === 'all') && (
-                <div className="form-group">
-                  <label>Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={editForm.name}
-                    onChange={handleEditChange}
-                    placeholder="Enter your name"
-                  />
-                </div>
-              )}
-              
-              {(editingField === 'bio' || editingField === 'all') && (
-                <div className="form-group">
-                  <label>Bio</label>
-                  <textarea
-                    name="bio"
-                    value={editForm.bio}
-                    onChange={handleEditChange}
-                    rows="3"
-                    placeholder="Tell us about yourself"
-                  />
-                </div>
-              )}
-              
-              {(editingField === 'location' || editingField === 'all') && (
-                <div className="form-group">
-                  <label>Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={editForm.location}
-                    onChange={handleEditChange}
-                    placeholder="Where are you from?"
-                  />
-                </div>
-              )}
-              
-              {(editingField === 'profile_pic' || editingField === 'all') && (
-                <div className="form-group">
-                  <label>Profile Picture (Max 2MB)</label>
-                  <div className="custom-file-input">
-                    <input
-                      type="file"
-                      id="profile-pic-upload"
-                      name="profile_pic"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="file-input"
-                    />
-                    <label htmlFor="profile-pic-upload" className="file-input-label">
-                      <span className="file-input-text">
-                        {editForm.profile_pic instanceof File 
-                          ? editForm.profile_pic.name 
-                          : 'Choose a file'}
-                      </span>
-                      <span className="file-input-button">Browse</span>
-                    </label>
-                  </div>
-                  {editForm.profile_pic instanceof File && (
-                    <div className="image-preview">
-                      <img 
-                        src={getPreviewUrl(editForm.profile_pic)} 
-                        alt="Preview" 
-                        className="preview-image"
-                      />
-                      <button 
-                        type="button" 
-                        onClick={() => setEditForm(prev => ({...prev, profile_pic: null}))}
-                        className="remove-image-btn"
-                      >
-                        X
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-              
-              {(editingField === 'cover_photo' || editingField === 'all') && (
-                <div className="form-group">
-                  <label>Cover Photo (Max 5MB)</label>
-                  <div className="custom-file-input">
-                    <input
-                      type="file"
-                      id="cover-photo-upload"
-                      name="cover_photo"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="file-input"
-                    />
-                    <label htmlFor="cover-photo-upload" className="file-input-label">
-                      <span className="file-input-text">
-                        {editForm.cover_photo instanceof File 
-                          ? editForm.cover_photo.name 
-                          : 'Choose a file'}
-                      </span>
-                      <span className="file-input-button">Browse</span>
-                    </label>
-                  </div>
-                  {editForm.cover_photo instanceof File && (
-                    <div className="image-preview">
-                      <img 
-                        src={getPreviewUrl(editForm.cover_photo)} 
-                        alt="Cover Preview" 
-                        className="preview-image"
-                      />
-                      <button 
-                        type="button" 
-                        onClick={() => setEditForm(prev => ({...prev, cover_photo: null}))}
-                        className="remove-image-btn"
-                      >
-                        X
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
-              
-              {uploadProgress > 0 && uploadProgress < 100 && (
-                <div className="upload-progress">
-                  <div 
-                    className="progress-bar" 
-                    style={{ width: `${uploadProgress}%` }}
-                  >
-                    {uploadProgress}%
-                  </div>
-                </div>
-              )}
-              
-              <div className="form-actions">
-                <button 
-                  type="submit" 
-                  className="save-btn"
-                  disabled={uploadProgress > 0 && uploadProgress < 100}
-                >
-                  {uploadProgress === 100 ? 'Processing...' : 'Save Changes'}
-                </button>
+        {isInstructor && activeTab === 'courses' && isCurrentUser && (
+          <button 
+            className="create-course-btn"
+            onClick={() => setShowCreateCourseModal(true)}
+          >
+            Create New Course
+          </button>
+        )}
+
+        {isEditing && (
+          <div className="modal-overlay">
+            <div className="edit-profile-modal">
+              <form onSubmit={handleEditSubmit} className="edit-profile-form">
                 <button 
                   type="button" 
-                  className="cancel-btn" 
+                  className="close-edit-form"
                   onClick={() => {
                     setIsEditing(false);
                     setEditingField(null);
                     setError(null);
                   }}
-                  disabled={uploadProgress > 0 && uploadProgress < 100}
+                >
+                  &times;
+                </button>
+                
+                <h2>Edit Profile</h2>
+                
+                {(editingField === 'name' || editingField === 'all') && (
+                  <div className="form-group">
+                    <label>Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={editForm.name}
+                      onChange={handleEditChange}
+                      placeholder="Enter your name"
+                    />
+                  </div>
+                )}
+                
+                {(editingField === 'bio' || editingField === 'all') && (
+                  <div className="form-group">
+                    <label>Bio</label>
+                    <textarea
+                      name="bio"
+                      value={editForm.bio}
+                      onChange={handleEditChange}
+                      rows="3"
+                      placeholder="Tell us about yourself"
+                    />
+                  </div>
+                )}
+                
+                {(editingField === 'location' || editingField === 'all') && (
+                  <div className="form-group">
+                    <label>Location</label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={editForm.location}
+                      onChange={handleEditChange}
+                      placeholder="Where are you from?"
+                    />
+                  </div>
+                )}
+                
+                {(editingField === 'profile_pic' || editingField === 'all') && (
+                  <div className="form-group">
+                    <label>Profile Picture (Max 2MB)</label>
+                    <div className="custom-file-input">
+                      <input
+                        type="file"
+                        id="profile-pic-upload"
+                        name="profile_pic"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="file-input"
+                      />
+                      <label htmlFor="profile-pic-upload" className="file-input-label">
+                        <span className="file-input-text">
+                          {editForm.profile_pic instanceof File 
+                            ? editForm.profile_pic.name 
+                            : 'Choose a file'}
+                        </span>
+                        <span className="file-input-button">Browse</span>
+                      </label>
+                    </div>
+                    {editForm.profile_pic instanceof File && (
+                      <div className="image-preview">
+                        <img 
+                          src={getPreviewUrl(editForm.profile_pic)} 
+                          alt="Preview" 
+                          className="preview-image"
+                        />
+                        <button 
+                          type="button" 
+                          onClick={() => setEditForm(prev => ({...prev, profile_pic: null}))}
+                          className="remove-image-btn"
+                        >
+                          X
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {(editingField === 'cover_photo' || editingField === 'all') && (
+                  <div className="form-group">
+                    <label>Cover Photo (Max 5MB)</label>
+                    <div className="custom-file-input">
+                      <input
+                        type="file"
+                        id="cover-photo-upload"
+                        name="cover_photo"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="file-input"
+                      />
+                      <label htmlFor="cover-photo-upload" className="file-input-label">
+                        <span className="file-input-text">
+                          {editForm.cover_photo instanceof File 
+                            ? editForm.cover_photo.name 
+                            : 'Choose a file'}
+                        </span>
+                        <span className="file-input-button">Browse</span>
+                      </label>
+                    </div>
+                    {editForm.cover_photo instanceof File && (
+                      <div className="image-preview">
+                        <img 
+                          src={getPreviewUrl(editForm.cover_photo)} 
+                          alt="Cover Preview" 
+                          className="preview-image"
+                        />
+                        <button 
+                          type="button" 
+                          onClick={() => setEditForm(prev => ({...prev, cover_photo: null}))}
+                          className="remove-image-btn"
+                        >
+                          X
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+                
+                {uploadProgress > 0 && uploadProgress < 100 && (
+                  <div className="upload-progress">
+                    <div 
+                      className="progress-bar" 
+                      style={{ width: `${uploadProgress}%` }}
+                    >
+                      {uploadProgress}%
+                    </div>
+                  </div>
+                )}
+                
+                <div className="form-actions">
+                  <button 
+                    type="submit" 
+                    className="save-btn"
+                    disabled={uploadProgress > 0 && uploadProgress < 100}
+                  >
+                    {uploadProgress === 100 ? 'Processing...' : 'Save Changes'}
+                  </button>
+                  <button 
+                    type="button" 
+                    className="cancel-btn" 
+                    onClick={() => {
+                      setIsEditing(false);
+                      setEditingField(null);
+                      setError(null);
+                    }}
+                    disabled={uploadProgress > 0 && uploadProgress < 100}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {showCreatePost && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <button 
+                className="close-modal" 
+                onClick={() => setShowCreatePost(false)}
+              >
+                &times;
+              </button>
+              <CreatePostSection 
+                onSuccess={handlePostCreated}
+              />
+            </div>
+          </div>
+        )}
+
+        {showCreateCourseModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <button 
+                className="close-modal" 
+                onClick={() => setShowCreateCourseModal(false)}
+              >
+                &times;
+              </button>
+              <CreateCourseModal 
+                onSuccess={handleCourseCreated}
+                onCancel={() => setShowCreateCourseModal(false)}
+              />
+            </div>
+          </div>
+        )}
+
+        {showDeleteModal && (
+          <div className="modal-overlay">
+            <div className="modal-content delete-modal">
+              <h3>Delete Post</h3>
+              <p>Are you sure you want to delete this post? This action cannot be undone.</p>
+              <div className="modal-actions">
+                <button 
+                  className="cancel-btn"
+                  onClick={() => {
+                    setShowDeleteModal(false);
+                    setPostToDelete(null);
+                  }}
                 >
                   Cancel
                 </button>
+                <button 
+                  className="delete-btn"
+                  onClick={handlePostDelete}
+                >
+                  Delete
+                </button>
               </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Create Post Modal */}
-      {showCreatePost && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button 
-              className="close-modal" 
-              onClick={() => setShowCreatePost(false)}
-            >
-              &times;
-            </button>
-            <CreatePostSection 
-              onSuccess={handlePostCreated}
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-content delete-modal">
-            <h3>Delete Post</h3>
-            <p>Are you sure you want to delete this post? This action cannot be undone.</p>
-            <div className="modal-actions">
-              <button 
-                className="cancel-btn"
-                onClick={() => {
-                  setShowDeleteModal(false);
-                  setPostToDelete(null);
-                }}
-              >
-                Cancel
-              </button>
-              <button 
-                className="delete-btn"
-                onClick={handlePostDelete}
-              >
-                Delete
-              </button>
             </div>
           </div>
-        </div>
-      )}
-
+        )}
+      </div>
       <Footer />
+      <ToastContainer position="top-right" autoClose={3000} />
     </>
   );
 };
