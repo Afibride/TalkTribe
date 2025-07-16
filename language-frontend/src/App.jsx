@@ -28,6 +28,7 @@ import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 import Notifications from './views/Notifications';
 import ProfilePage from './views/ProfilePage';
+import TestimonialsPage from './views/TestimonialsPage';
 
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/search" element={<SearchResults />} />
+          <Route path="/testimonials" element={<TestimonialsPage />} />
 
           {/* Public routes (redirect if logged in) */}
           <Route

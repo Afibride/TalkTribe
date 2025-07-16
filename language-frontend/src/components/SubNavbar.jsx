@@ -15,7 +15,7 @@ const SubNavbar = () => {
             <i className="fas fa-home"></i>
           </NavLink>
           <NavLink to="/local-languages" className="subnav-icon">
-            <i className="fas fa-language"></i>
+            <i className="fas fa-book-open"></i>
           </NavLink>
           <NavLink to="/blog" className="subnav-icon">
             <i className="fas fa-blog"></i>

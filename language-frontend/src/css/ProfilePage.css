@@ -760,3 +760,60 @@
   width: 100%;
   display: block;
 }
+
+/* Add to ProfilePage.css */
+
+/* Instructor Courses Tab */
+.tab-content .courses-container {
+  padding: 20px;
+}
+
+/* Create Course Button */
+.create-course-btn {
+  display: block;
+  margin: 20px auto;
+  padding: 12px 24px;
+  background: #188b81;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.create-course-btn:hover {
+  background: #135c56;
+}
+
+/* Responsive adjustments for instructor tabs */
+@media (max-width: 768px) {
+  .profile-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 5px;
+  }
+  
+  .tab {
+    display: inline-block;
+    margin-right: 10px;
+  }
+}
+
+
+.Toastify__toast--success {
+  background-color: #4caf50;
+}
+
+.Toastify__toast--error {
+  background-color: #f44336;
+}
+
+.Toastify__toast--info {
+  background-color: #2196f3;
+}
+
+.Toastify__toast--warning {
+  background-color: #ff9800;
+}

@@ -1,0 +1,183 @@
+.edit-course-modal {
+  max-width: 700px;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.edit-course-modal .modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.edit-course-modal .modal-header h2 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.edit-course-modal .modal-header .close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #777;
+}
+
+.edit-course-modal .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.edit-course-modal .form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.edit-course-modal .form-row .form-group {
+  flex: 1;
+}
+
+.edit-course-modal label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.edit-course-modal input[type="text"],
+.edit-course-modal textarea,
+.edit-course-modal select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.edit-course-modal textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.edit-course-modal .file-upload {
+  margin-top: 0.5rem;
+}
+
+.edit-course-modal .file-upload-label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #f0f0f0;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-course-modal .file-upload-label:hover {
+  background: #e0e0e0;
+}
+
+.edit-course-modal .image-preview {
+  margin-top: 1rem;
+  position: relative;
+  max-width: 300px;
+}
+
+.edit-course-modal .image-preview img {
+  width: 100%;
+  border-radius: 4px;
+}
+
+.edit-course-modal .remove-image-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.edit-course-modal .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.edit-course-modal .cancel-btn,
+.edit-course-modal .submit-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-course-modal .cancel-btn {
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  color: #555;
+}
+
+.edit-course-modal .cancel-btn:hover {
+  background: #e0e0e0;
+}
+
+.edit-course-modal .submit-btn {
+  background: #2196F3;
+  border: 1px solid #1e88e5;
+  color: white;
+}
+
+.edit-course-modal .submit-btn:hover {
+  background: #1e88e5;
+}
+
+.edit-course-modal .submit-btn:disabled {
+  background: #90caf9;
+  cursor: not-allowed;
+}
+
+.edit-course-modal .spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.edit-course-modal .error-message {
+  color: #f44336;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #ffebee;
+  border-radius: 4px;
+}
+
+.edit-course-modal input.error,
+.edit-course-modal textarea.error,
+.edit-course-modal select.error {
+  border-color: #f44336;
+}
+
+.edit-course-modal .loading-text {
+  color: #777;
+  font-style: italic;
+}

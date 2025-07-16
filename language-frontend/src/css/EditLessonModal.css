@@ -1,0 +1,172 @@
+.edit-lesson-modal {
+  max-width: 600px;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.edit-lesson-modal h2 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.edit-lesson-modal .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.edit-lesson-modal label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #444;
+}
+
+.edit-lesson-modal input[type="text"],
+.edit-lesson-modal textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.edit-lesson-modal textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.edit-lesson-modal .file-upload {
+  margin-top: 0.5rem;
+}
+
+.edit-lesson-modal .file-upload-label {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: #f0f0f0;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-lesson-modal .file-upload-label:hover {
+  background: #e0e0e0;
+}
+
+.edit-lesson-modal .preview-container {
+  margin-top: 1rem;
+  position: relative;
+}
+
+.edit-lesson-modal .preview-video {
+  width: 100%;
+  max-height: 200px;
+  border-radius: 4px;
+  background: #000;
+}
+
+.edit-lesson-modal .notes-preview {
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.edit-lesson-modal .file-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  margin-right: 1rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.edit-lesson-modal .file-icon.pdf {
+  background-image: url('../../assets/pdf-icon.png');
+}
+
+.edit-lesson-modal .file-icon.doc {
+  background-image: url('../../assets/doc-icon.png');
+}
+
+.edit-lesson-modal .remove-file-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.edit-lesson-modal .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.edit-lesson-modal .cancel-btn,
+.edit-lesson-modal .submit-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.edit-lesson-modal .cancel-btn {
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  color: #555;
+}
+
+.edit-lesson-modal .cancel-btn:hover {
+  background: #e0e0e0;
+}
+
+.edit-lesson-modal .submit-btn {
+  background: #4CAF50;
+  border: 1px solid #45a049;
+  color: white;
+}
+
+.edit-lesson-modal .submit-btn:hover {
+  background: #45a049;
+}
+
+.edit-lesson-modal .submit-btn:disabled {
+  background: #a5d6a7;
+  cursor: not-allowed;
+}
+
+.edit-lesson-modal .error-message {
+  color: #f44336;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background: #ffebee;
+  border-radius: 4px;
+}
+
+.edit-lesson-modal .error-text {
+  color: #f44336;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.edit-lesson-modal input.error,
+.edit-lesson-modal textarea.error {
+  border-color: #f44336;
+}

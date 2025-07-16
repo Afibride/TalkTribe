@@ -37,6 +37,7 @@ Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkE
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 Route::get('/home-courses', [CourseController::class, 'index']);
 Route::get('/search', [SearchController::class, 'search']); // Search for courses, lessons, and users   
+Route::get('/testimonials', [TestimonialController::class, 'index']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
@@ -62,6 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {              // All cours
         Route::put('/courses/{id}', [CourseController::class, 'update']);    // Update course
         Route::delete('/courses/{id}', [CourseController::class, 'destroy']); // Delete course
     });
+
+    Route::middleware(['auth:sanctum', 'is_instructor'])->get('/instructor/courses', [CourseController::class, 'getInstructorCourses']);
 });
 
 
@@ -117,9 +120,9 @@ Route::post('/blog/posts/{id}/view', [BlogController::class, 'trackView']);
 });
 Route::get('/stats', [StatsController::class, 'index']);
 
-Route::get('/testimonials', [TestimonialController::class, 'index']);
-Route::post('/testimonials', [TestimonialController::class, 'store']);
-
+Route::middleware('auth:sanctum')->group(function() {
+    Route::post('/testimonials', [TestimonialController::class, 'store']);
+});
 
 
 
