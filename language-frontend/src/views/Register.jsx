@@ -201,8 +201,8 @@ function Register() {
         {/* Back to Login Arrow */}
         <button
           className="back-arrow-btn"
-          onClick={() => navigate("/login")}
-          aria-label="Back to Login"
+          onClick={() => navigate("/")}
+          aria-label="Back to Home"
           type="button"
         >
           <FaArrowLeft />
@@ -460,6 +460,14 @@ function Register() {
               )}
             </div>
           </form>
+          <div className="redirect-login">
+            <p>
+              Already have an account?{"  "}
+              <NavLink to="/login" className="login-link">
+                Login
+              </NavLink>
+            </p>
+          </div>
         </div>
       </div>
     </div>
