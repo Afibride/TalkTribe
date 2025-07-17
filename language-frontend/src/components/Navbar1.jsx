@@ -315,7 +315,7 @@ const NewNavbar = () => {
             className="dropdown-item"
             onClick={closeDropdown}
           >
-            <i className="fas fa-user"></i> My Profile
+            <i className="fas fa-user-circle"></i> My Profile
           </NavLink>
           <NavLink to="/my-courses" className="dropdown-item">
             <i className="fas fa-book"></i> My Courses

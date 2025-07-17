@@ -77,20 +77,17 @@ const Navbar = () => {
       {/* Mobile Hamburger - different stuff */}
       <div className={`nav-menu mobile-menu ${isMenuOpen ? 'open' : ''}`}>
         <div className="nav-links">
-          <NavLink to="/about" className="nav-link">
-            About Us
+          <NavLink to="/help" className="nav-link">
+            <i className="fas fa-headset"></i> Get Help
           </NavLink>
-          <NavLink to="/features" className="nav-link">
-            Features
-          </NavLink>
-          <NavLink to="/contact" className="nav-link">
-            Contact Us
+          <NavLink to="/settings" className="nav-link">
+            <i className="fas fa-cog"></i> Settings
           </NavLink>
           <NavLink to="/login" className="nav-link">
-            Login
+            <i className="fas fa-sign-in-alt"></i> Login
           </NavLink>
           <NavLink to="/register" className="nav-link">
-            Sign Up
+           <i className="fas fa-user-plus"></i> Sign Up
           </NavLink>
         </div>
       </div>

@@ -308,7 +308,6 @@ const ProfilePage = () => {
 
 const handleCourseUpdated = (updatedCourse) => {
   setCourses(courses.map(c => c.id === updatedCourse.id ? updatedCourse : c));
-  toast.success('Course updated successfully!');
 };
 
 const handleCourseDeleted = (deletedId) => {

@@ -25,7 +25,7 @@ const SubNavbar = () => {
           </NavLink>
 
           <NavLink to={`/profile/${userName}`} className="subnav-icon">
-            <i className="fas fa-user"></i>
+            <i className="fas fa-user-circle"></i>
           </NavLink>
         </>
       ) : (
@@ -37,7 +37,7 @@ const SubNavbar = () => {
             <i className="fas fa-star"></i>
           </NavLink>
           <NavLink to="/contact" className="subnav-icon">
-            <i className="fas fa-envelope"></i>
+            <i className="fas fa-address-book"></i>
           </NavLink>
           <NavLink to="/login" className="subnav-icon">
             <i className="fas fa-sign-in-alt"></i>
