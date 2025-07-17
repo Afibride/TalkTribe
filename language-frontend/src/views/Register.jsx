@@ -205,7 +205,7 @@ function Register() {
           aria-label="Back to Home"
           type="button"
         >
-          <FaArrowLeft />
+          <i className="fas fa-home"></i> Home
         </button>
         <div className="content">
           <div className="logo">
