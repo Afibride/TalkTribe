@@ -1,9 +1,9 @@
 // src/api/api.js
-import axios from 'axios';
+import axios from "axios";
 
 // 👇 Set your Laravel API URL (use environment variables for production!)
 const api = axios.create({
-  baseURL: 'http://192.168.42.32:8000',
+  baseURL: 'http://192.168.31.97:8000',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -11,11 +11,10 @@ const api = axios.create({
   },
 });
 
-
-// 👇 Auto-attach Bearer token from localStorage
+// Attach token from either storage
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem("authToken") || localStorage.getItem("authToken");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -23,20 +22,5 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
-
-
-api.interceptors.response.use((response) => {
-  return response;
-}, (error) => {
-  if (error.response && error.response.status === 401) {
-    // Handle unauthorized access
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/login';
-  }
-  return Promise.reject(error);
-});
-
-
 
 export default api;

@@ -48,12 +48,18 @@ const RelatedBlogSection = ({ currentPostId }) => {
         {relatedPosts.map((post) => (
           <div key={post.id} className="related-blog-card">
             <Link to={`/blog/${post.id}`} className="related-blog-link">
-              <img 
-                src={post.image_url || '/blog1.jpg'} 
-                alt={post.title} 
-                className="related-blog-image" 
-                onError={(e) => e.target.src = '/blog1.jpg'}
-              />
+              {post.video_url ? (
+                <video className="related-blog-media">
+                  <source src={post.video_url} type="video/mp4" />
+                </video>
+              ) : (
+                <img 
+                  src={post.image_url || '/blog1.jpg'} 
+                  alt={post.title} 
+                  className="related-blog-media" 
+                  onError={(e) => e.target.src = '/blog1.jpg'}
+                />
+              )}
               <div className="related-blog-details">
                 <h3>{post.title}</h3>
                 <p className="related-blog-excerpt">

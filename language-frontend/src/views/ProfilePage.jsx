@@ -78,6 +78,7 @@ const ProfilePage = () => {
         ...post,
         content: post.content,
         image_url: post.image,
+        video_url: post.video,
         likes_count: post.likes_count || 0,
         comments_count: post.comments_count || 0,
         liked: post.likes && post.likes.length > 0,
@@ -291,6 +292,7 @@ const ProfilePage = () => {
       ...newPost,
       content: newPost.content,
       image_url: newPost.image,
+      video_url: newPost.video,
       likes_count: 0,
       comments_count: 0,
       liked: false,
@@ -301,19 +303,19 @@ const ProfilePage = () => {
   };
 
   const handleCourseCreated = (newCourse) => {
-  setCourses([newCourse, ...courses]);
-  toast.success('Course created successfully!');
-  setShowCreateCourseModal(false);
-};
+    setCourses([newCourse, ...courses]);
+    toast.success('Course created successfully!');
+    setShowCreateCourseModal(false);
+  };
 
-const handleCourseUpdated = (updatedCourse) => {
-  setCourses(courses.map(c => c.id === updatedCourse.id ? updatedCourse : c));
-};
+  const handleCourseUpdated = (updatedCourse) => {
+    setCourses(courses.map(c => c.id === updatedCourse.id ? updatedCourse : c));
+  };
 
-const handleCourseDeleted = (deletedId) => {
-  setCourses(courses.filter(c => c.id !== deletedId));
-  toast.success('Course deleted successfully!');
-};
+  const handleCourseDeleted = (deletedId) => {
+    setCourses(courses.filter(c => c.id !== deletedId));
+    toast.success('Course deleted successfully!');
+  };
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -341,11 +343,13 @@ const handleCourseDeleted = (deletedId) => {
                     ...post,
                     content: {
                       text: post.content,
-                      image: post.image_url
+                      image: post.image_url,
+                      video: post.video_url
                     },
                     author: {
                       name: profile.name,
-                      avatar: profile.profile_pic_url || '/profile.png',
+                      username: profile.username,
+                      profile_pic_url: profile.profile_pic_url || '/profile.png',
                       role: profile.role || 'User'
                     },
                     stats: {
@@ -355,7 +359,7 @@ const handleCourseDeleted = (deletedId) => {
                     },
                     liked: post.liked || false,
                     comments: post.comments || [],
-                    showComments: true
+                    timestamp: new Date(post.created_at).toLocaleDateString()
                   }}
                   onLike={() => handleLike(post.id)}
                   onAddComment={(commentText, parentId) => handleAddComment(post.id, commentText, parentId)}

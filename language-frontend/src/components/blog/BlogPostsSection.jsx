@@ -50,11 +50,6 @@ const BlogPostsSection = ({ refresh }) => {
       const response = await api.post(`/api/blog/posts/${postId}/comment`, {
         content: commentText,
         parent_id: parentId
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
       });
       
       setPosts(posts.map(post => 
@@ -102,7 +97,8 @@ const BlogPostsSection = ({ refresh }) => {
             ...post,
             content: {
               text: post.content,
-              image: post.image_url 
+              image: post.image_url,
+              video: post.video_url
             },
             author: {
               name: post.user?.name || 'Anonymous',
@@ -116,7 +112,8 @@ const BlogPostsSection = ({ refresh }) => {
               shares: post.shares_count || 0
             },
             liked: post.liked || false,
-            comments: post.comments || []
+            comments: post.comments || [],
+            timestamp: new Date(post.created_at).toLocaleDateString()
           }}
           onLike={handleLike}
           onAddComment={handleAddComment}

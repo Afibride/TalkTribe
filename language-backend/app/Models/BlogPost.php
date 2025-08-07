@@ -16,21 +16,20 @@ class BlogPost extends Model
         'title',
         'content',
         'image',
+        'video',
         'likes_count',
         'comments_count',
         'shares_count',
         'views_count',
     ];
 
-    protected $appends = ['image_url', 'excerpt'];
-
+    protected $appends = ['image_url', 'video_url', 'excerpt'];
 
     public function likes()
     {
         return $this->hasMany(BlogPostLike::class);
     }
 
-    // In BlogPost model
     public function comments()
     {
         return $this->hasMany(BlogPostComment::class)
@@ -44,6 +43,7 @@ class BlogPost extends Model
         return $this->hasMany(BlogPostComment::class, 'parent_id')
             ->with('user');
     }
+
     public function user()
     {
         return $this->belongsTo(User::class)->select(['id', 'name', 'image']);
@@ -62,15 +62,12 @@ class BlogPost extends Model
         return $this->likes()->where('user_id', $user->id)->exists();
     }
 
-    // In BlogPost model
-
     public function getImageUrlAttribute()
     {
         if (!$this->image) {
-            return null; // or return a default image URL if you prefer
+            return null;
         }
 
-        // Check if the image is already a full URL (e.g., from external sources)
         if (filter_var($this->image, FILTER_VALIDATE_URL)) {
             return $this->image;
         }
@@ -78,10 +75,28 @@ class BlogPost extends Model
         return Storage::disk('public')->url($this->image);
     }
 
+    public function getVideoUrlAttribute()
+    {
+        if (!$this->video) {
+            return null;
+        }
+
+        if (filter_var($this->video, FILTER_VALIDATE_URL)) {
+            return $this->video;
+        }
+
+        return Storage::disk('public')->url($this->video);
+    }
+
     public function getExcerptAttribute()
     {
         return Str::limit(strip_tags($this->content), 150);
     }
 
-
+    public function getMediaTypeAttribute()
+    {
+        if ($this->image) return 'image';
+        if ($this->video) return 'video';
+        return null;
+    }
 }

@@ -87,15 +87,22 @@ const BlogDetailPage = () => {
             </div>
           </header>
 
-          {post.image_url && (
-            <div className="post-featured-image">
+          {post.video_url ? (
+            <div className="post-featured-media">
+              <video controls className="post-video">
+                <source src={post.video_url} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          ) : post.image_url ? (
+            <div className="post-featured-media">
               <img
                 src={post.image_url}
                 alt={post.title}
                 onError={(e) => { e.target.src = '/blog.jpg'; }}
               />
             </div>
-          )}
+          ) : null}
 
           <div className="post-content" dangerouslySetInnerHTML={{ __html: post.content }} />
 

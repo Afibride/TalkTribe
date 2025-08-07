@@ -17,9 +17,10 @@ const BlogPost = ({
   const safePost = {
     id: post?.id || '',
     title: post?.title || '',
-    content: {
-      text: post?.content?.text || '',
-      image: post?.content?.image || null
+    content: post?.content || {
+      text: '',
+      image: null,
+      video: null
     },
     author: {
       name: post?.author?.name || 'Unknown Author',
@@ -147,6 +148,32 @@ const BlogPost = ({
     });
   };
 
+  const renderMedia = () => {
+    if (localPost.content.video) {
+      return (
+        <div className="post-video-container">
+          <video controls className="post-video">
+            <source src={localPost.content.video} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      );
+    }
+    if (localPost.content.image) {
+      return (
+        <div className="post-image-container">
+          <img
+            src={localPost.content.image}
+            alt="Post"
+            className="post-image"
+            onError={(e) => (e.target.src = "/blog.jpg")}
+          />
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <div className="blog-post">
       <div className="post-header">
@@ -254,16 +281,7 @@ const BlogPost = ({
                   </button>
                 )}
               </div>
-              {localPost.content.image && (
-                <div className="post-image-container">
-                  <img
-                    src={localPost.content.image}
-                    alt="Post"
-                    className="post-image"
-                    onError={(e) => (e.target.src = "/blog.jpg")}
-                  />
-                </div>
-              )}
+              {renderMedia()}
             </>
           )}
         </div>

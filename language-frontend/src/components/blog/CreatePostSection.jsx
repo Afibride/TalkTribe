@@ -6,41 +6,46 @@ const CreatePostSection = ({ onSuccess }) => {
   const [content, setContent] = useState('');
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(null);
+  const [video, setVideo] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!content.trim()) return;
-  
-  setIsSubmitting(true);
-  setError(null);
-  
-  try {
-    const formData = new FormData();
-    formData.append('content', content);
-    formData.append('title', title || 'New Post');
-    if (image) {
-      formData.append('image', image);
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!content.trim()) return;
     
-    const response = await api.post('/api/blog/posts', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+    setIsSubmitting(true);
+    setError(null);
+    
+    try {
+      const formData = new FormData();
+      formData.append('content', content);
+      formData.append('title', title || 'New Post');
+      if (image) {
+        formData.append('image', image);
       }
-    });
-    
-    setContent('');
-    setTitle('');
-    setImage(null);
-    
-    if (onSuccess) onSuccess(response.data);
-  } catch (err) {
-    setError(err.response?.data?.message || 'Failed to create post');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+      if (video) {
+        formData.append('video', video);
+      }
+      
+      const response = await api.post('/api/blog/posts', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      
+      setContent('');
+      setTitle('');
+      setImage(null);
+      setVideo(null);
+      
+      if (onSuccess) onSuccess(response.data);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to create post');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <section className="create-post-section">
@@ -67,12 +72,28 @@ const handleSubmit = async (e) => {
           />
           
           {image && (
-            <div className="image-preview">
+            <div className="media-preview">
               <img src={URL.createObjectURL(image)} alt="Preview" />
               <button 
                 type="button" 
                 onClick={() => setImage(null)}
-                className="remove-image-btn"
+                className="remove-media-btn"
+              >
+                ×
+              </button>
+            </div>
+          )}
+          
+          {video && (
+            <div className="media-preview">
+              <video controls>
+                <source src={URL.createObjectURL(video)} type={video.type} />
+                Your browser does not support the video tag.
+              </video>
+              <button 
+                type="button" 
+                onClick={() => setVideo(null)}
+                className="remove-media-btn"
               >
                 ×
               </button>
@@ -84,10 +105,26 @@ const handleSubmit = async (e) => {
               <input 
                 type="file" 
                 accept="image/*" 
-                onChange={(e) => setImage(e.target.files[0])}
+                onChange={(e) => {
+                  setImage(e.target.files[0]);
+                  setVideo(null);
+                }}
                 disabled={isSubmitting}
               />
               Add Image
+            </label>
+            
+            <label className="file-upload-btn">
+              <input 
+                type="file" 
+                accept="video/*" 
+                onChange={(e) => {
+                  setVideo(e.target.files[0]);
+                  setImage(null);
+                }}
+                disabled={isSubmitting}
+              />
+              Add Video
             </label>
             
             <button 

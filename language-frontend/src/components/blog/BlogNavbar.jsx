@@ -43,52 +43,62 @@ const BlogNavbar = () => {
     <div className="blog-navbar">
       <div className="blog-navbar-tabs">
         <button
-          className={`blog-navbar-tab ${activeTab === "blog-home" ? "active" : ""}`}
+          className={`blog-navbar-tab ${
+            activeTab === "blog-home" ? "active" : ""
+          }`}
           onClick={() => handleTabChange("blog-home")}
         >
           <i className="fas fa-home"></i> Blog Home
         </button>
-        
+
         <button
           className={`blog-navbar-tab ${activeTab === "news" ? "active" : ""}`}
           onClick={() => handleTabChange("news")}
         >
           <i className="fas fa-newspaper"></i> News
         </button>
-        
+
         <div className="communities-dropdown">
           <button
-            className={`blog-navbar-tab ${activeTab.startsWith("community-") ? "active" : ""}`}
+            className={`blog-navbar-tab ${
+              activeTab.startsWith("community-") ? "active" : ""
+            }`}
             onClick={toggleDropdown}
             onBlur={() => setTimeout(closeDropdown, 200)}
           >
             <i className="fas fa-users"></i> Communities
           </button>
-          
-          <div className={`communities-dropdown-content ${showDropdown ? "active" : ""}`}>
+
+          <div
+            className={`communities-dropdown-content ${
+              showDropdown ? "active" : ""
+            }`}
+          >
             {loading ? (
               <div className="loading-communities">Loading communities...</div>
             ) : communities.length > 0 ? (
               <>
-                {communities.map(community => (
+                {communities.map((community) => (
                   <button
                     key={community.id}
-                    className={`community-item ${activeTab === `community-${community.id}` ? "active" : ""}`}
+                    className={`community-item ${
+                      activeTab === `community-${community.id}` ? "active" : ""
+                    }`}
                     onClick={() => {
                       setActiveTab(`community-${community.id}`);
                       navigate(`/community/${community.id}`);
                       closeDropdown();
                     }}
                   >
-                    <img 
-                      src={community.image || "/community-default.png"} 
+                    <img
+                      src={community.image || "/community-default.png"}
                       alt={community.name}
                       className="community-avatar"
                     />
                     {community.name}
                   </button>
                 ))}
-                <button 
+                <button
                   className="community-item"
                   onClick={() => {
                     setShowPopup(true);
@@ -101,7 +111,7 @@ const BlogNavbar = () => {
             ) : (
               <div className="no-communities">
                 <p>You're not in any communities yet</p>
-                <button 
+                <button
                   className="join-community-btn"
                   onClick={() => {
                     setShowPopup(true);
@@ -115,15 +125,15 @@ const BlogNavbar = () => {
           </div>
         </div>
       </div>
-      
+
       {/* Communities Popup */}
       {showPopup && (
-        <div className="communities-popup">
+        <div className={`communities-popup ${showPopup ? "active" : ""}`}>
           <div className="communities-popup-content">
             <div className="popup-header">
               <h3 className="popup-title">Browse Communities</h3>
-              <button 
-                className="close-popup" 
+              <button
+                className="close-popup"
                 onClick={() => setShowPopup(false)}
               >
                 &times;
