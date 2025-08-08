@@ -1,0 +1,50 @@
+/* src/css/DonationCTA.css */
+.donation-cta {
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.donation-cta.primary {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.donation-cta.secondary {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.donation-cta h3 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.donation-cta p {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.donate-button {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background-color: #188b81;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.3s;
+}
+
+.donate-button:hover {
+  background-color: #188b81;
+}
+
+.donation-cta.secondary .donate-button {
+  background-color: #e74c3c;
+}
+
+.donation-cta.secondary .donate-button:hover {
+  background-color: #c0392b;
+}

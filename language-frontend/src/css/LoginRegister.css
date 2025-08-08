@@ -182,6 +182,7 @@ body, html {
   color: var(--primary-color);
 }
 
+
 /* ====== FORM CONTAINER ====== */
 .auth-form-container {
   width: 100%;
@@ -625,8 +626,53 @@ background-color: #188B81;
   min-width: 0;
 }
 
+/* Forgot Password Specific Styles */
+.forgot-password-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
 
-/* Prevent left panel from being scrollable and hide scrollbar */
+.auth-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+}
+
+.auth-link.back-to-login {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--secondary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.auth-link.back-to-login:hover {
+  text-decoration: underline;
+}
+
+.auth-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Ensure content stays within viewport */
+.auth-form-container {
+  max-height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-form {
+  max-height: 100%;
+  overflow: hidden;
+}
+
 .auth-left-panel,
 .login-container .left-panel {
   overflow: hidden !important;

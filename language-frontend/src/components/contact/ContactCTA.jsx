@@ -11,7 +11,7 @@ function ContactCTA() {
           <Link to="/local-languages" className="btn btn-primary">
             Explore Languages
           </Link>
-          <Link to="/help" className="btn btn-outline">
+          <Link to="#" className="btn btn-outline">
             Get Help
           </Link>
         </div>

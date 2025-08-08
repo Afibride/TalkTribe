@@ -393,3 +393,54 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Media preview styles */
+.media-preview {
+  width: 200px;
+  height: 120px;
+  margin-right: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.media-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-preview {
+  position: relative;
+  background: #000;
+}
+
+.preview-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.blog-content-wrapper {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.blog-text-content {
+  flex: 1;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+  .blog-content-wrapper {
+    flex-direction: column;
+  }
+  
+  .media-preview {
+    width: 100%;
+    height: 180px;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+}

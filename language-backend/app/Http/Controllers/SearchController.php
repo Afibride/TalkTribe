@@ -51,7 +51,7 @@ public function search(Request $request)
             ->orderByRaw("CASE WHEN title LIKE ? THEN 1 ELSE 2 END", [$searchQuery])
             ->limit(10)
             ->get()
-            ->each->append(['image_url', 'excerpt'])
+            ->each->append(['image_url', 'video_url', 'excerpt'])
     ];
 
     return response()->json($results);

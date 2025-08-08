@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import api from '../../api/api';
 import '../../css/Blog.css';
+import { FaImage, FaVideo, FaPaperPlane } from 'react-icons/fa';
 
 const CreatePostSection = ({ onSuccess }) => {
   const [content, setContent] = useState('');
@@ -51,7 +52,7 @@ const CreatePostSection = ({ onSuccess }) => {
     <section className="create-post-section">
       <div className="create-post-container">
         <div className="post-header">
-         <h3>Create a Post</h3>
+          <h3>Create a Post</h3>
         </div>
         
         <form onSubmit={handleSubmit}>
@@ -101,7 +102,7 @@ const CreatePostSection = ({ onSuccess }) => {
           )}
           
           <div className="create-post-actions">
-            <label className="file-upload-btn">
+            <label className="file-upload-btn image-upload">
               <input 
                 type="file" 
                 accept="image/*" 
@@ -111,10 +112,11 @@ const CreatePostSection = ({ onSuccess }) => {
                 }}
                 disabled={isSubmitting}
               />
-              Add Image
+              <FaImage className="action-icon" />
+              <span className="action-text">Image</span>
             </label>
             
-            <label className="file-upload-btn">
+            <label className="file-upload-btn video-upload">
               <input 
                 type="file" 
                 accept="video/*" 
@@ -124,7 +126,8 @@ const CreatePostSection = ({ onSuccess }) => {
                 }}
                 disabled={isSubmitting}
               />
-              Add Video
+              <FaVideo className="action-icon" />
+              <span className="action-text">Video</span>
             </label>
             
             <button 
@@ -132,7 +135,8 @@ const CreatePostSection = ({ onSuccess }) => {
               disabled={!content.trim() || isSubmitting}
               className="post-button"
             >
-              {isSubmitting ? 'Posting...' : 'Post'}
+              <FaPaperPlane className="action-icon" />
+              <span className="action-text">Post</span>
             </button>
           </div>
           

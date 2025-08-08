@@ -104,7 +104,7 @@ const BlogPostsSection = ({ refresh }) => {
               name: post.user?.name || 'Anonymous',
               username: post.user?.username || 'user',
               profile_pic_url: post.user?.profile_pic_url || '/profile.png',
-              role: post.user?.role || 'Language Enthusiast'
+              role: post.user?.role || 'Learner',
             },
             stats: {
               likes: post.likes_count || 0,

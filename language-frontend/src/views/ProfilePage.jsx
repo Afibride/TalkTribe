@@ -77,8 +77,8 @@ const ProfilePage = () => {
       setPosts(postsResponse.data.map(post => ({
         ...post,
         content: post.content,
-        image_url: post.image,
-        video_url: post.video,
+        image_url: post.image_url,
+        video_url: post.video_url,
         likes_count: post.likes_count || 0,
         comments_count: post.comments_count || 0,
         liked: post.likes && post.likes.length > 0,

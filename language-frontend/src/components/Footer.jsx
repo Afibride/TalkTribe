@@ -1,7 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../css/HomeLogin.css';
 
 const Footer = () => {
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' 
+    });
+  };
+
   return (
     <footer className="footer">
       <div className="footer-top">
@@ -21,9 +29,9 @@ const Footer = () => {
       </div>
 
       <div className="footer-links">
-        <a href="#careers">Careers</a>
-        <a href="#privacy">Privacy Policy</a>
-        <a href="#terms">Terms & Conditions</a>
+        <Link to="/careers" onClick={scrollToTop}>Careers</Link>
+        <Link to="/privacy-policy" onClick={scrollToTop}>Privacy Policy</Link>
+        <Link to="/terms-conditions" onClick={scrollToTop}>Terms & Conditions</Link>
       </div>
 
       <div className="footer-bottom">

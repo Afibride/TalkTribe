@@ -16,8 +16,8 @@ const contactMethods = [
     icon: <FaEnvelope />,
     title: "Email",
     details: [
-      "support@talktribe.africa",
-      "info@talktribe.africa"
+      "afibright07@gmail.com",
+      "afibright07@gmail.com"
     ],
     color: "#1cc88a"
   },

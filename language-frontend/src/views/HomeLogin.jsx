@@ -10,6 +10,7 @@ import Testimonials from '../components/home/Testimonials';
 import NewsSection from '../components/home/NewsSection';
 import Footer from '../components/Footer';
 import '../css/HomeLogin.css';
+import DonationCTA from '../components/DonationCTA';
 
 const HomeLogin = () => {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const HomeLogin = () => {
         userEmail={null}
       />
       <Testimonials />
+      <DonationCTA />
       <NewsSection />
       <Footer />
     </div>

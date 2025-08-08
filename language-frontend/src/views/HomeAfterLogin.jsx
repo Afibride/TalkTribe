@@ -10,6 +10,7 @@ import NewsSection from '../components/home/NewsSection';
 import Footer from '../components/Footer';
 import { toast } from "react-toastify";
 import '../css/HomeLogin.css';
+import DonationCTA from '../components/DonationCTA';
 
 const HomeAfterLogin = () => {
   const location = useLocation();
@@ -92,6 +93,7 @@ const HomeAfterLogin = () => {
         userName={user.name}
         userEmail={user.email}
       />
+      <DonationCTA />
       <Testimonials />
       <NewsSection />
       <Footer />

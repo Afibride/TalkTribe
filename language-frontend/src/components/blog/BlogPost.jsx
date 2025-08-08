@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { FaThumbsUp, FaComment, FaShare, FaEllipsisH } from "react-icons/fa";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
@@ -47,9 +47,25 @@ const BlogPost = ({
   const [editedContent, setEditedContent] = useState(safePost.content.text);
   const [showOptions, setShowOptions] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const videoRef = useRef(null);
 
   const CHAR_LIMIT = 200;
   const isContentLong = safePost.content.text.length > CHAR_LIMIT;
+
+  // Handle scroll to pause video
+  useEffect(() => {
+    const handleScroll = () => {
+      if (videoRef.current && !videoRef.current.paused) {
+        videoRef.current.pause();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const toggleComments = () => {
     setLocalPost((prev) => ({
@@ -152,7 +168,11 @@ const BlogPost = ({
     if (localPost.content.video) {
       return (
         <div className="post-video-container">
-          <video controls className="post-video">
+          <video 
+            ref={videoRef}
+            controls 
+            className="post-video"
+          >
             <source src={localPost.content.video} type="video/mp4" />
             Your browser does not support the video tag.
           </video>

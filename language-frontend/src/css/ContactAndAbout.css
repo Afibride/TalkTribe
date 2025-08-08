@@ -760,3 +760,140 @@ overflow-x: hidden;
     padding: 0.7rem 0;
   }
 }
+
+/* ====== DONATION SECTION ====== */
+.about-donation {
+  background: linear-gradient(135deg, #188B81 0%, #0d5d56 100%);
+  color: white;
+  padding: 50px 30px;
+  border-radius: 14px;
+  margin: 60px 0;
+  box-shadow: 0 8px 24px rgba(24,139,129,0.15);
+}
+
+.donation-content {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 40px;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.donation-text h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #F1A012;
+}
+
+.donation-icon {
+  font-size: 2.5rem;
+  color: #F1A012;
+  margin-bottom: 20px;
+}
+
+.donation-text p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.donation-impact {
+  list-style: none;
+  padding: 0;
+  margin: 25px 0;
+}
+
+.donation-impact li {
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+.donation-impact li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #F1A012;
+  font-weight: bold;
+}
+
+.donation-cta {
+  text-align: center;
+  padding: 30px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+.btn-donate {
+  background: #F1A012;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  border: none;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.btn-donate:hover {
+  background: #d18a0f;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(241,160,18,0.3);
+}
+
+.donation-note {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+/* Responsive Donation Section */
+@media (max-width: 900px) {
+  .donation-content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .donation-cta {
+    padding: 25px;
+  }
+}
+
+@media (max-width: 600px) {
+  .about-donation {
+    padding: 30px 20px;
+  }
+  
+  .donation-text h2 {
+    font-size: 1.5rem;
+  }
+  
+  .donation-icon {
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+  
+  .donation-text p {
+    font-size: 1rem;
+  }
+  
+  .donation-impact li {
+    font-size: 0.95rem;
+    padding-left: 25px;
+  }
+  
+  .btn-donate {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+}

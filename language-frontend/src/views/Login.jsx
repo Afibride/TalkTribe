@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { FaArrowLeft, FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "../api/api";
 import { validateField } from "../utils/validation";
+import "../css/LoginRegister.css";
 
 function Login() {
   const [loginInput, setLoginInput] = useState("");

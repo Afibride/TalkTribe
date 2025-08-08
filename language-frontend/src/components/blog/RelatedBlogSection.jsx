@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { FaThumbsUp, FaComment, FaShare } from 'react-icons/fa';
 import api from '../../api/api';
@@ -8,6 +8,24 @@ const RelatedBlogSection = ({ currentPostId }) => {
   const [relatedPosts, setRelatedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const videoRefs = useRef([]);
+
+  // Handle scroll to pause videos
+  useEffect(() => {
+    const handleScroll = () => {
+      videoRefs.current.forEach(video => {
+        if (video && !video.paused) {
+          video.pause();
+        }
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -45,11 +63,14 @@ const RelatedBlogSection = ({ currentPostId }) => {
         <Link to="/blog" className="see-all-link">See all</Link>
       </div>
       <div className="related-blog-grid">
-        {relatedPosts.map((post) => (
+        {relatedPosts.map((post, index) => (
           <div key={post.id} className="related-blog-card">
             <Link to={`/blog/${post.id}`} className="related-blog-link">
               {post.video_url ? (
-                <video className="related-blog-media">
+                <video 
+                  ref={el => videoRefs.current[index] = el}
+                  className="related-blog-media"
+                >
                   <source src={post.video_url} type="video/mp4" />
                 </video>
               ) : (

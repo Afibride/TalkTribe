@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { FaThumbsUp, FaComment, FaShare } from 'react-icons/fa';
 import api from '../api/api';
@@ -17,6 +17,22 @@ const BlogDetailPage = () => {
   const [error, setError] = useState(null);
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(0);
+  const videoRef = useRef(null);
+
+  // Handle scroll to pause video
+  useEffect(() => {
+    const handleScroll = () => {
+      if (videoRef.current && !videoRef.current.paused) {
+        videoRef.current.pause();
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -89,7 +105,11 @@ const BlogDetailPage = () => {
 
           {post.video_url ? (
             <div className="post-featured-media">
-              <video controls className="post-video">
+              <video 
+                ref={videoRef}
+                controls 
+                className="post-video"
+              >
                 <source src={post.video_url} type="video/mp4" />
                 Your browser does not support the video tag.
               </video>

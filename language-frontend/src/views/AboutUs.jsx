@@ -12,6 +12,8 @@ import {
   FaGlobeAfrica,
   FaHandsHelping,
   FaCalendarAlt,
+  FaDonate,
+  FaHandHoldingHeart,
 } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -172,6 +174,34 @@ const About = () => {
                 <p className="team-bio">{member.bio}</p>
               </div>
             ))}
+          </div>
+        </section>
+
+        <section className="about-donation" data-aos="fade-up">
+          <div className="donation-content">
+            <div className="donation-text">
+              <FaHandHoldingHeart className="donation-icon" />
+              <h2>Support Our Mission</h2>
+              <p>
+                Your donation helps us preserve endangered languages and provide
+                free resources to indigenous communities worldwide.
+              </p>
+              <ul className="donation-impact">
+                <li>Fund language documentation projects</li>
+                <li>Develop free learning materials</li>
+                <li>Support community language programs</li>
+                <li>Create digital archives of native speakers</li>
+              </ul>
+            </div>
+            <div className="donation-cta">
+              <Link to="/donate" className="btn btn-donate">
+                <FaDonate /> Make a Donation
+              </Link>
+              <p className="donation-note">
+                All donations are tax-deductible and directly support language
+                preservation efforts.
+              </p>
+            </div>
           </div>
         </section>
 

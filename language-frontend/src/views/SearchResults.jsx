@@ -37,7 +37,6 @@ const SearchResults = () => {
      !results.users?.length &&
      !results.blog_posts?.length);
 
-  // Count results for each category
   const resultCounts = {
     all: (results?.blog_posts?.length || 0) + 
          (results?.courses?.length || 0) + 
@@ -47,6 +46,34 @@ const SearchResults = () => {
     courses: results?.courses?.length || 0,
     lessons: results?.lessons?.length || 0,
     users: results?.users?.length || 0
+  };
+
+  const renderMediaPreview = (post) => {
+    if (post.video_url) {
+      return (
+        <div className="media-preview video-preview">
+          <video controls className="preview-video">
+            <source src={post.video_url} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      );
+    } else if (post.image_url) {
+      return (
+        <div className="media-preview">
+          <img 
+            src={post.image_url} 
+            alt={post.title}
+            className="blog-result-image"
+            onError={(e) => {
+              e.target.src = '/blog.jpg';
+              e.target.onerror = null;
+            }}
+          />
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -78,7 +105,6 @@ const SearchResults = () => {
         
         {!loading && !error && results && (
           <div className="results-container">
-            {/* Results Tabs */}
             <div className="results-tabs">
               <button
                 className={`tab ${activeTab === 'all' ? 'active' : ''}`}
@@ -120,7 +146,6 @@ const SearchResults = () => {
               )}
             </div>
 
-            {/* Blog Posts Results */}
             {(activeTab === 'all' || activeTab === 'posts') && results.blog_posts?.length > 0 && (
               <section className="results-section">
                 <h3>Blog Posts</h3>
@@ -131,19 +156,7 @@ const SearchResults = () => {
                         {post.title}
                       </Link>
                       <div className="blog-content-wrapper">
-                        {post.image_url && (
-                          <div className="blog-image-container">
-                            <img 
-                              src={post.image_url} 
-                              alt={post.title}
-                              className="blog-result-image"
-                              onError={(e) => {
-                                e.target.src = '/blog-placeholder.jpg';
-                                e.target.onerror = null;
-                              }}
-                            />
-                          </div>
-                        )}
+                        {renderMediaPreview(post)}
                         <div className="blog-text-content">
                           <p className="result-excerpt">
                             {post.excerpt || post.content?.substring(0, 150)}
@@ -152,8 +165,8 @@ const SearchResults = () => {
                           <div className="result-meta">
                             <span className="author">
                               <img 
-                                src={post.user?.profile_pic_url || '/profile-placeholder.png'} 
-                                alt={post.user?.name}
+                                src={post.user.profile_pic_url || '/profile.png'} 
+                                alt={post.user.name}
                                 className="author-avatar"
                               />
                               {post.user?.name || 'Unknown author'}
@@ -184,7 +197,6 @@ const SearchResults = () => {
               </section>
             )}
 
-            {/* Courses Results */}
             {(activeTab === 'all' || activeTab === 'courses') && results.courses?.length > 0 && (
               <section className="results-section">
                 <h3>Courses</h3>
@@ -199,7 +211,7 @@ const SearchResults = () => {
                               alt={course.title}
                               className="course-result-image"
                               onError={(e) => {
-                                e.target.src = '/course-placeholder.jpg';
+                                e.target.src = '/blog.jpg';
                                 e.target.onerror = null;
                               }}
                             />
@@ -234,7 +246,6 @@ const SearchResults = () => {
               </section>
             )}
 
-            {/* Lessons Results */}
             {(activeTab === 'all' || activeTab === 'lessons') && results.lessons?.length > 0 && (
               <section className="results-section">
                 <h3>Lessons</h3>
@@ -268,7 +279,6 @@ const SearchResults = () => {
               </section>
             )}
 
-            {/* Users Results */}
             {(activeTab === 'all' || activeTab === 'users') && results.users?.length > 0 && (
               <section className="results-section">
                 <h3>Users</h3>
@@ -277,11 +287,11 @@ const SearchResults = () => {
                     <div key={user.id} className="search-result-card user-result">
                       <Link to={`/profile/${user.username}`} className="user-profile-link">
                         <img 
-                          src={user.profile_pic_url || '/profile-placeholder.png'} 
+                          src={user.profile_pic_url || '/profile.png'} 
                           alt={user.name}
                           className="user-avatar"
                           onError={(e) => {
-                            e.target.src = '/profile-placeholder.png';
+                            e.target.src = '/profile.png';
                             e.target.onerror = null;
                           }}
                         />

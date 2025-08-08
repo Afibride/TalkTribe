@@ -134,7 +134,6 @@ class BlogController extends Controller
             $post->categories()->sync($request->categories);
         }
 
-        // Load relationships and append media URLs
         $post->load('user', 'categories');
         $post->append(['image_url', 'video_url']);
 
@@ -242,7 +241,7 @@ class BlogController extends Controller
             ->orderBy('created_at', 'desc')
             ->take($limit)
             ->get()
-            ->each->append('image_url');
+            ->each->append('image_url', 'video_url', 'excerpt');
 
         return response()->json($posts);
     }

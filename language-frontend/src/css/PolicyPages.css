@@ -1,0 +1,325 @@
+/* Common styles for all policy pages */
+.policy-page {
+  max-width: 100vw;
+  margin: 0 auto;
+  padding: 2rem;
+  color: #333;
+  line-height: 1.6;
+  background-color: #f8f8f8;
+}
+
+.policy-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #f1a012;
+  background-color: white;
+  padding: 2rem 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  
+}
+
+.policy-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  color: #ab2526;
+  font-weight: 700;
+}
+
+.policy-header p {
+  color: #666;
+  font-size: 1.1rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.policy-content {
+  padding: 0 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin-top: 1rem;
+  padding: 2rem;
+}
+
+.policy-content section {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #eee;
+}
+
+.policy-content section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.policy-content h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  color: #188B81;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f1a012;
+  font-weight: 600;
+}
+
+.policy-content h3 {
+  font-size: 1.4rem;
+  margin: 1.5rem 0 0.8rem;
+  color: #ab2526;
+  font-weight: 500;
+}
+
+.policy-content p {
+  margin-bottom: 1.2rem;
+  color: #444;
+}
+
+.policy-content ul {
+  margin: 1.2rem 0;
+  padding-left: 1.8rem;
+}
+
+.policy-content li {
+  margin-bottom: 0.8rem;
+  color: #444;
+  position: relative;
+  padding-left: 1.2rem;
+}
+
+.policy-content li:before {
+  content: "•";
+  color: #f1a012;
+  font-size: 1.2rem;
+  position: absolute;
+  left: 0;
+  top: -2px;
+}
+
+/* Careers page specific styles */
+.career-section {
+  margin-bottom: 4rem;
+}
+
+.opportunity-cards, .support-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2.5rem 0;
+}
+
+.opportunity-card, .support-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.8rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  border-top: 4px solid #188B81;
+}
+
+.opportunity-card:hover, .support-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
+
+.opportunity-card h3, .support-card h3 {
+  color: #ab2526;
+  margin-top: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.apply-btn, .donate-btn, .contact-btn {
+  display: inline-block;
+  margin-top: 1.2rem;
+  padding: 0.8rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+  min-width: 150px;
+}
+
+.apply-btn {
+  background: #188B81;
+  color: white;
+}
+
+.apply-btn:hover {
+  background: #137a6f;
+  transform: translateY(-2px);
+}
+
+.donate-btn {
+  background: #ab2526;
+  color: white;
+}
+
+.donate-btn:hover {
+  background: #8f1f1f;
+  transform: translateY(-2px);
+}
+
+.contact-btn {
+  background: #f1a012;
+  color: white;
+}
+
+.contact-btn:hover {
+  background: #d38e10;
+  transform: translateY(-2px);
+}
+
+.benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.benefit-item {
+  background: white;
+  padding: 1.8rem;
+  border-radius: 8px;
+  border-left: 4px solid #f1a012;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
+
+.benefit-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.benefit-item h3 {
+  color: #188B81;
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .policy-page {
+    padding: 0.5rem;
+  }
+  
+  .policy-header {
+    padding: 1.5rem 1rem;
+    margin-bottom: 1.5rem;
+    margin-top: 6rem;
+  }
+  
+  .policy-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .policy-content {
+    padding: 1.5rem 1rem;
+  }
+  
+  .policy-content h2 {
+    font-size: 1.5rem;
+  }
+  
+  .policy-content h3 {
+    font-size: 1.2rem;
+  }
+  
+  .opportunity-cards, .support-options, .benefits {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .opportunity-card, .support-card, .benefit-item {
+    padding: 1.5rem;
+  }
+  
+  .apply-btn, .donate-btn, .contact-btn {
+    width: 100%;
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .policy-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .policy-header p {
+    font-size: 1rem;
+  }
+  
+  .policy-content {
+    padding: 1rem 0.8rem;
+  }
+  
+  .policy-content h2 {
+    font-size: 1.3rem;
+  }
+  
+  .policy-content li {
+    padding-left: 1rem;
+  }
+  
+  .policy-content li:before {
+    left: -0.5rem;
+  }
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+.donation-method {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+}
+
+.donation-method h3 {
+  margin-top: 0;
+  color: #2c3e50;
+}

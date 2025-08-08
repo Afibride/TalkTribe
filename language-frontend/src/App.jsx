@@ -22,6 +22,9 @@ import FeaturesPage from './views/FeaturesPage';
 import SearchResults from './views/SearchResults';
 import QuizzesPage from './views/QuizzesPage';
 import BlogDetailPage from './views/BlogDetailPage';
+import CareersPage from './views/CareersPage';
+import PrivacyPolicyPage from './views/PrivacyPolicyPage';
+import TermsConditionsPage from './views/TermsConditionsPage';
 
 // Components
 import PrivateRoute from './components/PrivateRoute';
@@ -29,6 +32,8 @@ import PublicRoute from './components/PublicRoute';
 import Notifications from './views/Notifications';
 import ProfilePage from './views/ProfilePage';
 import TestimonialsPage from './views/TestimonialsPage';
+import DonatePage from './views/DonatePage';
+import ScrollToTop from './components/ScrollToTop';
 
 
 function App() {
@@ -51,6 +56,7 @@ function App() {
   return (
     <>
       <Router>
+        <ScrollToTop />
         <Routes>
           {/* Public routes (always accessible) */}
           <Route path="/" element={<HomeLogin />} />
@@ -61,6 +67,11 @@ function App() {
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/testimonials" element={<TestimonialsPage />} />
+          <Route path="/careers" element={<CareersPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+          <Route path="/terms-conditions" element={<TermsConditionsPage />} />
+          <Route path="/help" element={<Contact />} />
+          <Route path="donate" element={<DonatePage />} />
 
           {/* Public routes (redirect if logged in) */}
           <Route

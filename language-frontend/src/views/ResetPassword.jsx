@@ -20,26 +20,33 @@ function ResetPassword() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleBlur = (fieldName, value) => {
-    const error = validateField(fieldName, value, { password, password_confirmation });
+    const error = validateField(fieldName, value, {
+      password,
+      password_confirmation,
+    });
     if (error) {
-      setErrors(prev => ({ ...prev, [fieldName]: error }));
+      setErrors((prev) => ({ ...prev, [fieldName]: error }));
     } else if (errors[fieldName]) {
-      setErrors(prev => ({ ...prev, [fieldName]: null }));
+      setErrors((prev) => ({ ...prev, [fieldName]: null }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     const emailError = validateField("email", email);
     const passwordError = validateField("password", password);
-    const confirmError = validateField("password_confirmation", password_confirmation, { password });
+    const confirmError = validateField(
+      "password_confirmation",
+      password_confirmation,
+      { password }
+    );
 
     if (emailError || passwordError || confirmError) {
       setErrors({
         email: emailError,
         password: passwordError,
-        password_confirmation: confirmError
+        password_confirmation: confirmError,
       });
       return;
     }
@@ -63,10 +70,18 @@ function ResetPassword() {
   };
 
   return (
-    <AuthLayout 
+    <AuthLayout
       title="Set New Password"
       subtitle="Create a new password for your account"
     >
+      <button
+        className="back-arrow-btn"
+        onClick={() => navigate("/")}
+        aria-label="Back to Home"
+        type="button"
+      >
+        <i className="fas fa-home"></i> Home
+      </button>
       <form onSubmit={handleSubmit} className="auth-form">
         <input
           type="email"
@@ -77,7 +92,9 @@ function ResetPassword() {
           required
           placeholder="Your email"
         />
-        {errors.email && <span className="auth-error-text">{errors.email}</span>}
+        {errors.email && (
+          <span className="auth-error-text">{errors.email}</span>
+        )}
 
         <div className="password-field">
           <input
@@ -90,41 +107,66 @@ function ResetPassword() {
             placeholder="New password"
           />
           {showPassword ? (
-            <FaEyeSlash className="toggle-password-icon" onClick={() => setShowPassword(false)} />
+            <FaEyeSlash
+              className="toggle-password-icon"
+              onClick={() => setShowPassword(false)}
+            />
           ) : (
-            <FaEye className="toggle-password-icon" onClick={() => setShowPassword(true)} />
+            <FaEye
+              className="toggle-password-icon"
+              onClick={() => setShowPassword(true)}
+            />
           )}
           {password && (
-            <div className={`password-strength strength-${zxcvbn(password).score}`}>
-              Strength: {["Very Weak", "Weak", "Fair", "Good", "Strong"][zxcvbn(password).score]}
+            <div
+              className={`password-strength strength-${zxcvbn(password).score}`}
+            >
+              Strength:{" "}
+              {
+                ["Very Weak", "Weak", "Fair", "Good", "Strong"][
+                  zxcvbn(password).score
+                ]
+              }
             </div>
           )}
         </div>
-        {errors.password && <span className="auth-error-text">{errors.password}</span>}
+        {errors.password && (
+          <span className="auth-error-text">{errors.password}</span>
+        )}
 
         <div className="password-field">
           <input
             type={showConfirmPassword ? "text" : "password"}
             value={password_confirmation}
             onChange={(e) => setPasswordConfirmation(e.target.value)}
-            onBlur={() => handleBlur("password_confirmation", password_confirmation)}
-            className={`auth-input ${errors.password_confirmation ? "auth-error" : ""}`}
+            onBlur={() =>
+              handleBlur("password_confirmation", password_confirmation)
+            }
+            className={`auth-input ${
+              errors.password_confirmation ? "auth-error" : ""
+            }`}
             required
             placeholder="Confirm new password"
           />
           {showConfirmPassword ? (
-            <FaEyeSlash className="toggle-password-icon" onClick={() => setShowConfirmPassword(false)} />
+            <FaEyeSlash
+              className="toggle-password-icon"
+              onClick={() => setShowConfirmPassword(false)}
+            />
           ) : (
-            <FaEye className="toggle-password-icon" onClick={() => setShowConfirmPassword(true)} />
+            <FaEye
+              className="toggle-password-icon"
+              onClick={() => setShowConfirmPassword(true)}
+            />
           )}
         </div>
-        {errors.password_confirmation && <span className="auth-error-text">{errors.password_confirmation}</span>}
+        {errors.password_confirmation && (
+          <span className="auth-error-text">
+            {errors.password_confirmation}
+          </span>
+        )}
 
-        <button 
-          type="submit" 
-          className="auth-button" 
-          disabled={loading}
-        >
+        <button type="submit" className="auth-button" disabled={loading}>
           {loading ? "Resetting..." : "Reset Password"}
         </button>
       </form>
