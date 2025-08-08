@@ -9,10 +9,10 @@ const BlogCTASection = () => {
   const navigate = useNavigate();
 
   const images = [
-    { src: '/blog1.jpg', alt: 'Cultural Dance' },
-    { src: '/blog1.jpg', alt: 'Traditional Ceremony' },
-    { src: '/blog1.jpg', alt: 'Local Art' },
-    { src: '/blog1.jpg', alt: 'Community Gathering' },
+    { src: '/culture1.png', alt: 'Cultural Dance' },
+    { src: '/culture2.png', alt: 'Traditional Ceremony' },
+    { src: '/culture3.png', alt: 'Local Art' },
+    { src: '/culture1.jpg', alt: 'Community Gathering' },
   ];
 
   // Custom arrow components
