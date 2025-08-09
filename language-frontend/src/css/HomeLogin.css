@@ -1112,8 +1112,8 @@ button:active,
 
 .newsletter-input {
   display: flex ;
-  justify-content: center ;
-  gap: 1rem ;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .newsletter-input input {
@@ -1121,7 +1121,7 @@ button:active,
   border: 1px solid #f1a012 ;
   border-radius: 30px ;
   font-size: 1rem ;
-  color: #ab2526 ;
+  color: #fff;
   width: 300px ;
   background-color: #ab2526 ;
 }
