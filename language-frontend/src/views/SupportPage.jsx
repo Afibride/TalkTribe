@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../css/PolicyPages.css';
 import Navbar from '../components/Navbar';
 import NewNavbar from '../components/Navbar1';
 import Footer from '../components/Footer';
+import { FaHandshake, FaUsers, FaLanguage, FaBook, FaGlobeAfrica } from 'react-icons/fa';
 
-const DonatePage = () => {
+const SupportPage = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [donationType, setDonationType] = useState('');
+  const [supportType, setSupportType] = useState('');
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -15,14 +17,14 @@ const DonatePage = () => {
   }, []);
 
   const openModal = (type) => {
-    setDonationType(type);
+    setSupportType(type);
     setShowModal(true);
     document.body.style.overflow = 'hidden'; 
   };
 
   const closeModal = () => {
     setShowModal(false);
-    setDonationType('');
+    setSupportType('');
     document.body.style.overflow = 'auto'; 
   };
 
@@ -31,69 +33,72 @@ const DonatePage = () => {
       {isLoggedIn ? <NewNavbar /> : <Navbar />}
       <div className="policy-page">
         <div className="policy-header">
-          <h1>Support Our Mission</h1>
-          <p>Help us preserve and promote local languages in Cameroon and around the world</p>
+          <h1>Become a Language Guardian</h1>
+          <p>Partner with us to preserve and promote indigenous languages in Cameroon and beyond</p>
         </div>
 
         <div className="policy-content">
           <section className="donate-section">
-            <h2>Why Donate?</h2>
+            <h2>Why Support Us?</h2>
             <p>
-              Every contribution directly supports our projects — from creating free
-              learning tools to documenting endangered Cameroonian languages. 
-              With your help, we can keep language heritage alive for future generations.
+              Your partnership directly enables our cultural preservation work - from creating free
+              learning resources to documenting endangered languages. Together, we can keep linguistic
+              heritage alive for future generations.
             </p>
           </section>
 
           <section className="donate-section">
-            <h2>Ways to Give</h2>
+            <h2>Ways to Partner</h2>
             <div className="support-options">
               <div className="support-card">
-                <h3>One-Time Donation</h3>
-                <p>Choose any amount and make a one-time contribution to our work.</p>
-                <button className="donate-btn" onClick={() => openModal('One-Time Donation')}>Donate Once</button>
+                <FaHandshake className="support-icon" />
+                <h3>One-Time Contribution</h3>
+                <p>Make a single contribution to support our ongoing initiatives.</p>
+                <button className="donate-btn" onClick={() => openModal('One-Time Support')}>Support Now</button>
               </div>
 
               <div className="support-card">
-                <h3>Monthly Giving</h3>
-                <p>Join our community of monthly donors and provide ongoing support.</p>
-                <button className="donate-btn" onClick={() => openModal('Monthly Giving')}>Donate Monthly</button>
+                <FaUsers className="support-icon" />
+                <h3>Sustaining Partnership</h3>
+                <p>Join our community of monthly supporters for consistent impact.</p>
+                <button className="donate-btn" onClick={() => openModal('Monthly Partnership')}>Partner Monthly</button>
               </div>
 
               <div className="support-card">
-                <h3>Sponsor a Project</h3>
-                <p>Fund a specific project like language recording, workshops, or app development.</p>
-                <button className="donate-btn" onClick={() => openModal('Sponsor a Project')}>Sponsor Now</button>
+                <FaLanguage className="support-icon" />
+                <h3>Project Sponsorship</h3>
+                <p>Fund specific initiatives like language documentation or educational programs.</p>
+                <button className="donate-btn" onClick={() => openModal('Project Sponsorship')}>Sponsor a Project</button>
               </div>
             </div>
           </section>
 
           <section className="donate-section">
-            <h2>Other Ways to Help</h2>
-            <ul>
-              <li>Donate equipment (recorders, laptops, cameras)</li>
-              <li>Offer professional services (translation, design, legal)</li>
-              <li>Share our mission with your friends & community</li>
+            <h2>Other Partnership Opportunities</h2>
+            <ul className="support-impact">
+              <li><FaBook /> Provide equipment (recorders, laptops, cameras)</li>
+              <li><FaGlobeAfrica /> Offer professional services (translation, design, legal)</li>
+              <li>Introduce us to potential partners in your network</li>
             </ul>
           </section>
 
           <section className="donate-section">
-            <h2>Secure Payment</h2>
+            <h2>Secure Contribution Process</h2>
             <p>
-              All donations are processed securely. You’ll receive a confirmation
-              and receipt via email or SMS after your contribution.
+              All contributions are processed securely. You'll receive confirmation
+              and documentation for your records.
             </p>
           </section>
         </div>
       </div>
 
-      {/* Donation Modal */}
+      {/* Support Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close" onClick={closeModal}>×</button>
-            <h2>{donationType}</h2>
-            <p>Choose one of the following methods to make your donation:</p>
+            <h2>{supportType}</h2>
+            <p>Choose one of the following methods to make your contribution:</p>
 
             <div className="donation-method">
               <h3>MTN Mobile Money</h3>
@@ -116,12 +121,12 @@ const DonatePage = () => {
               <p>SWIFT/BIC: AFRICMCX</p>
             </div>
 
-            <p style={{marginTop: '1rem', fontSize: '0.9rem'}}>
-              After making your donation, please send proof of payment via 
-              WhatsApp or email so we can confirm and send you a receipt.
+            <p className="donation-note">
+              After making your contribution, please send proof of payment via 
+              WhatsApp or email so we can confirm and send you documentation.
             </p>
             
-            <div style={{marginTop: '1.5rem'}}>
+            <div className="modal-actions">
               <button className="donate-btn" onClick={closeModal}>Close</button>
             </div>
           </div>
@@ -133,4 +138,4 @@ const DonatePage = () => {
   );
 };
 
-export default DonatePage;
+export default SupportPage;

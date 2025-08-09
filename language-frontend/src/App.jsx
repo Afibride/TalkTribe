@@ -32,8 +32,8 @@ import PublicRoute from './components/PublicRoute';
 import Notifications from './views/Notifications';
 import ProfilePage from './views/ProfilePage';
 import TestimonialsPage from './views/TestimonialsPage';
-import DonatePage from './views/DonatePage';
 import ScrollToTop from './components/ScrollToTop';
+import SupportPage from './views/SupportPage';
 
 
 function App() {
@@ -71,7 +71,7 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
           <Route path="/terms-conditions" element={<TermsConditionsPage />} />
           <Route path="/help" element={<Contact />} />
-          <Route path="donate" element={<DonatePage />} />
+          <Route path="/support" element={<SupportPage />} />
 
           {/* Public routes (redirect if logged in) */}
           <Route

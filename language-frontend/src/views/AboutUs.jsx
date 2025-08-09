@@ -12,7 +12,7 @@ import {
   FaGlobeAfrica,
   FaHandsHelping,
   FaCalendarAlt,
-  FaDonate,
+  FaHandshake,
   FaHandHoldingHeart,
 } from "react-icons/fa";
 import AOS from "aos";
@@ -180,25 +180,33 @@ const About = () => {
         <section className="about-donation" data-aos="fade-up">
           <div className="donation-content">
             <div className="donation-text">
-              <FaHandHoldingHeart className="donation-icon" />
-              <h2>Support Our Mission</h2>
+              <FaHandshake className="donation-icon" />
+              <h2>Become a Language Guardian</h2>
               <p>
-                Your donation helps us preserve endangered languages and provide
-                free resources to indigenous communities worldwide.
+                Your partnership enables us to preserve endangered languages and
+                empower indigenous communities through these initiatives:
               </p>
               <ul className="donation-impact">
-                <li>Fund language documentation projects</li>
-                <li>Develop free learning materials</li>
-                <li>Support community language programs</li>
-                <li>Create digital archives of native speakers</li>
+                <li>
+                  <FaHandHoldingHeart /> Sponsor language documentation projects
+                </li>
+                <li>
+                  <FaBook /> Fund free educational resources
+                </li>
+                <li>
+                  <FaUsers /> Support community language programs
+                </li>
+                <li>
+                  <FaLanguage /> Create digital archives of native speakers
+                </li>
               </ul>
             </div>
             <div className="donation-cta">
-              <Link to="/donate" className="btn btn-donate">
-                <FaDonate /> Make a Donation
+              <Link to="/support" className="btn btn-donate">
+                <FaHandshake /> Partner With Us
               </Link>
               <p className="donation-note">
-                All donations are tax-deductible and directly support language
+                All contributions are tax-deductible and directly fund
                 preservation efforts.
               </p>
             </div>
@@ -224,7 +232,10 @@ const About = () => {
               {isLoggedIn ? "Explore Languages" : "Get Started"}
             </Link>
 
-            <Link to={isLoggedIn ? "/blog" : "/contact"} className="btn btn-outline">
+            <Link
+              to={isLoggedIn ? "/blog" : "/contact"}
+              className="btn btn-outline"
+            >
               {isLoggedIn ? "Explore Blog" : "Contact Us"}
             </Link>
           </div>

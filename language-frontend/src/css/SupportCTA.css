@@ -1,0 +1,301 @@
+/* src/css/SupportCTA.css */
+.support-cta {
+  padding: 3.5rem 2.5rem;
+  border-radius: 16px;
+  margin: 4rem auto;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  background: linear-gradient(145deg, #f8f9fa 0%, #ffffff 100%);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  max-width: 1400px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.support-cta:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.support-cta.primary {
+  border-left: 6px solid #188b81;
+  background: linear-gradient(145deg, #f0f8f7 0%, #ffffff 100%);
+}
+
+.support-cta.secondary {
+  background: linear-gradient(145deg, #2c3e50 0%, #1a2636 100%);
+  color: white;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.support-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 3rem;
+}
+
+.support-text {
+  flex: 1;
+  min-width: 300px;
+  padding-right: 2rem;
+}
+
+.support-action {
+  flex: 0 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 280px;
+}
+
+.support-icon {
+  font-size: 2.8rem;
+  color: #188b81;
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.support-cta:hover .support-icon {
+  transform: scale(1.1);
+}
+
+.support-cta.secondary .support-icon {
+  color: #e74c3c;
+}
+
+.support-cta h3 {
+  margin-top: 0;
+  font-size: 2rem;
+  margin-bottom: 1.8rem;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #2c3e50;
+}
+
+.support-cta.secondary h3 {
+  color: white;
+}
+
+.support-cta p {
+  margin-bottom: 2rem;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: #4a5568;
+}
+
+.support-cta.secondary p {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.support-impact {
+  margin: 2rem 0;
+  padding-left: 0;
+  list-style: none;
+}
+
+.support-impact li {
+  margin-bottom: 1.2rem;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  background-color: rgba(24, 139, 129, 0.05);
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.support-impact li:hover {
+  transform: translateX(5px);
+  background-color: rgba(24, 139, 129, 0.1);
+}
+
+.support-cta.secondary .support-impact li {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.support-cta.secondary .support-impact li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.support-impact svg {
+  color: #188b81;
+  font-size: 1.2rem;
+  min-width: 1.5rem;
+}
+
+.support-cta.secondary .support-impact svg {
+  color: #e74c3c;
+}
+
+.support-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1.2rem 2.5rem;
+  background-color: #188b81;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.15rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 15px rgba(24, 139, 129, 0.3);
+  margin-bottom: 1.5rem;
+  border: none;
+  cursor: pointer;
+}
+
+.support-button:hover {
+  background-color: #147a71;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(24, 139, 129, 0.4);
+}
+
+.support-note {
+  font-size: 0.95rem;
+  margin-top: 0.8rem;
+  opacity: 0.9;
+  max-width: 280px;
+  line-height: 1.6;
+}
+
+.support-cta.secondary .support-note {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.support-levels {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.support-levels span {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  background-color: rgba(24, 139, 129, 0.1);
+  border-radius: 50px;
+  font-weight: 600;
+  color: #188b81;
+  transition: all 0.3s ease;
+}
+
+.support-levels span:hover {
+  background-color: rgba(24, 139, 129, 0.2);
+  transform: translateY(-2px);
+}
+
+.support-cta.secondary .support-levels span {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: white;
+}
+
+.support-cta.secondary .support-levels span:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.support-cta.secondary .support-button {
+  background-color: #e74c3c;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.support-cta.secondary .support-button:hover {
+  background-color: #d14030;
+  box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+}
+
+@media (max-width: 768px) {
+  .support-cta {
+    padding: 1.8rem 1.5rem;
+    margin: 2.5rem auto;
+    border-radius: 10px;
+  }
+  
+  .support-content {
+    gap: 1.5rem;
+  }
+  
+  .support-icon {
+    font-size: 2.2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .support-cta h3 {
+    font-size: 1.6rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .support-cta p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .support-impact {
+    margin: 1.2rem auto;
+  }
+  
+  .support-impact li {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .support-button {
+    padding: 1rem 1.8rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .support-note {
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+  }
+  
+  .support-levels {
+    margin-top: 1.5rem;
+    gap: 0.8rem;
+  }
+  
+  .support-levels span {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .support-cta {
+    padding: 1.5rem 1.2rem;
+    margin: 2rem auto;
+  }
+  
+  .support-icon {
+    font-size: 2rem;
+  }
+  
+  .support-cta h3 {
+    font-size: 1.4rem;
+  }
+  
+  .support-impact li {
+    font-size: 0.9rem;
+    gap: 0.6rem;
+  }
+  
+  .support-button {
+    padding: 0.9rem 1.5rem;
+  }
+  
+  .support-levels {
+    flex-wrap: wrap;
+  }
+  
+  .support-levels span {
+    font-size: 0.5rem;
+    padding: 0.3rem 0.7rem;
+  }
+}

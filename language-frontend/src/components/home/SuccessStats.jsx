@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api/api';
 import '../../css/HomeLogin.css';
+import SupportCTA from '../SupportCTA';
 
 const SuccessStats = () => {
   const [stats, setStats] = useState({
@@ -24,10 +25,11 @@ const SuccessStats = () => {
   }, []);
 
   return (
+    <>
     <section className="success">
       <h1 className="success-title">Our Success</h1>
       <p className="success-subtitle">
-        We’ve helped thousands of learners grow their language skills and cultural understanding across Africa.
+        We’ve helped thousands of learners grow their language skills and cultural understanding across Cameroon.
       </p>
       <div className="stats">
         <div className="stat-item">
@@ -52,6 +54,8 @@ const SuccessStats = () => {
         </div>
       </div>
     </section>
+    <SupportCTA />
+    </>
   );
 };
 
