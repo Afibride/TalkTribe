@@ -108,17 +108,12 @@ const SupportPage = () => {
 
             <div className="donation-method">
               <h3>Orange Money</h3>
-              <p>Number: <strong>+237 69X XXX XXX</strong></p>
-              <p>Name: TalkTribe Foundation</p>
+              <p>TalkTribe currently has no Orange Money account</p>
             </div>
 
             <div className="donation-method">
               <h3>Bank Transfer</h3>
               <p>TalkTribe currently has no bank account</p>
-              <p>Bank: xxxx</p>
-              <p>Account Name: TalkTribe Foundation</p>
-              <p>Account Number: xxx xxx xxxx</p>
-              <p>SWIFT/BIC: AFRICMCX</p>
             </div>
 
             <p className="donation-note">

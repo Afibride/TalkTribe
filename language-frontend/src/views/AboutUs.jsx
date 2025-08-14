@@ -25,12 +25,6 @@ const team = [
     bio: "Passionate about preserving indigenous languages and cultures through technology.",
     image: "/profile.png",
   },
-  {
-    name: "Afi Bright",
-    role: "Head of Language Education",
-    bio: "Linguistics expert with 10+ years experience in language preservation.",
-    image: "/profile.png",
-  },
 ];
 
 const milestones = [
@@ -77,6 +71,21 @@ const About = () => {
 
         <section className="about-mission" data-aos="fade-up">
           <div className="mission-content">
+            <h2>What is Talktribe</h2>
+            <p className="mission-statement">
+              <strong>TalkTribe</strong> is a digital local language learning
+              and discovery platform that connects learners with{" "}
+              <strong>language experts</strong> and native instructors. We offer
+              a culturally rich and immersive learning experience designed to
+              help you understand your <strong>heritage</strong>, traditions,
+              and mother tongue. 
+              <br />
+              Through <strong>interactive courses</strong>, a
+              vibrant <strong>blog</strong>, and live sessions with{" "}
+              <strong>community leaders</strong>, you’ll gain more than just
+              language proficiency—you’ll gain a sense of{" "}
+              <strong>identity</strong> and belonging.
+            </p>
             <h2>Our Mission</h2>
             <p className="mission-statement">
               To create a world where everyone can embrace their roots and
@@ -86,10 +95,6 @@ const About = () => {
             </p>
 
             <div className="mission-values">
-              <div className="value-card">
-                <h3>Preservation</h3>
-                <p>Protecting endangered languages from extinction</p>
-              </div>
               <div className="value-card">
                 <h3>Community</h3>
                 <p>Connecting learners with native speakers</p>
@@ -105,7 +110,7 @@ const About = () => {
             </div>
           </div>
           <div className="mission-image">
-            <img src="/blog1.jpg" alt="Cultural diversity" />
+            <img src="/culture1.jpg" alt="Cultural diversity" />
           </div>
         </section>
 

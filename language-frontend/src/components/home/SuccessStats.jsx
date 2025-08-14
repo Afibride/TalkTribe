@@ -29,7 +29,7 @@ const SuccessStats = () => {
     <section className="success">
       <h1 className="success-title">Our Success</h1>
       <p className="success-subtitle">
-        We’ve helped thousands of learners grow their language skills and cultural understanding across Cameroon.
+        We’ve helped alot of learners grow their language skills and cultural understanding across Cameroon.
       </p>
       <div className="stats">
         <div className="stat-item">
