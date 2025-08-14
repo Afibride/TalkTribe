@@ -853,15 +853,6 @@ button:active,
   background-color: #145f5a !important;
 }
 
-.testimonial-cards {
-  flex: 2 !important;
-  display: grid !important;
-  grid-template-columns: repeat(2, 1fr) !important;
-  gap: 2rem !important;
-  min-width: 300px !important;
-  max-width: 60% !important;
-}
-
 .testimonial-card {
   max-width: 100% !important; /* Ensure cards fit within the grid */
   padding: 1rem !important; /* Add padding for spacing */
@@ -908,6 +899,7 @@ button:active,
   cursor: pointer !important;
   transition: background-color 0.3s ease !important;
   align-self: center !important;
+  text-decoration: none;
 }
 
 .show-more-btn:hover {
@@ -1422,7 +1414,8 @@ button:active,
   }
 
   .testimonial-cards {
-    grid-template-columns: repeat(2, 1fr) ; /* Two columns for mobile */
+    display: flex;
+    flex-direction: column;
     gap: 0.5rem !important; /* Reduce gap for smaller screens */
     width: 100% ; /* Full width for mobile */
     max-width: 100% ; /* Ensure cards fit within the grid */
