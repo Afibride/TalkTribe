@@ -395,7 +395,7 @@ button:active,
   }
 
   .about-image {
-    max-width: 100% ; /* Full width for mobile */
+    max-width: 100% ; 
   }
 
   .about-text {
@@ -500,11 +500,11 @@ button:active,
 }
 
 .blog-text-container {
-  width: 100% ; /* Full width for the text container */
-  padding: 2rem 1rem ; /* Add padding for spacing */
-  background-color: #188b81 ; /* Background color for the text section */
-  text-align: center ; /* Center-align the text */
-  color: #fff ; /* White text color */
+  width: 100% ; 
+  padding: 2rem 1rem ;
+  background-color: #188b81 ; 
+  text-align: center ;
+  color: #fff ; 
 }
 
 .blog-title {
@@ -853,9 +853,42 @@ button:active,
   background-color: #145f5a !important;
 }
 
+.rating-selector {
+  display: flex;
+  gap: 0.3rem;
+  margin: 0.7rem 0;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  font-size: 1.7rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s;
+  outline: none;
+  padding: 0 0.1rem;
+}
+
+.star-btn.selected {
+  color: #FFD700;
+  text-shadow: 0 0 4px #FFD700;
+}
+
+.star-btn:focus {
+  outline: 2px solid #188B81;
+}
+
+  .testimonial-cards {
+    display: flex;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem !important; 
+    width: 100% ; 
+  }
+
 .testimonial-card {
-  max-width: 100% !important; /* Ensure cards fit within the grid */
-  padding: 1rem !important; /* Add padding for spacing */
+  width: 50% !important; 
+  padding: 1rem !important; 
   background: #ffffff !important;
   box-shadow: 2px 4px 60px rgba(41, 44, 124, 0.1) !important;
   border-radius: 10px !important;
@@ -1401,7 +1434,7 @@ button:active,
   }
 
   .testimonial-header {
-    max-width: 98% ; /* Full width for mobile */
+    max-width: 98% ; 
     text-align: center ; /* Center-align the header */
   }
 
@@ -1410,19 +1443,20 @@ button:active,
     gap: 1rem ;
     align-items: center ;
     flex-direction: column ; /* Stack input and button vertically */
-    width: 100% ; /* Full width for mobile */
+    width: 100% ; 
   }
 
   .testimonial-cards {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem !important; /* Reduce gap for smaller screens */
-    width: 100% ; /* Full width for mobile */
-    max-width: 100% ; /* Ensure cards fit within the grid */
+    gap: 0.5rem !important; 
+    width: 100%;
+    
   }
 
   .testimonial-card {
-    padding: 0.5rem ; /* Reduce padding */
+    padding: 0.5rem ;
+    width: 100% !important;
   }
 
   .testimonial-img {
@@ -1607,7 +1641,7 @@ button:active,
   }
 
   .newsletter-input input {
-    width: 100% ; /* Full width for mobile */
+    width: 100% ; 
     text-align: center ; /* Center-align text inside the input */
     padding: 0.5rem 1rem ; /* Reduce padding for smaller height */
   }
@@ -1646,7 +1680,7 @@ button:active,
     border: 1px solid #702424 ;
     border-radius: 20px ;
     font-size: 1rem ;
-    width: 80% ; /* Full width for mobile */
+    width: 80% ; 
   }
 
   .search-icon {

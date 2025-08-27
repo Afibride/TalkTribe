@@ -29,13 +29,6 @@ const team = [
 
 const milestones = [
   {
-    year: "2024",
-    title: "Founded",
-    description:
-      "TalkTribe was established to preserve local languages and cultures",
-    icon: <FaLanguage />,
-  },
-  {
     year: "2025",
     title: "Platform Launch",
     description:

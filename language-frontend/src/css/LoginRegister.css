@@ -27,6 +27,19 @@ body, html {
   box-sizing: border-box;
 }
 
+/* ====== LOGIN CONTAINER ====== */
+.login-register-page {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 100vh !important;
+  width: 100vw !important;
+  background: var(--light-bg) !important;
+  overflow-y: hidden !important;
+}
+
+
+
 
 .login-container .left-panel {
   width: 50%;

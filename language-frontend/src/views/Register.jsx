@@ -179,8 +179,11 @@ function Register() {
     }
   };
 
+  
+
   return (
-    <div className="login-container">
+    <div className="login-register-page">
+          <div className="login-container">
       <ToastContainer
         position="top-right"
         autoClose={4000}
@@ -470,6 +473,7 @@ function Register() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

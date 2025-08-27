@@ -4,7 +4,7 @@ import '../../css/HomeLogin.css';
 const NewsSection = () => {
   const newsItems = [
     {
-      image: "/blog1.jpg",
+      image: "/culture1.jpg",
       title: "TalkTribe Adds $30 Million to Its Balance Sheet to Advance Local Language Learning Platform",
       description: "TalkTribe, a fast-growing platform dedicated to preserving and teaching local languages, has raised $30 million to accelerate its mission of revitalizing indigenous languages through technology.",
       tag: "NEWS",

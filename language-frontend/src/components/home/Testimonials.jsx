@@ -23,7 +23,7 @@ const TestimonialsSection = () => {
           response: error.response?.data,
           status: error.response?.status,
         });
-        setError('Failed to load testimonials');
+        setError("Failed to load testimonials");
         setTestimonials([]);
       } finally {
         setLoading(false);
@@ -36,7 +36,7 @@ const TestimonialsSection = () => {
   const handleSubmitTestimonial = async (e) => {
     e.preventDefault();
     if (!newTestimonialText.trim()) {
-      setError('Please enter your testimonial text');
+      setError("Please enter your testimonial text");
       return;
     }
 
@@ -57,11 +57,7 @@ const TestimonialsSection = () => {
   };
 
   if (loading) {
-    return (
-      <div className="testimonials-loading">
-        Loading testimonials...
-      </div>
-    );
+    return <div className="testimonials-loading">Loading testimonials...</div>;
   }
 
   return (
@@ -70,15 +66,15 @@ const TestimonialsSection = () => {
         <div className="testimonial-header">
           <h2 className="testimonial-title">What They Say?</h2>
           <p className="testimonial-subtitle">
-            TalkTribe has got more than 100k positive ratings from our users
+            TalkTribe has got more than 100 positive ratings from our users
             around the world.
           </p>
           <p className="testimonial-subtitle">
             Are you too? Please give your assessment.
           </p>
-          
+
           {error && <p className="testimonial-error">{error}</p>}
-          
+
           <form className="assessment-form" onSubmit={handleSubmitTestimonial}>
             <textarea
               placeholder="Write your assessment..."
@@ -87,15 +83,18 @@ const TestimonialsSection = () => {
               onChange={(e) => setNewTestimonialText(e.target.value)}
               rows="3"
             />
-            <div className="rating-selector">
+            <div className="rating-selector" aria-label="Select rating">
               {[1, 2, 3, 4, 5].map((star) => (
-                <span
+                <button
                   key={star}
-                  className={`star ${star <= rating ? "selected" : ""}`}
+                  type="button"
+                  className={`star-btn ${star <= rating ? "selected" : ""}`}
                   onClick={() => setRating(star)}
+                  aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                  tabIndex={0}
                 >
                   ★
-                </span>
+                </button>
               ))}
             </div>
             <button type="submit" className="submit-btn">
@@ -105,32 +104,38 @@ const TestimonialsSection = () => {
         </div>
 
         <div className="testimonial-cards">
-          {testimonials.length > 0 ? (
-            testimonials.map((testimonial, index) => (
-              <div key={index} className="testimonial-card" data-aos="zoom-in">
-                <img
-                  src={
-                    testimonial.image_url || 
-                    testimonial.image || 
-                    "/profile.png"
-                  }
-                  alt={testimonial.name}
-                  className="testimonial-img"
-                  onError={(e) => {
-                    e.target.src = "/profile.png";
-                  }}
-                />
-                <p className="testimonial-text">"{testimonial.text}"</p>
-                <strong className="testimonial-name">{testimonial.name}</strong>
-                <p className="testimonial-rating">
-                  {Array(testimonial.rating).fill("⭐").join(" ")}{" "}
-                  {testimonial.reviews}
-                </p>
-              </div>
-            ))
-          ) : (
-            !error && <p className="no-testimonials">No testimonials to show</p>
-          )}
+          {testimonials.length > 0
+            ? testimonials.map((testimonial, index) => (
+                <div
+                  key={index}
+                  className="testimonial-card"
+                  data-aos="zoom-in"
+                >
+                  <img
+                    src={
+                      testimonial.image_url ||
+                      testimonial.image ||
+                      "/profile.png"
+                    }
+                    alt={testimonial.name}
+                    className="testimonial-img"
+                    onError={(e) => {
+                      e.target.src = "/profile.png";
+                    }}
+                  />
+                  <p className="testimonial-text">"{testimonial.text}"</p>
+                  <strong className="testimonial-name">
+                    {testimonial.name}
+                  </strong>
+                  <p className="testimonial-rating">
+                    {Array(testimonial.rating).fill("⭐").join(" ")}{" "}
+                    {testimonial.reviews}
+                  </p>
+                </div>
+              ))
+            : !error && (
+                <p className="no-testimonials">No testimonials to show</p>
+              )}
         </div>
       </div>
       <Link to="/testimonials" className="show-more-btn">

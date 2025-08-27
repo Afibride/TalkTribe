@@ -1,6 +1,5 @@
 <?php
 
-
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\API\PasswordResetController;
 use App\Http\Controllers\CategoryController;

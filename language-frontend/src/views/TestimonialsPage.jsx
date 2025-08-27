@@ -47,6 +47,13 @@ const TestimonialsPage = () => {
     }));
   };
 
+  const handleRatingChange = (rating) => {
+    setNewTestimonial((prev) => ({
+      ...prev,
+      rating: rating,
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -123,19 +130,27 @@ const TestimonialsPage = () => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="rating">Rating</label>
-                  <select
-                    id="rating"
-                    name="rating"
-                    value={newTestimonial.rating}
-                    onChange={handleInputChange}
+                  <label>Rating</label>
+                  <div 
+                    className="rating-selector" 
+                    aria-label="Select rating"
                   >
-                    {[1, 2, 3, 4, 5].map((num) => (
-                      <option key={num} value={num}>
-                        {num} Star{num !== 1 ? "s" : ""}
-                      </option>
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        className={`star-btn ${star <= newTestimonial.rating ? "selected" : ""}`}
+                        onClick={() => handleRatingChange(star)}
+                        aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
+                        tabIndex={0}
+                      >
+                        ★
+                      </button>
                     ))}
-                  </select>
+                  </div>
+                  <div className="rating-text">
+                    {newTestimonial.rating} star{newTestimonial.rating !== 1 ? 's' : ''}
+                  </div>
                 </div>
 
                 <div className="form-group">

@@ -30,7 +30,7 @@ function Login() {
           await new Promise(resolve => setTimeout(resolve, 100));
           navigate("/home-after-login", {
             state: { user, isNewUser: false },
-            replace: true // Prevent going back to login page
+            replace: true 
           });
         }
       } catch (error) {
@@ -117,8 +117,10 @@ function Login() {
     return <div className="loading-centered">Checking authentication...</div>;
   }
 
+  
   return (
-    <div className="login-container">
+    <div className="login-register-page">
+          <div className="login-container">
       <div className="left-panel">
         <img
           src="/login.png"
@@ -232,6 +234,7 @@ function Login() {
           </form>
         </div>
       </div>
+    </div>
     </div>
   );
 }
