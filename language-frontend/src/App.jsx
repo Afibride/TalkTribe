@@ -34,6 +34,7 @@ import ProfilePage from './views/ProfilePage';
 import TestimonialsPage from './views/TestimonialsPage';
 import ScrollToTop from './components/ScrollToTop';
 import SupportPage from './views/SupportPage';
+import SettingsPage from './views/SettingsPage';
 
 
 function App() {
@@ -72,6 +73,7 @@ function App() {
           <Route path="/terms-conditions" element={<TermsConditionsPage />} />
           <Route path="/help" element={<Contact />} />
           <Route path="/support" element={<SupportPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
 
           {/* Public routes (redirect if logged in) */}
           <Route

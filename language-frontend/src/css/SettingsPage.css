@@ -1,0 +1,228 @@
+:root {
+  --primary-color: #F1A012;
+  --secondary-color: #AB2526;
+  --accent-color: #188B81;
+  --text-color: #333;
+  --light-text: #777;
+  --border-color: #e0e0e0;
+  --error-color: #ff3860;
+  --bg-color: #fff;
+  --light-bg: #f8f9fa;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --input-bg: #f5f5f5;
+}
+
+.settings-container {
+  max-width: 56rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  background-color: var(--light-bg);
+  min-height: calc(100vh - 140px);
+  margin-top: 100px;
+}
+
+.settings-title {
+  font-size: 1.875rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.settings-form {
+  background-color: var(--bg-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  border: 1px solid var(--border-color);
+}
+
+.settings-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+  margin-bottom: 1rem;
+}
+
+.settings-section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--secondary-color);
+  display: flex;
+  align-items: center;
+}
+
+.settings-section-title::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  margin-right: 10px;
+}
+
+.settings-checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background-color: var(--light-bg);
+  border-radius: 0.375rem;
+  transition: all 0.2s ease;
+}
+
+.settings-checkbox-group:hover {
+  background-color: var(--input-bg);
+}
+
+.settings-checkbox {
+  height: 1.25rem;
+  width: 1.25rem;
+  color: var(--primary-color);
+  border-color: var(--border-color);
+  border-radius: 0.25rem;
+  margin-right: 0.75rem;
+  cursor: pointer;
+}
+
+.settings-checkbox:focus {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.settings-checkbox-label {
+  display: block;
+  font-size: 1rem;
+  color: var(--text-color);
+  cursor: pointer;
+  flex-grow: 1;
+}
+
+.settings-input-group {
+  margin-bottom: 1rem;
+}
+
+.settings-label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.settings-select {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 0.375rem;
+  color: var(--text-color);
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1rem;
+}
+
+.settings-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(241, 160, 18, 0.2);
+}
+
+.settings-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.settings-button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+.settings-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(241, 160, 18, 0.3);
+}
+
+.settings-button-cancel {
+  color: var(--light-text);
+  background-color: transparent;
+  border-color: var(--border-color);
+}
+
+.settings-button-cancel:hover {
+  background-color: var(--light-bg);
+  color: var(--text-color);
+}
+
+.settings-button-save {
+  color: white;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.settings-button-save:hover {
+  background-color: #e0940c; /* Darker shade of primary color */
+  border-color: #e0940c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(241, 160, 18, 0.3);
+}
+
+/* Toast notification customization */
+.Toastify__toast--success {
+  background: var(--accent-color) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .settings-container {
+    padding: 1rem;
+  }
+  
+  .settings-form {
+    padding: 1.5rem;
+  }
+  
+  .settings-buttons {
+    flex-direction: column;
+  }
+  
+  .settings-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .settings-title {
+    font-size: 1.5rem;
+  }
+  
+  .settings-section-title {
+    font-size: 1.1rem;
+  }
+  
+  .settings-form {
+    padding: 1rem;
+  }
+}

@@ -182,7 +182,6 @@ function Register() {
   
 
   return (
-    <div className="login-register-page">
           <div className="login-container">
       <ToastContainer
         position="top-right"
@@ -473,7 +472,6 @@ function Register() {
           </div>
         </div>
       </div>
-    </div>
     </div>
   );
 }
