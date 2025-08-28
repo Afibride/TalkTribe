@@ -46,7 +46,6 @@ public function index(Request $request)
 
 public function store(Request $request)
 {
-    // This will now automatically return 401 if not authenticated
     $user = Auth::user();
     
     $validated = $request->validate([
@@ -64,8 +63,20 @@ public function store(Request $request)
         'reviews' => $validated['reviews'] ?? null,
     ]);
     
+    // Load the user relationship to ensure we have access to user data
+    $testimonial->load('user');
+    
+    // Return the testimonial with additional image_url field
     return response()->json([
-        ...$testimonial->toArray(),
+        'id' => $testimonial->id,
+        'user_id' => $testimonial->user_id,
+        'name' => $testimonial->name,
+        'image' => $testimonial->image,
+        'text' => $testimonial->text,
+        'rating' => $testimonial->rating,
+        'reviews' => $testimonial->reviews,
+        'created_at' => $testimonial->created_at,
+        'updated_at' => $testimonial->updated_at,
         'image_url' => $user->profile_pic_url,
     ], 201);
 }

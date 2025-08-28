@@ -59,7 +59,7 @@ Route::middleware('auth:sanctum')->group(function () {              // All cours
     
     Route::middleware('is_instructor')->group(function () {
         Route::post('/courses', [CourseController::class, 'store']);         // Add new course
-        Route::put('/courses/{id}', [CourseController::class, 'update']);    // Update course
+        Route::post('/courses/{id}', [CourseController::class, 'update']);    // Update course
         Route::delete('/courses/{id}', [CourseController::class, 'destroy']); // Delete course
     });
 
@@ -121,7 +121,6 @@ Route::get('/stats', [StatsController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function() {
     Route::post('/testimonials', [TestimonialController::class, 'store']);
+    Route::get('/user/me', [AuthController::class, 'getCurrentUser']);
 });
-
-
 

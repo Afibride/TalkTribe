@@ -107,9 +107,7 @@ const CreateCourseModal = ({ onSuccess, onCancel }) => {
     <div className="create-course-modal">
       <div className="modal-header">
         <h2>Create New Course</h2>
-        <button className="close-btn" onClick={onCancel} disabled={isSubmitting}>
-          &times;
-        </button>
+
       </div>
       
       {errors.general && <div className="error-message">{errors.general}</div>}

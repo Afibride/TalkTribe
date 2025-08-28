@@ -70,6 +70,11 @@ class AuthController extends Controller
         ]);
     }
     
+
+    public function getCurrentUser(Request $request)
+{
+    return response()->json($request->user());
+}
     
     
 

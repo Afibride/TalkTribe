@@ -7,8 +7,28 @@ const TestimonialsSection = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [newTestimonialText, setNewTestimonialText] = useState("");
   const [rating, setRating] = useState(5);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        if (token) {
+          await api.get("/api/user/me");
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -35,6 +55,12 @@ const TestimonialsSection = () => {
 
   const handleSubmitTestimonial = async (e) => {
     e.preventDefault();
+    
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    
     if (!newTestimonialText.trim()) {
       setError("Please enter your testimonial text");
       return;
@@ -50,9 +76,15 @@ const TestimonialsSection = () => {
 
       setTestimonials((prev) => [response.data, ...prev].slice(0, 2));
       setNewTestimonialText("");
+      setRating(5);
+      setSuccess("Thank you for your review!");
+      
+      setTimeout(() => setSuccess(null), 3000);
+      
     } catch (error) {
       console.error("Submission error:", error.response?.data);
       setError(error.response?.data?.message || "Failed to submit testimonial");
+      setSuccess(null);
     }
   };
 
@@ -62,6 +94,34 @@ const TestimonialsSection = () => {
 
   return (
     <section className="testimonials-section">
+      {/* Success Message */}
+      {success && (
+        <div className="success-message">
+          <span>✅ {success}</span>
+        </div>
+      )}
+      
+      {/* Login Modal */}
+      {showLoginModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Login Required</h3>
+            <p>Please log in to submit your review.</p>
+            <div className="modal-actions">
+              <button 
+                className="modal-btn secondary"
+                onClick={() => setShowLoginModal(false)}
+              >
+                Cancel
+              </button>
+              <Link to="/login" className="modal-btn primary">
+                Login
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <div className="testimonial-layout">
         <div className="testimonial-header">
           <h2 className="testimonial-title">What They Say?</h2>
@@ -82,6 +142,7 @@ const TestimonialsSection = () => {
               value={newTestimonialText}
               onChange={(e) => setNewTestimonialText(e.target.value)}
               rows="3"
+              required
             />
             <div className="rating-selector" aria-label="Select rating">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -97,6 +158,9 @@ const TestimonialsSection = () => {
                 </button>
               ))}
             </div>
+            <div className="rating-text">
+              {rating} star{rating !== 1 ? 's' : ''}
+            </div>
             <button type="submit" className="submit-btn">
               Submit
             </button>
@@ -107,7 +171,7 @@ const TestimonialsSection = () => {
           {testimonials.length > 0
             ? testimonials.map((testimonial, index) => (
                 <div
-                  key={index}
+                  key={testimonial.id || index}
                   className="testimonial-card"
                   data-aos="zoom-in"
                 >

@@ -56,7 +56,7 @@ const EditLessonModal = ({ lesson, onSuccess, onCancel }) => {
       formDataToSend.append('title', formData.title);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('course_id', lesson.course_id);
-      formDataToSend.append('_method', 'PUT');
+      formDataToSend.append('_method', 'POST');
       
       if (formData.video_file) {
         formDataToSend.append('video_file', formData.video_file);

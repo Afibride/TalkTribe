@@ -28,7 +28,15 @@ const EditCourseModal = ({ course, onSuccess, onCancel }) => {
           ...prev,
           categories: 'Failed to load categories'
         }));
-        toast.error('Failed to load categories');
+        // Safe toast notification with fallback
+        try {
+          toast.error('Failed to load course categories. Please try again.', {
+            position: "top-right",
+            autoClose: 4000,
+          });
+        } catch (toastError) {
+          console.error('Failed to load categories:', error);
+        }
       } finally {
         setIsLoadingCategories(false);
       }
@@ -82,7 +90,7 @@ const EditCourseModal = ({ course, onSuccess, onCancel }) => {
       formDataToSend.append('category_id', formData.category_id);
       formDataToSend.append('level', formData.level);
       formDataToSend.append('duration', formData.duration);
-      formDataToSend.append('_method', 'PUT');
+      formDataToSend.append('_method', 'POST');
       
       if (formData.image) {
         formDataToSend.append('image', formData.image);
@@ -94,6 +102,16 @@ const EditCourseModal = ({ course, onSuccess, onCancel }) => {
         }
       });
 
+      // Success toast with improved message
+      try {
+        toast.success('Course updated successfully! Your changes have been saved.', {
+          position: "top-right",
+          autoClose: 4000,
+        });
+      } catch (toastError) {
+        console.log('Course updated successfully!');
+      }
+
       onSuccess(response.data.course);
     } catch (error) {
       if (error.response?.data?.errors) {
@@ -101,7 +119,16 @@ const EditCourseModal = ({ course, onSuccess, onCancel }) => {
       } else {
         setErrors({ general: error.message || 'Failed to update course' });
       }
-      toast.error('Failed to update course');
+      
+      // Error toast with improved message
+      try {
+        toast.error('Failed to update course. Please check your inputs and try again.', {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      } catch (toastError) {
+        console.error('Failed to update course:', error);
+      }
     } finally {
       setIsSubmitting(false);
     }

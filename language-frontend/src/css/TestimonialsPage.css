@@ -291,6 +291,7 @@
   color: #ccc;
   transition: color 0.2s, transform 0.1s;
   padding: 0;
+    outline: none;
 }
 
 .star-btn:hover {
@@ -306,4 +307,126 @@
   font-size: 14px;
   color: #666;
   margin-top: 5px;
+}
+
+
+.star-btn:focus {
+  outline: none;
+  border: none;
+}
+
+/* Add the same modal styles as above */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.modal-content p {
+  margin: 1rem 0 2rem;
+  color: #666;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal-btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.modal-btn.primary {
+  background-color: #188b81;
+  color: white;
+}
+
+.modal-btn.primary:hover {
+  background-color: #0f5c55;
+}
+
+.modal-btn.secondary {
+  background-color: #e5e7eb;
+  color: #4b5563;
+}
+
+.modal-btn.secondary:hover {
+  background-color: #d1d5db;
+}
+
+/* Success Message Styles */
+.success-message {
+  background-color: #d4edda;
+  color: #188b81;
+  padding: 12px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border: 1px solid #c3e6cb;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in;
+}
+
+.form-error {
+  color: #dc3545;
+  background-color: #f8d7da;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #f5c6cb;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Disabled state for buttons */
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Testimonial date */
+.testimonial-date {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 8px;
 }

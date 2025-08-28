@@ -9,12 +9,33 @@ const TestimonialsPage = () => {
   const [testimonials, setTestimonials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [newTestimonial, setNewTestimonial] = useState({
     text: "",
     rating: 5,
     reviews: "",
   });
   const [showForm, setShowForm] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Check if user is logged in
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const token = localStorage.getItem("authToken");
+        if (token) {
+          await api.get("/api/user/me");
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        setIsLoggedIn(false);
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -56,19 +77,43 @@ const TestimonialsPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!isLoggedIn) {
+      setShowLoginModal(true);
+      return;
+    }
+    
+    if (!newTestimonial.text.trim()) {
+      setError("Please enter your testimonial text");
+      return;
+    }
+
     try {
+      setSubmitting(true);
+      setError(null);
       const response = await api.post("/api/testimonials", newTestimonial);
-      setTestimonials((prev) => [response.data, ...prev]);
+      
+      setSuccess("Thank you for your testimonial! It has been submitted successfully.");
+      
       setNewTestimonial({
         text: "",
         rating: 5,
         reviews: "",
       });
       setShowForm(false);
-      setError(null);
+      
+      // Refresh testimonials to include the new one
+      const updatedResponse = await api.get("/api/testimonials");
+      setTestimonials(updatedResponse.data);
+      
+      setTimeout(() => setSuccess(null), 5000);
+      
     } catch (error) {
       console.error("Submission error:", error.response?.data);
       setError(error.response?.data?.message || "Failed to submit testimonial");
+      setSuccess(null);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -85,10 +130,38 @@ const TestimonialsPage = () => {
     <>
       <NewNavbar />
       <div className="testimonials-page">
+        {/* Success Message */}
+        {success && (
+          <div className="success-message">
+            <span>✅ {success}</span>
+          </div>
+        )}
+        
+        {/* Login Modal */}
+        {showLoginModal && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h3>Login Required</h3>
+              <p>Please log in to submit your review.</p>
+              <div className="modal-actions">
+                <button 
+                  className="modal-btn secondary"
+                  onClick={() => setShowLoginModal(false)}
+                >
+                  Cancel
+                </button>
+                <Link to="/login" className="modal-btn primary">
+                  Login
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+        
         <div className="container">
           <h1 className="page-title">What Our Tribe Says 🗣️</h1>
           <p className="page-subtitle">
-            We're building TalkTribe together — here’s what people think so far.
+            We're building TalkTribe together — here's what people think so far.
           </p>
 
           <Link to="/" className="back-btn">
@@ -117,7 +190,7 @@ const TestimonialsPage = () => {
               {error && <p className="form-error">{error}</p>}
               <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                  <label htmlFor="text">Your Testimonial</label>
+                  <label htmlFor="text">Your Testimonial *</label>
                   <textarea
                     id="text"
                     name="text"
@@ -126,15 +199,13 @@ const TestimonialsPage = () => {
                     required
                     rows="5"
                     placeholder="What's your honest take?"
+                    disabled={submitting}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label>Rating</label>
-                  <div 
-                    className="rating-selector" 
-                    aria-label="Select rating"
-                  >
+                  <label>Rating *</label>
+                  <div className="rating-selector" aria-label="Select rating">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <button
                         key={star}
@@ -143,6 +214,7 @@ const TestimonialsPage = () => {
                         onClick={() => handleRatingChange(star)}
                         aria-label={`Rate ${star} star${star > 1 ? "s" : ""}`}
                         tabIndex={0}
+                        disabled={submitting}
                       >
                         ★
                       </button>
@@ -162,6 +234,7 @@ const TestimonialsPage = () => {
                     value={newTestimonial.reviews}
                     onChange={handleInputChange}
                     placeholder="e.g., 5 reviews on Google"
+                    disabled={submitting}
                   />
                 </div>
 
@@ -173,11 +246,16 @@ const TestimonialsPage = () => {
                       setShowForm(false);
                       setError(null);
                     }}
+                    disabled={submitting}
                   >
                     Cancel
                   </button>
-                  <button type="submit" className="submit-btn">
-                    Submit Testimonial
+                  <button 
+                    type="submit" 
+                    className="submit-btn"
+                    disabled={submitting}
+                  >
+                    {submitting ? 'Submitting...' : 'Submit Testimonial'}
                   </button>
                 </div>
               </form>
@@ -194,7 +272,7 @@ const TestimonialsPage = () => {
           <div className="testimonials-grid">
             {testimonials.length > 0 ? (
               testimonials.map((testimonial, index) => (
-                <div key={index} className="testimonial-card">
+                <div key={testimonial.id || index} className="testimonial-card">
                   <img
                     src={
                       testimonial.image_url ||
@@ -216,13 +294,16 @@ const TestimonialsPage = () => {
                       {Array(testimonial.rating).fill("⭐").join(" ")}
                       {testimonial.reviews && ` — ${testimonial.reviews}`}
                     </p>
+                    <p className="testimonial-date">
+                      {new Date(testimonial.created_at).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
               ))
             ) : (
               !error && (
                 <p className="no-testimonials">
-                  No testimonials available yet.
+                  No testimonials available yet. Be the first to share your experience!
                 </p>
               )
             )}
