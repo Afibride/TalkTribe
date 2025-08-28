@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../api/api";
 import "../css/TestimonialsPage.css";
-import NewNavbar from "../components/Navbar1";
+import Navbar from "../components/Navbar"; // Import regular Navbar
+import NewNavbar from "../components/Navbar1"; // Import logged-in Navbar
 import Footer from "../components/Footer";
 
 const TestimonialsPage = () => {
@@ -28,6 +29,8 @@ const TestimonialsPage = () => {
         if (token) {
           await api.get("/api/user/me");
           setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
         }
       } catch (error) {
         setIsLoggedIn(false);
@@ -119,16 +122,20 @@ const TestimonialsPage = () => {
 
   if (loading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading testimonials...</p>
-      </div>
+      <>
+        {isLoggedIn ? <NewNavbar /> : <Navbar />}
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Loading testimonials...</p>
+        </div>
+        <Footer />
+      </>
     );
   }
 
   return (
     <>
-      <NewNavbar />
+      {isLoggedIn ? <NewNavbar /> : <Navbar />}
       <div className="testimonials-page">
         {/* Success Message */}
         {success && (
