@@ -74,8 +74,7 @@ const About = () => {
               and mother tongue. 
               <br />
               Through <strong>interactive courses</strong>, a
-              vibrant <strong>blog</strong>, and live sessions with{" "}
-              <strong>community leaders</strong>, you’ll gain more than just
+              vibrant <strong>blog</strong>, and more, you’ll gain more than just
               language proficiency—you’ll gain a sense of{" "}
               <strong>identity</strong> and belonging.
             </p>

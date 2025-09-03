@@ -23,7 +23,7 @@ const AboutSection = () => {
               We offer a culturally rich and immersive learning experience designed to help you understand your <strong>heritage</strong>, traditions, and mother tongue.
             </p>
             <p>
-              Through <strong>interactive courses</strong>, a vibrant <strong>blog</strong>, and live sessions with <strong>community leaders</strong>, you’ll gain more than just language proficiency—you’ll gain a sense of <strong>identity</strong> and belonging.
+              Through <strong>interactive courses</strong>, a vibrant <strong>blog</strong>, and more, you’ll gain more than just language proficiency—you’ll gain a sense of <strong>identity</strong> and belonging.
             </p>
             <button
               className="learn-more-btn"
