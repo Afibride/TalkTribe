@@ -15,6 +15,8 @@ use App\Http\Controllers\LessonProgressController;
 use App\Http\Controllers\QuizSubmissionController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\TestimonialController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\NewsletterController;  
 
 
 /*
@@ -35,9 +37,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 Route::get('/home-courses', [CourseController::class, 'index']);
-Route::get('/search', [SearchController::class, 'search']); // Search for courses, lessons, and users   
+Route::get('/search', [SearchController::class, 'search']); 
 Route::get('/testimonials', [TestimonialController::class, 'index']);
-
+Route::post('/contact', [ContactController::class, 'sendContactEmail']);
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe']);
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

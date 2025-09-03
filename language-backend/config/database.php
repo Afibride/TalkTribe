@@ -95,6 +95,20 @@ return [
             // 'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', 'false'),
         ],
 
+         'supabase' => [
+        'driver' => 'pgsql',
+        'host' => env('DB_HOST', 'aws-0-eu-central-1.pooler.supabase.com'),
+        'port' => env('DB_PORT', '6543'),
+        'database' => env('DB_DATABASE', 'postgres'),
+        'username' => env('DB_USERNAME', 'postgres.aqigcaxvundmyzadgvnq'),
+        'password' => env('DB_PASSWORD', 'R.xp8t$wNUuGz86'),
+        'charset' => 'utf8',
+        'prefix' => '',
+        'prefix_indexes' => true,
+        'search_path' => 'public',
+        'sslmode' => 'require',
+    ],
+
     ],
 
     /*
