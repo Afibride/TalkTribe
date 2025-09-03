@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import Navbar from '../components/Navbar';
-import NewNavbar from '../components/Navbar1';
-import Footer from '../components/Footer';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Navbar from "../components/Navbar";
+import NewNavbar from "../components/Navbar1";
+import Footer from "../components/Footer";
 import "../css/SettingsPage.css";
 
 const SettingsPage = () => {
@@ -12,8 +12,8 @@ const SettingsPage = () => {
   const [settings, setSettings] = useState({
     notifications: true,
     emailUpdates: false,
-    language: 'english',
-    theme: 'light'
+    language: "english",
+    theme: "light",
   });
 
   useEffect(() => {
@@ -23,16 +23,16 @@ const SettingsPage = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Here you would typically save settings to your backend
-    toast.success('Settings saved successfully!', {
+    toast.success("Settings saved successfully!", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: false,
@@ -47,11 +47,13 @@ const SettingsPage = () => {
       {isLoggedIn ? <NewNavbar /> : <Navbar />}
       <div className="settings-container">
         <h1 className="settings-title">Settings</h1>
-        
+        <p>
+          <span>Note</span> <br /> settings not yet functional. Coming soon
+        </p>
         <form onSubmit={handleSubmit} className="settings-form">
           <div className="settings-section">
             <h2 className="settings-section-title">Notification Preferences</h2>
-            
+
             <div className="settings-checkbox-group">
               <input
                 type="checkbox"
@@ -61,11 +63,14 @@ const SettingsPage = () => {
                 onChange={handleChange}
                 className="settings-checkbox"
               />
-              <label htmlFor="notifications" className="settings-checkbox-label">
+              <label
+                htmlFor="notifications"
+                className="settings-checkbox-label"
+              >
                 Enable notifications
               </label>
             </div>
-            
+
             <div className="settings-checkbox-group">
               <input
                 type="checkbox"
@@ -80,10 +85,10 @@ const SettingsPage = () => {
               </label>
             </div>
           </div>
-          
+
           <div className="settings-section">
             <h2 className="settings-section-title">Language & Region</h2>
-            
+
             <div className="settings-input-group">
               <label htmlFor="language" className="settings-label">
                 Language
@@ -100,10 +105,10 @@ const SettingsPage = () => {
               </select>
             </div>
           </div>
-          
+
           <div className="settings-section">
             <h2 className="settings-section-title">Appearance</h2>
-            
+
             <div className="settings-input-group">
               <label htmlFor="theme" className="settings-label">
                 Theme
@@ -121,7 +126,7 @@ const SettingsPage = () => {
               </select>
             </div>
           </div>
-          
+
           <div className="settings-buttons">
             <button
               type="button"

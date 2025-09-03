@@ -144,8 +144,7 @@ public function getCourses()
         ->take(6)
         ->get();
 
-    \Log::info('Most Clicked Courses:', $courses->toArray()); // Log the fetched courses
-
+    \Log::info('Most Clicked Courses:', $courses->toArray()); 
     return response()->json($courses);
 }
     public function randomCourses()

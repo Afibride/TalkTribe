@@ -1771,3 +1771,14 @@
   position: relative;
   overflow: hidden;
 }
+
+
+.delete-confirm-btn {
+  background-color: #e53e3e;
+  color: white;
+  border-radius: 3px;
+}
+
+.delete-confirm-btn:hover {
+  background-color: #c53030;
+}

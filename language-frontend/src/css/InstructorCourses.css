@@ -216,17 +216,17 @@
   }
 
   .course-card {
-    width: 180px; /* tighter width */
+    width: 180px; 
     flex: 0 0 auto;
-    height: auto; /* auto so it shrinks naturally */
+    height: auto; 
   }
 
   .course-image-container {
-    height: 60px; /* shorter image */
+    height: 60px; 
   }
 
   .course-header h3 {
-    font-size: 0.85rem; /* slightly smaller title */
+    font-size: 0.85rem; 
   }
 
   .course-description {

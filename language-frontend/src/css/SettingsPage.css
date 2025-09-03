@@ -183,7 +183,7 @@
 }
 
 .settings-button-save:hover {
-  background-color: #e0940c; /* Darker shade of primary color */
+  background-color: #e0940c; 
   border-color: #e0940c;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(241, 160, 18, 0.3);

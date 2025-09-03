@@ -24,7 +24,7 @@ h2 {
 }
 
 .welcome-back h2 {
-  color: #AB2526; /* Red for Welcome Back Section */
+  color: #AB2526;
 }
 
 .welcome-header {
@@ -36,7 +36,7 @@ h2 {
 
 .welcome-header h2 {
   font-size: 1.8rem;
-  color: #AB2526; /* Red for Welcome Back Section */
+  color: #AB2526; 
 }
 
 .welcome-header .view-history {
@@ -100,7 +100,7 @@ h2 {
 
 .top-categories h2 {
   font-size: 2rem;
-  color: #188B81; /* Green for Top Categories Section */
+  color: #188B81;
   margin-bottom: 1rem;
 }
 
@@ -112,7 +112,7 @@ h2 {
 
 .categories-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Default: 4 columns for desktop */
+  grid-template-columns: repeat(4, 1fr); 
   gap: 1.5rem;
 }
 
@@ -123,9 +123,9 @@ h2 {
   padding: 1rem;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 90%; /* Reduce card size */
-  max-width: 200px; /* Limit the maximum width */
-  margin: 0 auto; /* Center the cards */
+  width: 90%; 
+  max-width: 200px; 
+  margin: 0 auto; 
   gap: 1.5rem;
 }
 
@@ -136,20 +136,20 @@ h2 {
 
 .category-icon {
   width: 100%;
-  height: 120px; /* Reduce image height */
+  height: 120px; 
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 1rem;
 }
 
 .category-name {
-  font-size: 1rem; /* Reduce font size */
+  font-size: 1rem;
   color: #333;
   margin-bottom: 0.5rem;
 }
 
 .category-description {
-  font-size: 0.9rem; /* Reduce font size */
+  font-size: 0.9rem;
   color: #666;
 }
 
@@ -166,7 +166,7 @@ h2 {
 .online-learning-cta h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
-  color: #FFFFFF; /* White for Online Learning CTA Section */
+  color: #FFFFFF; 
 }
 
 .online-learning-cta p {
@@ -186,7 +186,7 @@ h2 {
 .cta-benefits li {
   font-size: 1rem;
   margin-bottom: 0.5rem;
-  color: #F1D7A7; /* Light yellow for benefits */
+  color: #F1D7A7; 
 }
 
 .cta-button {
@@ -223,7 +223,7 @@ h2 {
 
 .students-viewing-header h2 {
   font-size: 1.8rem;
-  color: #F1A012; /* Orange for Students Viewing Section */
+  color: #F1A012; 
 }
 
 .students-viewing-header .view-all {
@@ -281,7 +281,7 @@ h2 {
 
 /* Courses Section */
 .courses-section h2 {
-  color: #702424; /* Dark red for Courses Section */
+  color: #702424; 
   text-align: center;
   margin-bottom: 2rem;
 }
@@ -337,7 +337,7 @@ h2 {
 
 .course-details p:last-child {
   font-weight: bold;
-  color: #F1A012; /* Highlight rating */
+  color: #F1A012;
 }
 
 /* Language Courses Section */
@@ -377,8 +377,8 @@ h2 {
   overflow: hidden;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  text-decoration: none; /* Remove underline */
-  color: inherit; /* Inherit text color */
+  text-decoration: none;
+  color: inherit; 
 }
 
 .language-course-card:hover {
@@ -391,12 +391,12 @@ h2 {
 .language-course-card p {
   margin: 0;
   padding: 0;
-  text-decoration: none; /* Ensure no underline */
+  text-decoration: none; 
 }
 
 .language-course-card a {
-  text-decoration: none; /* Remove underline for links */
-  color: inherit; /* Inherit text color */
+  text-decoration: none;
+  color: inherit; 
 }
 
 .language-course-image {
@@ -427,11 +427,11 @@ h2 {
   font-size: 0.9rem;
   color: #555;
   margin-bottom: 1rem;
-  cursor: pointer; /* Indicate that the text is clickable */
+  cursor: pointer;
 }
 
 .language-course-description:hover {
-  color: #AB2526; /* Highlight on hover */
+  color: #AB2526;
 }
 
 .course-actions {
@@ -465,29 +465,29 @@ h2 {
 
 /* Reduced size for course cards */
 .students-viewing-card.reduced-size {
-  width: 200px; /* Adjust the width */
-  height: auto; /* Maintain aspect ratio */
-  margin: 10px; /* Add spacing between cards */
-  text-decoration: none; /* Remove underline for links */
-  color: inherit; /* Inherit text color */
+  width: 200px; 
+  height: auto; 
+  margin: 10px; 
+  text-decoration: none; 
+  color: inherit; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  border-radius: 8px; 
   overflow: hidden;
-  transition: transform 0.2s ease-in-out; /* Add hover effect */
+  transition: transform 0.2s ease-in-out; 
 }
 
 .students-viewing-card.reduced-size:hover {
-  transform: scale(1.05); /* Slightly enlarge on hover */
+  transform: scale(1.05);
 }
 
 .students-viewing-image {
   width: 100%;
-  height: 120px; /* Adjust height for smaller images */
-  object-fit: cover; /* Ensure the image fits within the card */
-  border-bottom: 1px solid #ddd; /* Add a separator */
+  height: 120px; 
+  object-fit: cover; 
+  border-bottom: 1px solid #ddd; 
 }
 
 .students-viewing-details {
@@ -496,7 +496,7 @@ h2 {
 }
 
 .students-viewing-title {
-  font-size: 16px; /* Adjust font size */
+  font-size: 16px;
   font-weight: bold;
   margin: 5px 0;
 }
@@ -504,7 +504,7 @@ h2 {
 .students-viewing-info,
 .students-viewing-description,
 .students-viewing-clicks {
-  font-size: 14px; /* Adjust font size */
+  font-size: 14px;
   margin: 5px 0;
 }
 
@@ -716,8 +716,8 @@ h2 {
   }
 
   .welcome-header {
-    flex-direction: row; /* Keep items in a row */
-    justify-content: space-between; /* Ensure "View History" is on the right */
+    flex-direction: row; 
+    justify-content: space-between;
     align-items: center;
   }
 
@@ -751,16 +751,16 @@ h2 {
   }
 
   .categories-grid {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
+    grid-template-columns: repeat(2, 1fr); 
     gap: 1.5rem;
   }
 
   .category-card {
-    max-width: 150px; /* Further reduce card size for mobile */
+    max-width: 150px; 
   }
 
   .category-icon {
-    height: 100px; /* Reduce image height for mobile */
+    height: 100px; 
   }
 
   .category-name {
@@ -849,17 +849,17 @@ h2 {
   }
 
   .language-courses-container {
-    grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
+    grid-template-columns: repeat(2, 1fr); 
     gap: 1rem;
   }
 
   .language-course-card {
-    width: 100%; /* Full width for mobile */
+    width: 100%; 
     max-width: none;
   }
 
   .language-course-image {
-    height: 120px; /* Reduce image height for mobile */
+    height: 120px; 
   }
 
   .language-course-name {
@@ -933,5 +933,5 @@ h2 {
 
 /* Smooth scrolling target */
 .category-section {
-  scroll-margin-top: 80px; /* Adjust based on your navbar height */
+  scroll-margin-top: 80px; 
 }

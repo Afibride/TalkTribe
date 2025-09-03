@@ -115,6 +115,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/blog/posts/{post}/related', [BlogController::class, 'relatedPosts']);
     Route::get('/blog/posts/popular', [BlogController::class, 'popularPosts']);
     Route::get('/blog/posts/{id}', [BlogController::class, 'show']);
+     Route::post('/blog/posts/{id}', [BlogController::class, 'update']);
+    Route::delete('/blog/posts/{id}', [BlogController::class, 'destroy']);
 Route::post('/blog/posts/{id}/view', [BlogController::class, 'trackView']);
 });
 Route::get('/stats', [StatsController::class, 'index']);

@@ -693,12 +693,12 @@ background-color: #188B81;
   height: 100vh;
   max-height: 100vh;
   justify-content: center;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
 }
 .auth-left-panel::-webkit-scrollbar,
 .login-container .left-panel::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none; 
 }
 
 /* Allow only the right panel to scroll, but hide its scrollbar */
@@ -706,12 +706,12 @@ background-color: #188B81;
 .login-container .right-panel {
   overflow-y: auto;
   height: 100vh;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
 }
 .auth-right-panel::-webkit-scrollbar,
 .login-container .right-panel::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none; 
 }
 
 /* Style for Create Account button below Login */

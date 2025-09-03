@@ -72,7 +72,7 @@ const Notifications = () => {
 
         <div className="notifications-container">
           <h1>Notifications</h1>
-
+          <p>notification handler implementation coming soon</p>
           {loading && <p className="notif-loading">Loading notifications...</p>}
 
           {error && (

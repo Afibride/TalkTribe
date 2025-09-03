@@ -11,7 +11,7 @@
 
 .blog-post-detail {
   flex: 2;
-  min-width: 0; /* Prevent flex overflow */
+  min-width: 0; 
   flex-direction: column;
 }
 

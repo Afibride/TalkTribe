@@ -38,7 +38,7 @@ class BlogController extends Controller
         return response()->json($posts);
     }
 
-    // Similarly update the show() method:
+    
     public function show($id)
     {
         try {
@@ -81,6 +81,69 @@ class BlogController extends Controller
             ], 500);
         }
     }
+
+    // Update a blog post
+public function update(Request $request, $id)
+{
+    try {
+        $post = BlogPost::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        $request->validate([
+            'content' => 'required|string',
+        ]);
+
+        $post->content = $request->content;
+        $post->save();
+
+        return response()->json([
+            'message' => 'Post updated successfully',
+            'post' => $post
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Error updating post: ' . $e->getMessage());
+        return response()->json([
+            'message' => 'Failed to update post',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+// Delete a blog post
+public function destroy($id)
+{
+    try {
+        $post = BlogPost::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
+
+        // Delete associated media files
+        if ($post->image) {
+            Storage::disk('public')->delete($post->image);
+        }
+        if ($post->video) {
+            Storage::disk('public')->delete($post->video);
+        }
+
+        // Delete likes and comments
+        BlogPostLike::where('blog_post_id', $id)->delete();
+        BlogPostComment::where('blog_post_id', $id)->delete();
+
+        // Delete the post
+        $post->delete();
+
+        return response()->json([
+            'message' => 'Post deleted successfully'
+        ]);
+    } catch (\Exception $e) {
+        \Log::error('Error deleting post: ' . $e->getMessage());
+        return response()->json([
+            'message' => 'Failed to delete post',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
 
 
     public function trackView($id)
