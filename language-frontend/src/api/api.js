@@ -3,7 +3,7 @@ import axios from "axios";
 
 // 👇 Set your Laravel API URL (use environment variables for production!)
 const api = axios.create({
-  baseURL: 'http://192.168.138.218:8000',
+  baseURL: 'https://talktribe-tgos.onrender.com',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
