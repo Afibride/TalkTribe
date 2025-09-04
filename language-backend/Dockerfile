@@ -1,34 +1,33 @@
-# Use official PHP image with extensions
-FROM php:8.2-fpm
-
-# Set working directory
-WORKDIR /var/www/html
+# Use official PHP CLI image
+FROM php:8.2-cli
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     git \
+    curl \
+    zip \
     unzip \
+    libpq-dev \
     libzip-dev \
     libonig-dev \
-    libpng-dev \
-    libpq-dev \
-    curl \
-    && docker-php-ext-install pdo pdo_pgsql zip mbstring exif pcntl bcmath gd
+    libxml2-dev \
+    && docker-php-ext-install pdo pdo_pgsql zip
 
 # Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php \
+    && mv composer.phar /usr/local/bin/composer
 
-# Copy application files
+# Set working directory
+WORKDIR /app
+
+# Copy project files
 COPY . .
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader
+# Install Laravel dependencies
+RUN composer install --optimize-autoloader --no-dev
 
-# Set permissions
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Expose default local dev port (Render will override with $PORT)
+EXPOSE 8000
 
-# Expose port 9000 for php-fpm
-EXPOSE 9000
-
-# Run Laravel using PHP-FPM
-CMD ["php-fpm"]
+# Start Laravel server (uses $PORT if set, else 8000 locally)
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=${PORT:-8000}"]
