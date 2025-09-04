@@ -11,6 +11,7 @@ export default defineConfig({
       '/api': {
         target: 'https://talktribe-tgos.onrender.com',
         changeOrigin: true,
+        secure: false,
       },
     },
     cors: true,
@@ -20,8 +21,4 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
   },
-
-  define: {
-    'process.env': process.env
-  }
 });
