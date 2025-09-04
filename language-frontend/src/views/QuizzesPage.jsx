@@ -4,7 +4,7 @@ import api from '../api/api';
 import NewNavbar from '../components/Navbar1';
 import Footer from '../components/Footer';
 import Quizzes from '../components/lessons/Quizzes';
-import '../css/Course_open.css';
+import '../css/course_open.css';
 
 const QuizzesPage = () => {
   const { id: courseId } = useParams();
