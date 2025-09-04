@@ -22,6 +22,7 @@ public function run()
         BlogPostsTableSeeder::class,
         BlogPostCommentsTableSeeder::class,
         BlogPostLikesTableSeeder::class,
+        NorthwestCameroonNewsSeeder::class,
     ]);
 }
 

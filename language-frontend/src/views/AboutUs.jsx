@@ -38,7 +38,7 @@ const milestones = [
   {
     year: "2025",
     title: "Community Growth",
-    description: "Reached 10,000 active learners across 50+ languages",
+    description: "Reached 100 active learners across 2+ languages",
     icon: <FaUsers />,
   },
 ];

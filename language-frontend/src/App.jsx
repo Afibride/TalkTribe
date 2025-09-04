@@ -35,6 +35,8 @@ import TestimonialsPage from './views/TestimonialsPage';
 import ScrollToTop from './components/ScrollToTop';
 import SupportPage from './views/SupportPage';
 import SettingsPage from './views/SettingsPage';
+import NewsListPage from './views/NewsListPage';
+import NewsPage from './views/NewsPage';
 
 
 function App() {
@@ -42,14 +44,12 @@ function App() {
   useEffect(() => {
     AOS.init({ 
       duration: 1000,
-      once: true // Animations only happen once
+      once: true 
     });
   }, []);
 
-  // State for refreshing course data when progress updates
-  const [refreshKey, setRefreshKey] = useState(0);
+ const [refreshKey, setRefreshKey] = useState(0);
 
-  // Handler for progress updates that triggers refresh
   const handleProgressUpdate = () => {
     setRefreshKey(prev => prev + 1);
   };
@@ -74,6 +74,8 @@ function App() {
           <Route path="/help" element={<Contact />} />
           <Route path="/support" element={<SupportPage />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route path="/news" element={<NewsListPage />} />
+        <Route path="/news/:slug" element={<NewsPage />} />
 
           {/* Public routes (redirect if logged in) */}
           <Route

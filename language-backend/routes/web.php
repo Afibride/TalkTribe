@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NewsletterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/newsletter/unsubscribe', [NewsletterController::class, 'showUnsubscribeForm'])->name('newsletter.unsubscribe.form');
+Route::view('/newsletter/resubscribe', 'newsletter.resubscribe')->name('newsletter.resubscribe.form');

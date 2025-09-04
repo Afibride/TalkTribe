@@ -192,6 +192,7 @@
 /* Toast notification customization */
 .Toastify__toast--success {
   background: var(--accent-color) !important;
+  color: #fff !important;
 }
 
 /* Responsive adjustments */

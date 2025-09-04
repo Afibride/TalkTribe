@@ -54,7 +54,7 @@
 <body>
   <div class="container">
     <div class="logo">
-    <img src="{{ asset('images/logo.png') }}" alt="Talk Tribe Logo" />
+    <img src="{{ config('app.url') }}/images/logo.png" alt="Talk Tribe Logo" />
     </div>
 
     <h2>Password Reset Request</h2>

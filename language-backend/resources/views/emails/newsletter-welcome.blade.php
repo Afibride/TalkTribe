@@ -14,14 +14,14 @@
         }
         .cta-section {
             background-color: #f8f9fa;
-            border-left: 4px solid #4a90e2;
+            border-left: 4px solid #188B81;
             padding: 15px;
             margin: 20px 0;
             border-radius: 4px;
         }
         .cta-button {
             display: inline-block;
-            background-color: #4a90e2;
+            background-color: #188B81;
             color: white;
             padding: 12px 24px;
             text-decoration: none;
@@ -30,10 +30,13 @@
             margin-top: 10px;
         }
         .cta-button:hover {
-            background-color: #357abD;
+            background-color: #188B81;
         }
         .benefits-list {
             margin-left: 20px;
+        }
+        p {
+            margin-top: 0.5rem;
         }
     </style>
 </head>
@@ -62,7 +65,11 @@
         </ul>
         
         <p>Creating an account only takes a minute, but it will transform your language learning journey!</p>
-        <P>So do create an account with us if you haven't</P>
+         <a href="{{ config('app.frontend_url') }}/register" class="cta-button">Create Your Account Now</a>
+        
+        <p style="margin-top: 15px; font-size: 0.9em;">
+            Already have an account? <a href="{{ config('app.frontend_url') }}/login">Sign in here</a>
+        </p>
 
 
     </div>
@@ -74,6 +81,6 @@
     
     <hr>
     <p><small>If you no longer wish to receive these emails, you can 
-    <a href="{{ url('/unsubscribe') }}">unsubscribe here</a>.</small></p>
+<a href="{{ config('app.url') }}/newsletter/unsubscribe?email={{ urlencode($subscriber->email) }}">unsubscribe here</a>.</small></p>
 </body>
 </html>

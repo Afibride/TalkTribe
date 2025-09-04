@@ -2313,18 +2313,22 @@ overflow-x: hidden;
 
 .toast.error {
   background-color: #ff4444;
+  color: #fff;
 }
 
 .toast.success {
   background-color: #188b81;
+  color: #fff;
 }
 
 .toast.warning {
   background-color: #ffbb33;
+  color: #fff;
 }
 
 .toast-content {
   flex-grow: 1;
+  color: #fff;
 }
 
 .toast-close {

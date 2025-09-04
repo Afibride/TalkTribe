@@ -933,14 +933,17 @@ overflow-x: hidden;
 .Toastify__toast {
   border-radius: 8px;
   font-family: inherit;
+  color: #fff;
 }
 
 .Toastify__toast--success {
   background: #188B81 !important;
+  color: #fff !important;
 }
 
 .Toastify__toast--error {
   background: linear-gradient(135deg, #f44336, #d32f2f);
+  color: #fff;
 }
 
 .Toastify__progress-bar {

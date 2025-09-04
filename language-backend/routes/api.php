@@ -3,6 +3,7 @@
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\API\PasswordResetController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
@@ -41,6 +42,15 @@ Route::get('/search', [SearchController::class, 'search']);
 Route::get('/testimonials', [TestimonialController::class, 'index']);
 Route::post('/contact', [ContactController::class, 'sendContactEmail']);
 Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribe']);
+Route::post('/newsletter/unsubscribe', [NewsletterController::class, 'unsubscribe']);
+Route::post('/newsletter/resubscribe', [NewsletterController::class, 'resubscribe']);
+
+Route::prefix('news')->group(function () {
+    Route::get('/featured', [NewsController::class, 'featured']);
+    Route::get('/', [NewsController::class, 'index']);
+    Route::get('/{slug}', [NewsController::class, 'show']);
+    Route::get('/tags/all', [NewsController::class, 'tags']);
+});
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
