@@ -9,7 +9,7 @@ import LectureNotes from '../components/lessons/LectureNotes';
 import Quizzes from '../components/lessons/Quizzes';
 import Footer from '../components/Footer';
 import LessonPopup from '../components/lessons/LessonPopup';
-import '../css/Course_open.css';
+import '../css/course_open.css';
 
 const LessonsPage = ({ onProgressUpdate }) => {
   const { id: courseId } = useParams();
