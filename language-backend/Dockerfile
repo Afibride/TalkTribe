@@ -26,6 +26,11 @@ RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql gd zip
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
+# Set Apache document root to Laravel's public directory
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
+RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -41,8 +46,17 @@ USER www-data
 # Install Laravel dependencies
 RUN composer install --optimize-autoloader --no-dev --ignore-platform-req=ext-gd
 
-# Expose default local dev port (Render will override with $PORT)
-EXPOSE 8000
+# Set proper permissions for Laravel
+RUN chmod -R 775 storage bootstrap/cache
+
+# Generate application key if not exists
+RUN if [ ! -f .env ]; then \
+        cp .env.example .env && \
+        php artisan key:generate; \
+    fi
+
+# Expose port 80 (Apache default)
+EXPOSE 80
 
 # Start Apache server
 CMD ["apache2-foreground"]
