@@ -12,26 +12,26 @@ use Illuminate\Support\Facades\Storage;
 class CourseController extends Controller
 {
     // Get all courses (learners + instructors can access)
-    public function index(Request $request)
-    {
-        $limit = $request->query('limit', 12);
+public function index(Request $request)
+{
+    $limit = $request->query('limit', 12);
 
-        $courses = Course::with(['instructor:id,name'])
-            ->where('is_public', true) // ✅ Only public courses
-            ->inRandomOrder()
-            ->take($limit)
-            ->get()
-            ->each->append('total_lessons');
+    $courses = Course::with(['instructor:id,name'])
+        ->where('is_public', true) // ✅ Only public courses
+        ->inRandomOrder()
+        ->take($limit)
+        ->get()
+        ->each->append('total_lessons');
 
-        return response()->json($courses);
-    }
+    return response()->json($courses);
+}
 
     // Show a single course
     public function show($id)
     {
         $course = Course::with('instructor')->findOrFail($id);
-        $course->append('total_lessons');
-        return response()->json($course);
+$course->append('total_lessons');
+return response()->json($course);
     }
 
     // Instructor adds a new course
@@ -57,7 +57,7 @@ class CourseController extends Controller
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store(
                 'course_images/user_' . $user->id,
-                'supabase'
+                'public'
             );
         }
 
@@ -99,7 +99,7 @@ class CourseController extends Controller
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store(
                 'course_images/user_' . $user->id,
-                'supabase'
+                'public'
             );
             $validated['image'] = $imagePath;
         }
@@ -109,67 +109,65 @@ class CourseController extends Controller
         return response()->json(['message' => 'Course updated', 'course' => $course]);
     }
 
-
+   
     public function destroy($id)
     {
         $user = Auth::user();
         $course = Course::findOrFail($id);
-
+    
         if ($user->id !== $course->instructor_id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
         if ($course->image) {
-            Storage::disk('supabase')->delete($course->image);
+            Storage::disk('public')->delete($course->image);
         }
-
+    
         $course->delete();
-
+    
         return response()->json(['message' => 'Course deleted']);
     }
-
+    
 
     // Get courses by category
-    public function getCourses()
-    {
-        $categories = Category::with([
-            'courses' => function ($query) {
-                $query->with(['instructor:id,name']);
-            }
-        ])->get();
+public function getCourses()
+{
+    $categories = Category::with(['courses' => function($query) {
+        $query->with(['instructor:id,name']);
+    }])->get();
 
-        return response()->json($categories);
-    }
+    return response()->json($categories);
+}
 
-    public function mostClickedCourses()
-    {
-        $courses = Course::with('instructor:id,name')
-            ->orderByDesc('clicks')
-            ->take(6)
-            ->get();
+   public function mostClickedCourses()
+{
+    $courses = Course::with('instructor:id,name')
+        ->orderByDesc('clicks')
+        ->take(6)
+        ->get();
 
-        Log::info('Most Clicked Courses:', $courses->toArray());
-        return response()->json($courses);
-    }
+    Log::info('Most Clicked Courses:', $courses->toArray()); 
+    return response()->json($courses);
+}
     public function randomCourses()
     {
         $courses = Course::inRandomOrder()->take(5)->get();
         return response()->json($courses);
     }
 
-
-    public function getInstructorCourses(Request $request)
-    {
-        $user = $request->user();
-
-        if ($user->role !== 'instructor') {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        $courses = Course::where('instructor_id', $user->id)
-            ->with(['category', 'lessons'])
-            ->latest()
-            ->get();
-
-        return response()->json($courses);
+    
+public function getInstructorCourses(Request $request)
+{
+    $user = $request->user();
+    
+    if ($user->role !== 'instructor') {
+        return response()->json(['message' => 'Unauthorized'], 403);
     }
+    
+    $courses = Course::where('instructor_id', $user->id)
+        ->with(['category', 'lessons'])
+        ->latest()
+        ->get();
+        
+    return response()->json($courses);
+}
 }

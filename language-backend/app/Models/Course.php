@@ -59,11 +59,11 @@ public function getImageUrlAttribute()
         return null; 
     }
     
-    if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+   if (filter_var($this->image, FILTER_VALIDATE_URL)) {
         return $this->image;
     }
     
-    return Storage::disk('supabase')->url($this->image);
+    return Storage::disk('public')->url($this->image);
 }
 
 public function getTotalLessonsAttribute()

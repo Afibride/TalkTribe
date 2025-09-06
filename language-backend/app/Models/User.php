@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -52,31 +53,31 @@ class User extends Authenticatable
         return $this->hasMany(LessonProgress::class);
     }
 
-public function getProfilePicUrlAttribute()
-{
+   public function getProfilePicUrlAttribute()
+    {
     if (!$this->image) {
         return null; 
     }
     
-    if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+   if (filter_var($this->image, FILTER_VALIDATE_URL)) {
         return $this->image;
     }
     
-    return Storage::disk('supabase')->url($this->image);
+    return Storage::disk('public')->url($this->image);
 }
 
-public function getCoverPhotoUrlAttribute()
-{
-    if (!$this->cover_photo) {
-        return null;
-    }
+    public function getCoverPhotoUrlAttribute()
+    {
+        if (!$this->cover_photo) {
+            return null;
+        }
 
-    if (filter_var($this->cover_photo, FILTER_VALIDATE_URL)) {
-        return $this->cover_photo;
-    }
+        if (filter_var($this->cover_photo, FILTER_VALIDATE_URL)) {
+            return $this->cover_photo;
+        }
 
-    return Storage::disk('supabase')->url($this->cover_photo);
-}
+        return Storage::disk('public')->url($this->cover_photo);
+    }
 
     public function courseProgress()
     {

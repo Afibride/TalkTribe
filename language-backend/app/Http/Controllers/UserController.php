@@ -15,23 +15,18 @@ class UserController extends Controller
     public function show($username)
     {
         $user = User::withCount(['posts'])
-            ->with([
-                'posts' => function ($query) {
-                    $query->latest()
-                        ->withCount(['likes', 'comments'])
-                        ->with([
-                            'likes' => function ($q) {
-                                $q->where('user_id', Auth::id());
-                            },
-                            'comments' => function ($q) {
-                                $q->whereNull('parent_id')
-                                    ->with(['user:id,name,image', 'replies.user:id,name,image'])
-                                    ->latest();
-                            }
-                        ])
-                        ->limit(5);
-                }
-            ])
+            ->with(['posts' => function($query) {
+                $query->latest()
+                    ->withCount(['likes', 'comments'])
+                    ->with(['likes' => function($q) {
+                        $q->where('user_id', Auth::id());
+                    }, 'comments' => function($q) {
+                        $q->whereNull('parent_id')
+                           ->with(['user:id,name,image', 'replies.user:id,name,image'])
+                           ->latest();
+                    }])
+                    ->limit(5);
+            }])
             ->where('username', $username)
             ->first();
 
@@ -75,20 +70,19 @@ class UserController extends Controller
         try {
             $data = $request->only(['name', 'bio', 'location']);
 
-            
             if ($request->hasFile('profile_pic')) {
                 if ($user->image && !filter_var($user->image, FILTER_VALIDATE_URL)) {
-                    Storage::disk('supabase')->delete($user->image);
+                    Storage::disk('public')->delete($user->image);
                 }
-                $path = $request->file('profile_pic')->store('profile_pics', 'supabase');
+                $path = $request->file('profile_pic')->store('profile_pics', 'public');
                 $data['image'] = $path;
             }
 
             if ($request->hasFile('cover_photo')) {
                 if ($user->cover_photo && !filter_var($user->cover_photo, FILTER_VALIDATE_URL)) {
-                    Storage::disk('supabase')->delete($user->cover_photo);
+                    Storage::disk('public')->delete($user->cover_photo);
                 }
-                $path = $request->file('cover_photo')->store('cover_photos', 'supabase');
+                $path = $request->file('cover_photo')->store('cover_photos', 'public');
                 $data['cover_photo'] = $path;
             }
 
@@ -114,18 +108,14 @@ class UserController extends Controller
 
         $posts = BlogPost::where('user_id', $user->id)
             ->withCount(['likes', 'comments'])
-            ->with([
-                'likes' => function ($query) {
-                    $query->where('user_id', Auth::id());
-                }
-            ])
-            ->with([
-                'comments' => function ($query) {
-                    $query->whereNull('parent_id')
-                        ->with(['user:id,name,image', 'replies.user:id,name,image'])
-                        ->latest();
-                }
-            ])
+            ->with(['likes' => function($query) {
+                $query->where('user_id', Auth::id());
+            }])
+            ->with(['comments' => function($query) {
+                $query->whereNull('parent_id')
+                      ->with(['user:id,name,image', 'replies.user:id,name,image'])
+                      ->latest();
+            }])
             ->latest()
             ->get();
 

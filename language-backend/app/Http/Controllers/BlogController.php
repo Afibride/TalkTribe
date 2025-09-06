@@ -38,7 +38,7 @@ class BlogController extends Controller
         return response()->json($posts);
     }
 
-
+    
     public function show($id)
     {
         try {
@@ -83,68 +83,68 @@ class BlogController extends Controller
     }
 
     // Update a blog post
-    public function update(Request $request, $id)
-    {
-        try {
-            $post = BlogPost::where('id', $id)
-                ->where('user_id', Auth::id())
-                ->firstOrFail();
+public function update(Request $request, $id)
+{
+    try {
+        $post = BlogPost::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-            $request->validate([
-                'content' => 'required|string',
-            ]);
+        $request->validate([
+            'content' => 'required|string',
+        ]);
 
-            $post->update([
-                'content' => $request->input('content')
-            ]);
+        $post->update([
+            'content' => $request->input('content')
+        ]);
 
-            return response()->json([
-                'message' => 'Post updated successfully',
-                'post' => $post
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error updating post: ' . $e->getMessage());
-            return response()->json([
-                'message' => 'Failed to update post',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'message' => 'Post updated successfully',
+            'post' => $post
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Error updating post: ' . $e->getMessage());
+        return response()->json([
+            'message' => 'Failed to update post',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
-    // Delete a blog post
-    public function destroy($id)
-    {
-        try {
-            $post = BlogPost::where('id', $id)
-                ->where('user_id', Auth::id())
-                ->firstOrFail();
+// Delete a blog post
+public function destroy($id)
+{
+    try {
+        $post = BlogPost::where('id', $id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-            // Delete associated media files
-            if ($post->image) {
-                Storage::disk('supabase')->delete($post->image);
-            }
-            if ($post->video) {
-                Storage::disk('supabase')->delete($post->video);
-            }
-
-            // Delete likes and comments
-            BlogPostLike::where('blog_post_id', $id)->delete();
-            BlogPostComment::where('blog_post_id', $id)->delete();
-
-            // Delete the post
-            $post->delete();
-
-            return response()->json([
-                'message' => 'Post deleted successfully'
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error deleting post: ' . $e->getMessage());
-            return response()->json([
-                'message' => 'Failed to delete post',
-                'error' => $e->getMessage()
-            ], 500);
+        // Delete associated media files
+        if ($post->image) {
+            Storage::disk('public')->delete($post->image);
         }
+        if ($post->video) {
+            Storage::disk('public')->delete($post->video);
+        }
+
+        // Delete likes and comments
+        BlogPostLike::where('blog_post_id', $id)->delete();
+        BlogPostComment::where('blog_post_id', $id)->delete();
+
+        // Delete the post
+        $post->delete();
+
+        return response()->json([
+            'message' => 'Post deleted successfully'
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Error deleting post: ' . $e->getMessage());
+        return response()->json([
+            'message' => 'Failed to delete post',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
 
     public function trackView($id)
@@ -179,11 +179,11 @@ class BlogController extends Controller
         $videoPath = null;
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('blog_images', 'supabase');
+            $imagePath = $request->file('image')->store('blog_images', 'public');
         }
 
         if ($request->hasFile('video')) {
-            $videoPath = $request->file('video')->store('blog_videos', 'supabase');
+            $videoPath = $request->file('video')->store('blog_videos', 'public');
         }
 
         $post = BlogPost::create([
