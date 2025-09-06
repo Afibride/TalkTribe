@@ -23,7 +23,7 @@ const team = [
     name: "Afi Adrine-Bride",
     role: "Founder & CEO",
     bio: "Passionate about preserving indigenous languages and cultures through technology.",
-    image: "/profile.png",
+    image: "/ceo.jpg",
   },
 ];
 

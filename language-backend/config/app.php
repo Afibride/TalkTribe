@@ -28,7 +28,7 @@ return [
     |
     */
 
-    'frontend_url' => env('FRONTEND_URL', 'http://192.168.59.250:5173'),
+    'frontend_url' => env('FRONTEND_URL', 'https://talk-tribe-five.vercel.app'),
 
     'env' => env('APP_ENV', 'production'),
 
