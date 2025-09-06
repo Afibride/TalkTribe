@@ -39,7 +39,7 @@ const features = [
       "Connect with cultural roots",
       "Certificates upon completion",
     ],
-    image: "/blog.jpg",
+    image: "/blog.jpeg",
     color: "#4e73df",
   },
   {
@@ -60,7 +60,7 @@ const features = [
       "Personalized feedback",
       "Build meaningful connections",
     ],
-    image: "/blog.jpg",
+    image: "/blog3.jpeg",
     color: "#1cc88a",
   },
   {
@@ -82,7 +82,7 @@ const features = [
       "Engaging and memorable",
       "Understand cultural values",
     ],
-    image: "/blog.jpg",
+    image: "/blog.jpeg",
     color: "#6f42c1",
   },
   {
@@ -126,7 +126,7 @@ const features = [
       "Quick daily lessons",
       "Track progress anywhere",
     ],
-    image: "/blog.jpg",
+    image: "/mobile.png",
     color: "#36b9cc",
   },
   {
@@ -148,7 +148,7 @@ const features = [
       "Contribute to language preservation",
       "Academic and career advancement",
     ],
-    image: "/blog.jpg",
+    image: "/blog4.jpeg",
     color: "#e74a3b",
   },
 ];
