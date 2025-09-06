@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\Course;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
@@ -144,7 +145,7 @@ public function getCourses()
         ->take(6)
         ->get();
 
-    \Log::info('Most Clicked Courses:', $courses->toArray()); 
+    Log::info('Most Clicked Courses:', $courses->toArray()); 
     return response()->json($courses);
 }
     public function randomCourses()

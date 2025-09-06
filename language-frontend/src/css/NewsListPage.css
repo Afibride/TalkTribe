@@ -256,7 +256,7 @@
   }
 
   .news-search {
-    flex-direction: row;
+    flex-direction: column;
     gap: 0.5rem;
   }
 

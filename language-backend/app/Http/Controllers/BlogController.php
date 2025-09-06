@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Schema;
+use Illuminate\Support\Facades\Schema;
 
 class BlogController extends Controller
 {
@@ -74,7 +74,7 @@ class BlogController extends Controller
 
             return response()->json($post);
         } catch (\Exception $e) {
-            \Log::error('Failed to fetch blog post: ' . $e->getMessage());
+            Log::error('Failed to fetch blog post: ' . $e->getMessage());
             return response()->json([
                 'error' => 'Failed to fetch post',
                 'message' => $e->getMessage()
@@ -94,15 +94,16 @@ public function update(Request $request, $id)
             'content' => 'required|string',
         ]);
 
-        $post->content = $request->content;
-        $post->save();
+        $post->update([
+            'content' => $request->input('content')
+        ]);
 
         return response()->json([
             'message' => 'Post updated successfully',
             'post' => $post
         ]);
     } catch (\Exception $e) {
-        \Log::error('Error updating post: ' . $e->getMessage());
+        Log::error('Error updating post: ' . $e->getMessage());
         return response()->json([
             'message' => 'Failed to update post',
             'error' => $e->getMessage()
@@ -137,7 +138,7 @@ public function destroy($id)
             'message' => 'Post deleted successfully'
         ]);
     } catch (\Exception $e) {
-        \Log::error('Error deleting post: ' . $e->getMessage());
+        Log::error('Error deleting post: ' . $e->getMessage());
         return response()->json([
             'message' => 'Failed to delete post',
             'error' => $e->getMessage()
@@ -188,7 +189,7 @@ public function destroy($id)
         $post = BlogPost::create([
             'user_id' => Auth::id(),
             'title' => $request->title,
-            'content' => $request->content,
+            'content' => $request->input('content'),
             'image' => $imagePath,
             'video' => $videoPath,
         ]);
@@ -269,7 +270,7 @@ public function destroy($id)
             ], 201);
 
         } catch (\Exception $e) {
-            \Log::error('Error adding comment: ' . $e->getMessage());
+            Log::error('Error adding comment: ' . $e->getMessage());
             return response()->json([
                 'message' => 'Failed to add comment',
                 'error' => $e->getMessage()

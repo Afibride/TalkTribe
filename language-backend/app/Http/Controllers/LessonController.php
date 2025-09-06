@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Course;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Lesson;
 use App\Models\LessonProgress;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser as PdfParser;
 use PhpOffice\PhpWord\IOFactory as WordIOFactory;
@@ -31,10 +32,10 @@ class LessonController extends Controller
 
             // Save video file if provided
             if ($request->hasFile('video_file')) {
-                \Log::info('Video file detected in request.');
+                Log::info('Video file detected in request.');
                 $videoPath = $request->file('video_file')->store("videos/course_{$request->course_id}", 'public');
             } else {
-                \Log::warning('No video file found in request.');
+                Log::warning('No video file found in request.');
             }
 
             // Save notes file if provided
@@ -66,12 +67,12 @@ class LessonController extends Controller
                 app()->call('App\Http\Controllers\QuizController@generateQuizFromNotes', ['lessonId' => $lesson->id]);
             } catch (\Exception $e) {
                 // Optionally log or handle quiz generation errors
-                \Log::error('Quiz auto-generation failed: ' . $e->getMessage());
+                Log::error('Quiz auto-generation failed: ' . $e->getMessage());
             }
 
             return response()->json($lesson, 201);
         } catch (\Exception $e) {
-            \Log::error('Lesson store error: ' . $e->getMessage());
+            Log::error('Lesson store error: ' . $e->getMessage());
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
@@ -89,16 +90,16 @@ class LessonController extends Controller
         }
 
         $command = "\"$ffmpeg\" -i \"$fullVideoPath\" -ss 00:00:02 -vframes 1 \"$fullThumbnailPath\" 2>&1";
-        \Log::info("Running FFmpeg command: $command");
+        Log::info("Running FFmpeg command: $command");
 
         $output = [];
         $returnVar = 0;
         exec($command, $output, $returnVar);
 
         if ($returnVar !== 0) {
-            \Log::error("FFmpeg failed to generate thumbnail. Output: " . implode("\n", $output));
+            Log::error("FFmpeg failed to generate thumbnail. Output: " . implode("\n", $output));
         } else {
-            \Log::info("Thumbnail successfully generated at $fullThumbnailPath");
+            Log::info("Thumbnail successfully generated at $fullThumbnailPath");
         }
     }
 
@@ -248,9 +249,18 @@ public function getLessonNotesContent($lessonId)
                 $phpWord = \PhpOffice\PhpWord\IOFactory::load($filePath);
                 foreach ($phpWord->getSections() as $section) {
                     foreach ($section->getElements() as $element) {
-                        if (method_exists($element, 'getText')) {
+                        // Paragraphs
+                        if ($element instanceof \PhpOffice\PhpWord\Element\TextRun) {
+                            foreach ($element->getElements() as $childElement) {
+                                if ($childElement instanceof \PhpOffice\PhpWord\Element\Text) {
+                                    $content .= $childElement->getText() . " ";
+                                }
+                            }
+                            $content .= "\n";
+                        } elseif ($element instanceof \PhpOffice\PhpWord\Element\Text) {
                             $content .= $element->getText() . "\n";
                         }
+                        // You can add more element types as needed
                     }
                 }
                 break;
@@ -259,7 +269,7 @@ public function getLessonNotesContent($lessonId)
                 return response()->json(['error' => 'Preview not supported for .' . $ext], 400);
         }
     } catch (\Throwable $e) {
-        \Log::error("Notes parsing failed: " . $e->getMessage());
+        Log::error("Notes parsing failed: " . $e->getMessage());
         return response()->json(['error' => 'Failed to parse notes file'], 500);
     }
 

@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Lesson;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
-use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class QuizController extends Controller
 {

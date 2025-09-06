@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class TestimonialController extends Controller
 {
@@ -36,7 +37,7 @@ public function index(Request $request)
         return response()->json($transformed);
         
     } catch (\Exception $e) {
-        \Log::error('Testimonials index error: ' . $e->getMessage());
+        Log::error('Testimonials index error: ' . $e->getMessage());
         return response()->json([
             'error' => 'Server error',
             'message' => $e->getMessage()
