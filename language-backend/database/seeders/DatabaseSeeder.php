@@ -19,10 +19,6 @@ public function run()
     $this->call([
         UsersTableSeeder::class,
         BlogCategoriesTableSeeder::class,
-        BlogPostsTableSeeder::class,
-        BlogPostCommentsTableSeeder::class,
-        BlogPostLikesTableSeeder::class,
-        NorthwestCameroonNewsSeeder::class,
         CategoriesTableSeeder::class,
     ]);
 }

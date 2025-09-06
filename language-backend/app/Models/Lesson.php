@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Lesson extends Model
 {
@@ -18,7 +19,7 @@ class Lesson extends Model
         'created_by',
         'thumbnail',
         'order',
-        'quiz_id', 
+        'quiz_id',
     ];
 
     protected $appends = ['video_url_full', 'notes_file_url_full', 'thumbnail_url'];
@@ -40,18 +41,20 @@ class Lesson extends Model
 
     public function getVideoUrlFullAttribute()
     {
-        return $this->video_url ? url('storage/' . $this->video_url) : null;
+        return $this->video_url ? Storage::disk('supabase')->url($this->video_url) : null;
     }
 
     public function getNotesFileUrlFullAttribute()
     {
-        return $this->notes_file ? url('storage/' . $this->notes_file) : null;
+        return $this->notes_file ? Storage::disk('supabase')->url($this->notes_file) : null;
     }
 
     public function getThumbnailUrlAttribute()
     {
-        return $this->thumbnail ? url('storage/' . $this->thumbnail) : null;
+        return $this->thumbnail ? Storage::disk('supabase')->url($this->thumbnail) : null;
     }
+
+
 
     public function quizzes()
     {
@@ -75,7 +78,7 @@ class Lesson extends Model
                     }
 
                 } catch (\Exception $e) {
-                    \Log::error("Auto quiz generation failed: " . $e->getMessage());
+                    Log::error("Auto quiz generation failed: " . $e->getMessage());
                 }
             })->delay(now()->addSeconds(10));
         });
@@ -90,7 +93,7 @@ class Lesson extends Model
                             $lesson->update(['quiz_id' => $quiz->id]);
                         }
                     } catch (\Exception $e) {
-                        \Log::error("Auto quiz regeneration failed: " . $e->getMessage());
+                        Log::error("Auto quiz regeneration failed: " . $e->getMessage());
                     }
                 })->delay(now()->addSeconds(10));
             }

@@ -72,7 +72,7 @@ class BlogPost extends Model
             return $this->image;
         }
 
-        return Storage::disk('public')->url($this->image);
+        return Storage::disk('supabase')->url($this->image);
     }
 
     public function getVideoUrlAttribute()
@@ -85,7 +85,7 @@ class BlogPost extends Model
             return $this->video;
         }
 
-        return Storage::disk('public')->url($this->video);
+        return Storage::disk('supabase')->url($this->video);
     }
 
     public function getExcerptAttribute()
@@ -95,8 +95,10 @@ class BlogPost extends Model
 
     public function getMediaTypeAttribute()
     {
-        if ($this->image) return 'image';
-        if ($this->video) return 'video';
+        if ($this->image)
+            return 'image';
+        if ($this->video)
+            return 'video';
         return null;
     }
 }

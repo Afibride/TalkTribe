@@ -55,6 +55,12 @@ RUN if [ ! -f .env ]; then \
         php artisan key:generate; \
     fi
 
+# Create storage link (for local development scenarios)
+# Note: This is less critical when using Supabase storage but good to include
+RUN if [ -f artisan ]; then \
+        php artisan storage:link; \
+    fi
+
 # Expose port 80 (Apache default)
 EXPOSE 80
 

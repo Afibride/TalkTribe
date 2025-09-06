@@ -350,7 +350,7 @@ public function getNextLesson($courseId)
 
     } catch (\Exception $e) {
         DB::rollBack();
-        \Log::error("Next lesson error", [
+        Log::error("Next lesson error", [
             'course_id' => $courseId,
             'user_id' => auth()->id(),
             'error' => $e->getMessage(),
