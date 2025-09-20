@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SupabaseUploadHelper;
 use App\Http\Controllers\Controller;
 use App\Models\BlogPost;
 use App\Models\BlogPostLike;
@@ -15,6 +16,13 @@ use Illuminate\Support\Facades\Schema;
 
 class BlogController extends Controller
 {
+
+        protected $uploadHelper;
+
+    public function __construct()
+    {
+        $this->uploadHelper = new SupabaseUploadHelper();
+    }
 
     public function index()
     {
@@ -112,40 +120,39 @@ public function update(Request $request, $id)
 }
 
 // Delete a blog post
-public function destroy($id)
-{
-    try {
-        $post = BlogPost::where('id', $id)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+ public function destroy($id)
+    {
+        try {
+            $post = BlogPost::where('id', $id)
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
 
-        // Delete associated media files
-        if ($post->image) {
-            Storage::disk('public')->delete($post->image);
+            // Delete associated media files from Supabase
+            if ($post->image) {
+                $this->uploadHelper->delete($post->image);
+            }
+            if ($post->video) {
+                $this->uploadHelper->delete($post->video);
+            }
+
+            // Delete likes and comments
+            BlogPostLike::where('blog_post_id', $id)->delete();
+            BlogPostComment::where('blog_post_id', $id)->delete();
+
+            // Delete the post
+            $post->delete();
+
+            return response()->json([
+                'message' => 'Post deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error deleting post: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Failed to delete post',
+                'error' => $e->getMessage()
+            ], 500);
         }
-        if ($post->video) {
-            Storage::disk('public')->delete($post->video);
-        }
-
-        // Delete likes and comments
-        BlogPostLike::where('blog_post_id', $id)->delete();
-        BlogPostComment::where('blog_post_id', $id)->delete();
-
-        // Delete the post
-        $post->delete();
-
-        return response()->json([
-            'message' => 'Post deleted successfully'
-        ]);
-    } catch (\Exception $e) {
-        Log::error('Error deleting post: ' . $e->getMessage());
-        return response()->json([
-            'message' => 'Failed to delete post',
-            'error' => $e->getMessage()
-        ], 500);
     }
-}
-
 
     public function trackView($id)
     {
@@ -170,7 +177,7 @@ public function destroy($id)
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'image' => 'nullable|image|max:2048',
-            'video' => 'nullable|mimetypes:video/mp4,video/quicktime,video/webm|max:10240', // 10MB max
+            'video' => 'nullable|mimetypes:video/mp4,video/quicktime,video/webm|max:10240',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:blog_categories,id',
         ]);
@@ -179,11 +186,17 @@ public function destroy($id)
         $videoPath = null;
 
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('blog_images', 'public');
+            $imagePath = $this->uploadHelper->uploadBlogImage(
+                $request->file('image'), 
+                Auth::id()
+            );
         }
 
         if ($request->hasFile('video')) {
-            $videoPath = $request->file('video')->store('blog_videos', 'public');
+            $videoPath = $this->uploadHelper->uploadBlogVideo(
+                $request->file('video'), 
+                Auth::id()
+            );
         }
 
         $post = BlogPost::create([

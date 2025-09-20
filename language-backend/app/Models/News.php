@@ -26,7 +26,7 @@ class News extends Model
 
     protected $casts = [
         'published_at' => 'datetime',
-        'is_published' => 'boolean'
+        'is_published' => 'boolean' // This ensures proper casting
     ];
 
     protected $appends = ['image_url'];
@@ -38,6 +38,18 @@ class News extends Model
         static::creating(function ($news) {
             if (empty($news->slug)) {
                 $news->slug = Str::slug($news->title);
+            }
+            
+            // Ensure is_published is boolean
+            if (!is_bool($news->is_published)) {
+                $news->is_published = (bool) $news->is_published;
+            }
+        });
+
+        static::updating(function ($news) {
+            // Ensure is_published is boolean during updates too
+            if ($news->isDirty('is_published') && !is_bool($news->is_published)) {
+                $news->is_published = (bool) $news->is_published;
             }
         });
     }

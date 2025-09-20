@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\SupabaseUploadHelper;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 use Storage;
@@ -53,18 +54,20 @@ public function quizzes()
     }
 
 
-public function getImageUrlAttribute()
-{
-    if (!$this->image) {
-        return null; 
+    public function getImageUrlAttribute()
+    {
+        if (!$this->image) {
+            return null; 
+        }
+        
+        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+            return $this->image;
+        }
+        
+        $uploadHelper = new SupabaseUploadHelper();
+        return $uploadHelper->getUrl($this->image);
     }
-    
-   if (filter_var($this->image, FILTER_VALIDATE_URL)) {
-        return $this->image;
-    }
-    
-    return Storage::disk('public')->url($this->image);
-}
+
 
 public function getTotalLessonsAttribute()
 {

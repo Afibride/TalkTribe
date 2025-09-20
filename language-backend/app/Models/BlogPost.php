@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Storage;
-use Str;
+use Illuminate\Support\Str;
+use App\Helpers\SupabaseUploadHelper;
 
 class BlogPost extends Model
 {
@@ -62,20 +63,22 @@ class BlogPost extends Model
         return $this->likes()->where('user_id', $user->id)->exists();
     }
 
-    public function getImageUrlAttribute()
-    {
-        if (!$this->image) {
-            return null;
-        }
-
-        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
-            return $this->image;
-        }
-
-        return Storage::disk('public')->url($this->image);
+public function getImageUrlAttribute()
+{
+    if (!$this->image) {
+        return null; 
     }
+    
+    if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+        return $this->image;
+    }
+    
+    $uploadHelper = new SupabaseUploadHelper();
+    return $uploadHelper->getUrl($this->image);
+}
 
-    public function getVideoUrlAttribute()
+
+public function getVideoUrlAttribute()
     {
         if (!$this->video) {
             return null;
@@ -85,7 +88,8 @@ class BlogPost extends Model
             return $this->video;
         }
 
-        return Storage::disk('public')->url($this->video);
+        $uploadHelper = new SupabaseUploadHelper();
+        return $uploadHelper->getUrl($this->video);
     }
 
     public function getExcerptAttribute()
