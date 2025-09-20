@@ -18,7 +18,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['https://talk-tribe-five.vercel.app', 'http://localhost:5173', 'https://talktribe0.netlify.app'],
 
     'allowed_origins_patterns' => [],
 
