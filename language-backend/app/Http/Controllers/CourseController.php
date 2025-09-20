@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\SupabaseUploadHelper;
 use App\Models\Category;
 use App\Models\Course;
 use Illuminate\Http\Request;
@@ -12,15 +11,6 @@ use Illuminate\Support\Facades\Storage;
 
 class CourseController extends Controller
 {
-
-     protected $uploadHelper;
-
-    public function __construct()
-    {
-        $this->uploadHelper = new SupabaseUploadHelper();
-    }
-
-    
     // Get all courses (learners + instructors can access)
 public function index(Request $request)
 {
@@ -45,7 +35,7 @@ return response()->json($course);
     }
 
     // Instructor adds a new course
-public function store(Request $request)
+    public function store(Request $request)
     {
         $user = Auth::user();
 
@@ -58,16 +48,16 @@ public function store(Request $request)
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'duration' => 'nullable|string|max:100',
-            'level' => 'nullable|in:beginner,intermediate,advanced',
+            'duration' => 'nullable|string|max:100', // e.g., "3 weeks"
+            'level' => 'nullable|in:beginner,intermediate,advanced', // validate enum values
         ]);
 
         $imagePath = null;
 
         if ($request->hasFile('image')) {
-            $imagePath = $this->uploadHelper->uploadCourseImage(
-                $request->file('image'), 
-                $user->id
+            $imagePath = $request->file('image')->store(
+                'course_images/user_' . $user->id,
+                'public'
             );
         }
 
@@ -78,7 +68,7 @@ public function store(Request $request)
             'instructor_id' => $user->id,
             'image' => $imagePath,
             'duration' => $validated['duration'] ?? null,
-            'level' => $validated['level'] ?? 'beginner',
+            'level' => $validated['level'] ?? 'beginner', // default if not passed
         ]);
 
         return response()->json(['message' => 'Course created', 'course' => $course], 201);
@@ -88,7 +78,7 @@ public function store(Request $request)
 
 
     // Instructor updates a course
-public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $user = Auth::user();
         $course = Course::findOrFail($id);
@@ -107,14 +97,9 @@ public function update(Request $request, $id)
         ]);
 
         if ($request->hasFile('image')) {
-            // Delete old image from Supabase
-            if ($course->image) {
-                $this->uploadHelper->delete($course->image);
-            }
-            
-            $imagePath = $this->uploadHelper->uploadCourseImage(
-                $request->file('image'), 
-                $user->id
+            $imagePath = $request->file('image')->store(
+                'course_images/user_' . $user->id,
+                'public'
             );
             $validated['image'] = $imagePath;
         }
@@ -124,9 +109,8 @@ public function update(Request $request, $id)
         return response()->json(['message' => 'Course updated', 'course' => $course]);
     }
 
-
    
-public function destroy($id)
+    public function destroy($id)
     {
         $user = Auth::user();
         $course = Course::findOrFail($id);
@@ -134,10 +118,8 @@ public function destroy($id)
         if ($user->id !== $course->instructor_id) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-        
-        // Delete image from Supabase
         if ($course->image) {
-            $this->uploadHelper->delete($course->image);
+            Storage::disk('public')->delete($course->image);
         }
     
         $course->delete();

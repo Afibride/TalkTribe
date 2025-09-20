@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\SupabaseUploadHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
@@ -42,46 +41,18 @@ class Lesson extends Model
 
     public function getVideoUrlFullAttribute()
     {
-        if (!$this->video_url) {
-            return null;
-        }
-
-        if (filter_var($this->video_url, FILTER_VALIDATE_URL)) {
-            return $this->video_url;
-        }
-
-        $uploadHelper = new SupabaseUploadHelper();
-        return $uploadHelper->getUrl($this->video_url);
+        return $this->video_url ? url('storage/' . $this->video_url) : null;
     }
 
     public function getNotesFileUrlFullAttribute()
     {
-        if (!$this->notes_file) {
-            return null;
-        }
-
-        if (filter_var($this->notes_file, FILTER_VALIDATE_URL)) {
-            return $this->notes_file;
-        }
-
-        $uploadHelper = new SupabaseUploadHelper();
-        return $uploadHelper->getUrl($this->notes_file);
+        return $this->notes_file ? url('storage/' . $this->notes_file) : null;
     }
 
     public function getThumbnailUrlAttribute()
     {
-        if (!$this->thumbnail) {
-            return null;
-        }
-
-        if (filter_var($this->thumbnail, FILTER_VALIDATE_URL)) {
-            return $this->thumbnail;
-        }
-
-        $uploadHelper = new SupabaseUploadHelper();
-        return $uploadHelper->getUrl($this->thumbnail);
+        return $this->thumbnail ? url('storage/' . $this->thumbnail) : null;
     }
-
 
     public function quizzes()
     {

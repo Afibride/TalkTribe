@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Helpers\SupabaseUploadHelper;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -54,19 +53,18 @@ class User extends Authenticatable
         return $this->hasMany(LessonProgress::class);
     }
 
-public function getProfilePicUrlAttribute()
+   public function getProfilePicUrlAttribute()
     {
-        if (!$this->image) {
-            return null; 
-        }
-        
-        if (filter_var($this->image, FILTER_VALIDATE_URL)) {
-            return $this->image;
-        }
-        
-        $uploadHelper = new SupabaseUploadHelper();
-        return $uploadHelper->getUrl($this->image);
+    if (!$this->image) {
+        return null; 
     }
+    
+   if (filter_var($this->image, FILTER_VALIDATE_URL)) {
+        return $this->image;
+    }
+    
+    return Storage::disk('public')->url($this->image);
+}
 
     public function getCoverPhotoUrlAttribute()
     {
@@ -78,10 +76,8 @@ public function getProfilePicUrlAttribute()
             return $this->cover_photo;
         }
 
-        $uploadHelper = new SupabaseUploadHelper();
-        return $uploadHelper->getUrl($this->cover_photo);
+        return Storage::disk('public')->url($this->cover_photo);
     }
-
 
     public function courseProgress()
     {

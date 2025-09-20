@@ -8,27 +8,22 @@ use Illuminate\Http\Request;
 use App\Models\Lesson;
 use App\Models\LessonProgress;
 use Illuminate\Support\Facades\Log;
-use App\Helpers\SupabaseUploadHelper;
+use Illuminate\Support\Facades\Storage;
+use Smalot\PdfParser\Parser as PdfParser;
+use PhpOffice\PhpWord\IOFactory as WordIOFactory;
 
 class LessonController extends Controller
 {
 
-       protected $uploadHelper;
-
-    public function __construct()
-    {
-        $this->uploadHelper = new SupabaseUploadHelper();
-    }
-
     // Only instructors can create lessons
-public function store(Request $request)
+    public function store(Request $request)
     {
         try {
             $request->validate([
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'video_file' => 'nullable|file|mimes:mp4,mov,avi|max:10240',
-                'notes_file' => 'nullable|file|mimes:pdf,xlsx,xls,ppt,pptx,doc,docx|max:5120',
+                'video_file' => 'nullable|file|mimes:mp4,mov,avi|max:10240', // Max size 10MB
+                'notes_file' => 'nullable|file|mimes:pdf,xlsx,xls,ppt,pptx,doc,docx|max:5120', // Max size 5MB
                 'course_id' => 'required|exists:courses,id',
             ]);
 
@@ -38,20 +33,22 @@ public function store(Request $request)
             // Save video file if provided
             if ($request->hasFile('video_file')) {
                 Log::info('Video file detected in request.');
-                $videoPath = $this->uploadHelper->uploadLessonVideo(
-                    $request->file('video_file'),
-                    $request->course_id
-                );
+                $videoPath = $request->file('video_file')->store("videos/course_{$request->course_id}", 'public');
             } else {
                 Log::warning('No video file found in request.');
             }
 
             // Save notes file if provided
             if ($request->hasFile('notes_file')) {
-                $notesPath = $this->uploadHelper->uploadLectureNote(
-                    $request->file('notes_file'),
-                    $request->course_id
-                );
+                $notesPath = $request->file('notes_file')->store("notes/course_{$request->course_id}", 'public');
+            }
+
+            // Generate thumbnail for the video
+            if ($videoPath) {
+                $thumbnailName = 'thumbnails/' . uniqid('thumb_') . '.jpg';
+                $this->generateVideoThumbnail($videoPath, $thumbnailName);
+            } else {
+                $thumbnailName = null;
             }
 
             // Create the lesson
@@ -60,6 +57,7 @@ public function store(Request $request)
                 'description' => $request->description,
                 'video_url' => $videoPath,
                 'notes_file' => $notesPath,
+                'thumbnail' => $thumbnailName,
                 'course_id' => $request->course_id,
                 'created_by' => auth()->id(),
             ]);
@@ -68,6 +66,7 @@ public function store(Request $request)
             try {
                 app()->call('App\Http\Controllers\QuizController@generateQuizFromNotes', ['lessonId' => $lesson->id]);
             } catch (\Exception $e) {
+                // Optionally log or handle quiz generation errors
                 Log::error('Quiz auto-generation failed: ' . $e->getMessage());
             }
 
@@ -77,7 +76,6 @@ public function store(Request $request)
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
 
     
     // Generate video thumbnail (placeholder function, implement actual logic)
@@ -119,42 +117,44 @@ public function store(Request $request)
     }
 
     // Update lesson (only instructor who created it)
-public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
         $lesson = Lesson::findOrFail($id);
 
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'video_file' => 'nullable|file|mimes:mp4,mov,avi|max:10240',
-            'notes_file' => 'nullable|file|mimes:pdf,xlsx,xls,ppt,pptx,doc,docx|max:5120',
+            'video_file' => 'nullable|file|mimes:mp4,mov,avi|max:10240', // Max 10MB
+            'notes_file' => 'nullable|file|mimes:pdf,xlsx,xls,ppt,pptx,doc,docx|max:5120', // Max 5MB
             'course_id' => 'required|exists:courses,id',
         ]);
 
         $videoPath = $lesson->video_url;
         $notesPath = $lesson->notes_file;
+        $thumbnailName = $lesson->thumbnail;
 
         // Update video file if provided
         if ($request->hasFile('video_file')) {
-            // Delete old video from Supabase
-            if ($lesson->video_url) {
-                $this->uploadHelper->delete($lesson->video_url);
+            // Delete old video
+            if ($lesson->video_url && Storage::disk('public')->exists($lesson->video_url)) {
+                Storage::disk('public')->delete($lesson->video_url);
             }
-            $videoPath = $this->uploadHelper->uploadLessonVideo(
-                $request->file('video_file'),
-                $request->course_id
-            );
+            $videoPath = $request->file('video_file')->store("videos/course_{$request->course_id}", 'public');
+
+            // Generate new thumbnail
+            if ($thumbnailName && Storage::disk('public')->exists($thumbnailName)) {
+                Storage::disk('public')->delete($thumbnailName);
+            }
+            $thumbnailName = 'thumbnails/' . uniqid('thumb_') . '.jpg';
+            $this->generateVideoThumbnail($videoPath, $thumbnailName);
         }
 
         // Update notes file if provided
         if ($request->hasFile('notes_file')) {
-            if ($lesson->notes_file) {
-                $this->uploadHelper->delete($lesson->notes_file);
+            if ($lesson->notes_file && Storage::disk('public')->exists($lesson->notes_file)) {
+                Storage::disk('public')->delete($lesson->notes_file);
             }
-            $notesPath = $this->uploadHelper->uploadLectureNote(
-                $request->file('notes_file'),
-                $request->course_id
-            );
+            $notesPath = $request->file('notes_file')->store("notes/course_{$request->course_id}", 'public');
         }
 
         // Update lesson fields
@@ -163,6 +163,7 @@ public function update(Request $request, $id)
             'description' => $request->description,
             'video_url' => $videoPath,
             'notes_file' => $notesPath,
+            'thumbnail' => $thumbnailName,
             'course_id' => $request->course_id,
         ]);
 
@@ -170,18 +171,21 @@ public function update(Request $request, $id)
     }
 
     // Delete lesson (only instructor who created it)
-public function destroy($id)
+    public function destroy($id)
     {
         $lesson = Lesson::where('id', $id)
             ->where('created_by', Auth::id())
             ->firstOrFail();
 
-        // Delete associated files from Supabase
-        if ($lesson->video_url) {
-            $this->uploadHelper->delete($lesson->video_url);
+        // Delete associated files
+        if ($lesson->video_url && Storage::disk('public')->exists($lesson->video_url)) {
+            Storage::disk('public')->delete($lesson->video_url);
         }
-        if ($lesson->notes_file) {
-            $this->uploadHelper->delete($lesson->notes_file);
+        if ($lesson->notes_file && Storage::disk('public')->exists($lesson->notes_file)) {
+            Storage::disk('public')->delete($lesson->notes_file);
+        }
+        if ($lesson->thumbnail && Storage::disk('public')->exists($lesson->thumbnail)) {
+            Storage::disk('public')->delete($lesson->thumbnail);
         }
 
         $lesson->delete();
