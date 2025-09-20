@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\SupabaseUploadHelper;
 use App\Models\BlogPost;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -12,6 +13,14 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+
+    protected $uploadHelper;
+
+    public function __construct()
+    {
+        $this->uploadHelper = new SupabaseUploadHelper();
+    }
+
     public function show($username)
     {
         $user = User::withCount(['posts'])
@@ -40,7 +49,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request, $username)
+public function update(Request $request, $username)
     {
         $user = User::where('username', $username)->first();
 
@@ -71,18 +80,24 @@ class UserController extends Controller
             $data = $request->only(['name', 'bio', 'location']);
 
             if ($request->hasFile('profile_pic')) {
-                if ($user->image && !filter_var($user->image, FILTER_VALIDATE_URL)) {
-                    Storage::disk('public')->delete($user->image);
+                if ($user->image) {
+                    $this->uploadHelper->delete($user->image);
                 }
-                $path = $request->file('profile_pic')->store('profile_pics', 'public');
+                $path = $this->uploadHelper->uploadProfilePicture(
+                    $request->file('profile_pic'), 
+                    $user->id
+                );
                 $data['image'] = $path;
             }
 
             if ($request->hasFile('cover_photo')) {
-                if ($user->cover_photo && !filter_var($user->cover_photo, FILTER_VALIDATE_URL)) {
-                    Storage::disk('public')->delete($user->cover_photo);
+                if ($user->cover_photo) {
+                    $this->uploadHelper->delete($user->cover_photo);
                 }
-                $path = $request->file('cover_photo')->store('cover_photos', 'public');
+                $path = $this->uploadHelper->uploadCoverPhoto(
+                    $request->file('cover_photo'), 
+                    $user->id
+                );
                 $data['cover_photo'] = $path;
             }
 

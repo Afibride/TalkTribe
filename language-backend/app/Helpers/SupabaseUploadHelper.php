@@ -3,22 +3,26 @@
 
 namespace App\Helpers;
 
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SupabaseUploadHelper
 {
-    protected $storage;
+    protected $projectRef;
+    protected $accessKey;
     protected $bucket;
 
-    public function __construct($bucket = 'public')
+    public function __construct($bucket = null)
     {
-        $this->bucket = $bucket;
-        $this->storage = Storage::disk('supabase');
+        $this->projectRef = config('services.supabase.project_ref');
+        $this->accessKey = config('services.supabase.access_key');
+        $this->bucket = $bucket ?: config('services.supabase.bucket', 'public');
     }
 
     /**
-     * Upload a file to Supabase storage
+     * Upload a file to Supabase storage using direct API calls
      */
     public function upload(UploadedFile $file, $path, $fileName = null)
     {
@@ -26,11 +30,22 @@ class SupabaseUploadHelper
             $fileName = $fileName ?: time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
             $fullPath = trim($path . '/' . $fileName, '/');
             
-            $this->storage->put($fullPath, file_get_contents($file));
+            $url = "https://{$this->projectRef}.supabase.co/storage/v1/object/{$this->bucket}/{$fullPath}";
             
-            return $fullPath;
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessKey,
+                'Content-Type' => $file->getMimeType(),
+            ])->put($url, file_get_contents($file));
+            
+            if ($response->successful()) {
+                return $fullPath;
+            }
+            
+            Log::error('Supabase upload failed: ' . $response->body());
+            return null;
+            
         } catch (\Exception $e) {
-            \Log::error('Supabase upload error: ' . $e->getMessage());
+            Log::error('Supabase upload error: ' . $e->getMessage());
             return null;
         }
     }
@@ -43,9 +58,9 @@ class SupabaseUploadHelper
         if (!$path) return null;
         
         try {
-            return $this->storage->url($path);
+            return "https://{$this->projectRef}.supabase.co/storage/v1/object/public/{$this->bucket}/{$path}";
         } catch (\Exception $e) {
-            \Log::error('Supabase URL error: ' . $e->getMessage());
+            Log::error('Supabase URL error: ' . $e->getMessage());
             return null;
         }
     }
@@ -58,9 +73,16 @@ class SupabaseUploadHelper
         if (!$path) return false;
         
         try {
-            return $this->storage->delete($path);
+            $url = "https://{$this->projectRef}.supabase.co/storage/v1/object/{$this->bucket}/{$path}";
+            
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $this->accessKey,
+            ])->delete($url);
+            
+            return $response->successful();
+            
         } catch (\Exception $e) {
-            \Log::error('Supabase delete error: ' . $e->getMessage());
+            Log::error('Supabase delete error: ' . $e->getMessage());
             return false;
         }
     }

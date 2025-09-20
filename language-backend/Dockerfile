@@ -14,14 +14,16 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     unzip \
-    libpq-dev
+    libpq-dev \
+    libonig-dev \
+    libxml2-dev
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql gd zip
+RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql gd zip mbstring exif pcntl bcmath xml
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
@@ -37,14 +39,14 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy existing application directory contents
 COPY . .
 
-# Copy existing application directory permissions
-COPY --chown=www-data:www-data . .
+# Change ownership to www-data for Apache
+RUN chown -R www-data:www-data /var/www/html
 
 # Change to the correct user
 USER www-data
 
 # Install Laravel dependencies
-RUN composer install --optimize-autoloader --no-dev --ignore-platform-req=ext-gd
+RUN composer install --optimize-autoloader --no-dev
 
 # Set proper permissions for Laravel
 RUN chmod -R 775 storage bootstrap/cache
@@ -55,10 +57,15 @@ RUN if [ ! -f .env ]; then \
         php artisan key:generate; \
     fi
 
-# Create storage link (for local development scenarios)
-# Note: This is less critical when using Supabase storage but good to include
+# Create storage link
 RUN if [ -f artisan ]; then \
         php artisan storage:link; \
+    fi
+
+# Optimize for production
+RUN if [ -f artisan ]; then \
+        php artisan config:clear && \
+        php artisan optimize; \
     fi
 
 # Expose port 80 (Apache default)
