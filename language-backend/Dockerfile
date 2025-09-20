@@ -39,25 +39,26 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Copy existing application directory contents
 COPY . .
 
-# Change ownership to www-data for Apache
+# Change ownership to www-data for Apache (FIXED - do this before switching user)
 RUN chown -R www-data:www-data /var/www/html
 
 # Change to the correct user
 USER www-data
 
-# Install Laravel dependencies
-RUN composer install --optimize-autoloader --no-dev
+# Install Laravel dependencies (no dev dependencies for production)
+RUN composer install --optimize-autoloader --no-dev --ignore-platform-req=ext-gd
 
 # Set proper permissions for Laravel
 RUN chmod -R 775 storage bootstrap/cache
 
-# Generate application key if not exists
+# Generate application key if not exists (but don't override existing .env)
 RUN if [ ! -f .env ]; then \
         cp .env.example .env && \
         php artisan key:generate; \
     fi
 
-# Create storage link
+# Since you're using Supabase storage, the storage:link is less critical
+# but keep it for potential local development or fallback
 RUN if [ -f artisan ]; then \
         php artisan storage:link; \
     fi
@@ -65,6 +66,7 @@ RUN if [ -f artisan ]; then \
 # Optimize for production
 RUN if [ -f artisan ]; then \
         php artisan config:clear && \
+        php artisan optimize:clear && \
         php artisan optimize; \
     fi
 
